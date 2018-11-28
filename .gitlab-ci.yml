@@ -3,47 +3,8 @@ stages:
 - build
 - release
 
-chktex:
-  image: dbogatov/docker-images:latex-latest
-  stage: lint
-  script:
-  - chktex -eall -n22 -n46 -n30 -n3 -e16 -I0 -v2 -o chktex.out report/**/*.tex report/*.tex || true
-  - cat chktex.out
-  - "! [ -s chktex.out ]"
-  tags:
-  - docker
-  allow_failure: true
-
-cspell:
-  image: dbogatov/docker-images:cspell-latest
-  stage: lint
-  script:
-  - cspell -c .vscode/cSpell.json report/**/*.tex report/*.tex 
-  tags:
-  - docker
-  allow_failure: true
-
-build:
-  image: dbogatov/docker-images:latex-latest
-  stage: build
-  script:
-  - ./report/build.sh
-  artifacts:
-    expire_in: 30 min
-    paths:
-    - "report/dist/*.pdf"
-  tags:
-  - docker
-
-artifacts:
-  image: dbogatov/docker-images:alpine-extras-latest
-  stage: release
-  script:
-  - mv report/dist/*.pdf .
-  dependencies:
-  - build
-  artifacts:
-    paths:
-    - "*.pdf"
-  tags:
-  - docker
+include:
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/cspell.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/build.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
