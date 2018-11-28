@@ -1,16 +1,17 @@
 stages:
 - lint
 - build
+- review
 - release
 
 include:
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/cspell.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/cspell.yml'
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/build.yml'
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
 
-dockerify:
-  stage: release
+review:
+  stage: review
   dependencies:
   - build
   script:
@@ -22,5 +23,26 @@ dockerify:
       -t registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME .
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.dbogatov.org
   - docker push registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    url: https://$CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
+    on_stop: stop_review
+  only:
+    - branches
+  except:
+    - master
   tags:
   - shell
+
+stop_review:
+  stage: review
+  script:
+    - echo "TODO delete"
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+  environment:
+    name: review/$CI_BUILD_REF_NAME
+    action: stop
+  tags:
+    - shell
