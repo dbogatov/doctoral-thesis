@@ -1,26 +1,18 @@
 stages:
 - lint
 - build
+- build-review
+- review
 - release
 
-include:
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/cspell.yml'
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/build.yml'
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
+variables:
+  REPO: "templates/latex-report"
 
-dockerify:
-  stage: release
-  dependencies:
-  - build
-  script:
-  - |
-    docker build \
-      --build-arg PROJECTNAME=$CI_PROJECT_NAME \
-      --build-arg PROJECTURL=$CI_PROJECT_URL \
-      --build-arg COMMIT=$CI_COMMIT_SHA \
-      -t registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME .
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.dbogatov.org
-  - docker push registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME
-  tags:
-  - shell
+include:
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/cspell.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/build.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/build-review.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/review.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/stop-review.yml'
