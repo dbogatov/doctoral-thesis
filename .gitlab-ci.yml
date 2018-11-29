@@ -8,6 +8,8 @@ stages:
 # CHANGE ME!
 variables:
   REPO: "templates/latex-report"
+  AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
+  # username is always "review" (without quotes)
 
 include:
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
