@@ -5,6 +5,9 @@ stages:
 - review
 - release
 
+variables:
+  REPO: "templates/latex-report"
+
 include:
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/cspell.yml'
@@ -21,9 +24,9 @@ build-review:
       --build-arg PROJECTNAME=$CI_PROJECT_NAME \
       --build-arg PROJECTURL=$CI_PROJECT_URL \
       --build-arg COMMIT=$CI_COMMIT_SHA \
-      -t registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME .
+      -t registry.dbogatov.org/$REPO/review/$CI_COMMIT_REF_NAME .
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.dbogatov.org
-  - docker push registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME
+  - docker push registry.dbogatov.org/$REPO/review/$CI_COMMIT_REF_NAME
   only:
     - branches
   except:
@@ -41,7 +44,7 @@ review:
     - |
       ./generate-review-app.sh \
         $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME \
-        registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME \
+        registry.dbogatov.org/$REPO/review/$CI_COMMIT_REF_NAME \
         $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
     - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org apply -R -f ./out
   environment:
@@ -63,7 +66,7 @@ stop_review:
     - |
       ./generate-review-app.sh \
         $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME \
-        registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME \
+        registry.dbogatov.org/$REPO/review/$CI_COMMIT_REF_NAME \
         $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
     - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org delete -R -f ./out
   variables:
