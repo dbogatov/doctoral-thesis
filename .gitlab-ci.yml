@@ -40,7 +40,7 @@ review:
     - cd /
     - |
       ./generate-review-app.sh \
-        $CI_PROJECT_NAME \
+        $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME \
         registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME \
         $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
     - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org apply -R -f ./out
@@ -62,7 +62,7 @@ stop_review:
     - cd /
     - |
       ./generate-review-app.sh \
-        $CI_PROJECT_NAME \
+        $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME \
         registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME \
         $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
     - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org delete -R -f ./out
