@@ -9,7 +9,7 @@ ARG COMMIT
 WORKDIR /srv
 
 # Copy the source
-COPY report/dist/ .
+COPY document/dist/ .
 
 RUN /pdf/build-index.sh "$PROJECTNAME" "$PROJECTURL" "$COMMIT"
 
