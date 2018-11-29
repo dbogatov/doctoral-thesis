@@ -33,6 +33,7 @@ review:
         registry.dbogatov.org/$REPOLOWER/review/$CI_COMMIT_REF_NAME \
         $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org \
         $AUTHPASSWORD
+    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org --namespace=review delete secret $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth || true
     - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org --namespace=review create secret generic $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth --from-file=./out/auth
     - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org apply -R -f ./out
   environment:
