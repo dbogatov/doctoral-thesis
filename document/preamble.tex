@@ -32,6 +32,7 @@
 \usepackage[all]{nowidow}
 \usepackage{hyphenat}
 \usepackage{enumitem}
+\usepackage{comment}
 
 \usepackage[
 	backend=biber,
@@ -98,6 +99,12 @@
 	tabsize=2,
 	morekeywords={return,then,if,else,foreach,endforeach}
 }
+
+\ifdefined\preview%
+	\excludecomment{release}
+\else
+	\newenvironment{release}{}{}
+\fi
 
 % \captionsetup[table]{skip=10pt}
 % \captionsetup[figure]{skip=10pt}
