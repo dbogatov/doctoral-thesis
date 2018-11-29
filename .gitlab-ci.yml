@@ -34,6 +34,8 @@ build-review:
 review:
   stage: review
   image: registry.dbogatov.org/dbogatov/setup-manager
+  variables:
+    GIT_STRATEGY: none
   script:
     - cd /
     - |
@@ -55,8 +57,15 @@ review:
 
 stop_review:
   stage: review
+  image: registry.dbogatov.org/dbogatov/setup-manager
   script:
-    - echo "Remove image from registry https://gitlab.com/gitlab-org/gitlab-ce/issues/25322"
+    - cd /
+    - |
+      ./generate-review-app.sh \
+        $CI_PROJECT_NAME \
+        registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME \
+        $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
+    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org delete -R -f ./out
   variables:
     GIT_STRATEGY: none
   when: manual
@@ -64,4 +73,4 @@ stop_review:
     name: review/$CI_BUILD_REF_NAME
     action: stop
   tags:
-    - shell
+  - docker
