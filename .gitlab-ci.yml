@@ -35,8 +35,9 @@ review:
   stage: review
   image: registry.dbogatov.org/dbogatov/setup-manager
   script:
+    - cd /
     - |
-      /generate-review-app.sh \
+      ./generate-review-app.sh \
         $CI_PROJECT_NAME \
         registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME \
         $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
