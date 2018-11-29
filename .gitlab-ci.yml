@@ -1,6 +1,7 @@
 stages:
 - lint
 - build
+- build-review
 - review
 - release
 
@@ -10,8 +11,8 @@ include:
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/build.yml'
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
 
-review:
-  stage: review
+build-review:
+  stage: build-review
   dependencies:
   - build
   script:
@@ -23,6 +24,23 @@ review:
       -t registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME .
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.dbogatov.org
   - docker push registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME
+  only:
+    - branches
+  except:
+    - master
+  tags:
+  - shell
+
+review:
+  stage: review
+  image: registry.dbogatov.org/dbogatov/setup-manager
+  script:
+    - |
+      ./generate-review-app.sh \
+        $CI_PROJECT_NAME \
+        registry.dbogatov.org/templates/latex-report/review/$CI_COMMIT_REF_NAME \
+        $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
+    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org apply -R -f ./out
   environment:
     name: review/$CI_BUILD_REF_NAME
     url: https://$CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
@@ -32,7 +50,7 @@ review:
   except:
     - master
   tags:
-  - shell
+  - docker
 
 stop_review:
   stage: review
