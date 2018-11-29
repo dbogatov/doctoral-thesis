@@ -37,7 +37,7 @@ review:
 stop_review:
   stage: review
   script:
-    - echo "TODO delete"
+    - echo "Remove image from registry https://gitlab.com/gitlab-org/gitlab-ce/issues/25322"
   variables:
     GIT_STRATEGY: none
   when: manual
