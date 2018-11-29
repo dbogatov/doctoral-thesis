@@ -9,6 +9,7 @@ stages:
 variables:
   REPO: "templates/latex-report"
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
+  # username is always "review" (without quotes)
 
 include:
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
@@ -16,60 +17,5 @@ include:
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/build.yml'
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
 - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/build-review.yml'
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/review.yml'
-# - 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/stop-review.yml'
-
-review:
-  stage: review
-  image: registry.dbogatov.org/dbogatov/setup-manager
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - REPOLOWER=$(echo "$REPO" | tr '[:upper:]' '[:lower:]')
-    - cd /
-    - |
-      ./generate-review-app.sh \
-        $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME \
-        registry.dbogatov.org/$REPOLOWER/review/$CI_COMMIT_REF_NAME \
-        $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org \
-        $AUTHPASSWORD
-    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org --namespace=review delete secret $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth || true
-    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org --namespace=review create secret generic $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth --from-file=./out/auth
-    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org apply -R -f ./out
-  environment:
-    name: review/$CI_BUILD_REF_NAME
-    url: https://$CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
-    on_stop: stop_review
-  only:
-    - branches
-  except:
-    - master
-  tags:
-  - docker
-
-stop_review:
-  stage: review
-  image: registry.dbogatov.org/dbogatov/setup-manager
-  script:
-    - REPOLOWER=$(echo "$REPO" | tr '[:upper:]' '[:lower:]')
-    - cd /
-    - |
-      ./generate-review-app.sh \
-        $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME \
-        registry.dbogatov.org/$REPOLOWER/review/$CI_COMMIT_REF_NAME \
-        $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org \
-        $AUTHPASSWORD
-    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org delete -R -f ./out
-    - kubectl --token=$K8STOKEN --server=https://k8sapi.dbogatov.org --namespace=review delete secret $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth
-  variables:
-    GIT_STRATEGY: none
-  when: manual
-  environment:
-    name: review/$CI_BUILD_REF_NAME
-    action: stop
-  only:
-    - branches
-  except:
-    - master
-  tags:
-  - docker
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/review.yml'
+- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/stop-review.yml'
