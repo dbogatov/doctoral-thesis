@@ -5,6 +5,7 @@ stages:
 - review
 - release
 
+# CHANGE ME!
 variables:
   REPO: "templates/latex-report"
 
