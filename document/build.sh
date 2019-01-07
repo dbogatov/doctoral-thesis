@@ -35,6 +35,11 @@ echo "Cleaning up workspace"
 rm -rf ${OUTDIR}
 mkdir -p ${OUTDIR}
 
+if [ -n "$CI_BUILD_REF" ];
+then
+	printf "\providecommand{\\\version}{%s}" $(echo $CI_BUILD_REF | cut -c1-8) > version.tex
+fi
+
 for j in `seq 1 $ITERATIONS`;
 do
 	echo "Compiling for the $j time..."
