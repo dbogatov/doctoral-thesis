@@ -40,3 +40,14 @@ include:
   # RELEASE
   - project: 'templates/ci-snippets'
     file: 'latex-report/artifacts.yml'
+
+# ADJUSTMENTS
+
+build-review:
+  except: []
+
+review:
+  except: []
+
+stop_review:
+  except: []
