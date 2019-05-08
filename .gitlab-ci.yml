@@ -7,11 +7,14 @@ stages:
 
 # CHANGE ME!
 variables:
-  REPO: "templates/latex-report"
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
 
 include:
+  # BEFORE SCRIPT
+  - project: 'templates/ci-snippets'
+    file: 'variables.yml'
+
   # LINT
   - project: 'templates/ci-snippets'
     file: 'latex-report/chktex.yml'
