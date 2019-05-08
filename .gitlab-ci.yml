@@ -14,17 +14,17 @@ variables:
 include:
   # LINT
   - project: 'templates/ci-snippets'
-    file: 'latex-assignments/chktex.yml'
+    file: 'latex-report/chktex.yml'
   
   - project: 'templates/ci-snippets'
-    file: 'latex-assignments/cspell.yml'
+    file: 'latex-report/cspell.yml'
     
   - project: 'templates/ci-snippets'
-    file: 'latex-assignments/metrics.yml'
+    file: 'latex-report/metrics.yml'
     
   # BUILD
   - project: 'templates/ci-snippets'
-    file: 'latex-assignments/build.yml'
+    file: 'latex-report/build.yml'
   
   # BUILD REVIEW
   - project: 'templates/ci-snippets'
@@ -39,4 +39,4 @@ include:
   
   # RELEASE
   - project: 'templates/ci-snippets'
-    file: 'latex-assignments/artifacts.yml'
+    file: 'latex-report/artifacts.yml'
