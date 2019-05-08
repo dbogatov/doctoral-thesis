@@ -19,6 +19,9 @@ include:
   - project: 'templates/ci-snippets'
     file: 'latex-assignments/cspell.yml'
     
+  - project: 'templates/ci-snippets'
+    file: 'latex-assignments/metrics.yml'
+    
   # BUILD
   - project: 'templates/ci-snippets'
     file: 'latex-assignments/build.yml'
