@@ -12,10 +12,28 @@ variables:
   # username is always "review" (without quotes)
 
 include:
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/chktex.yml'
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/cspell.yml'
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/build.yml'
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-report/artifacts.yml'
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/build-review.yml'
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/review.yml'
-- 'https://git.dbogatov.org/templates/ci-snippets/raw/master/latex-review-apps/stop-review.yml'
+  # LINT
+  - project: 'templates/ci-snippets'
+    file: 'latex-assignments/chktex.yml'
+  
+  - project: 'templates/ci-snippets'
+    file: 'latex-assignments/cspell.yml'
+    
+  # BUILD
+  - project: 'templates/ci-snippets'
+    file: 'latex-assignments/build.yml'
+  
+  # BUILD REVIEW
+  - project: 'templates/ci-snippets'
+    file: 'latex-review-apps/build-review.yml'
+  
+  # REVIEW
+  - project: 'templates/ci-snippets'
+    file: 'latex-review-apps/review.yml'
+    
+  - project: 'templates/ci-snippets'
+    file: 'latex-review-apps/stop-review.yml'
+  
+  # RELEASE
+  - project: 'templates/ci-snippets'
+    file: 'latex-assignments/artifacts.yml'
