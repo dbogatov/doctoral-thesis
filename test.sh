@@ -21,6 +21,16 @@ else
 	rm -f chktex.*
 fi
 
+echo ">>> Testing special characters..."
+
+! grep " ̈" document/**/*.tex document/*.tex
+
+if [[ $? != 0 ]];
+then
+	echo ">>> FAIL"
+	exit 1
+fi
+
 echo ">>> Testing CSPELL..."
 
 docker run -it -v $(PWD):/code --entrypoint /bin/bash dbogatov/docker-images:cspell-latest -c "cd /code && cspell -c .vscode/cSpell.json document/**/*.tex document/*.tex"

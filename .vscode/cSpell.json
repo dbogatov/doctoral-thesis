@@ -5,7 +5,10 @@
 		"Dmytro",
 		"Bogatov"
     ],
-    "flagWords": [],
+    "flagWords": [
+        "yu",
+		"yum"
+    ],
     "dictionaries": [
         "companies",
         "filetypes",
