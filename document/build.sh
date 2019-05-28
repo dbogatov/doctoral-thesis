@@ -6,20 +6,18 @@ set -e
 cd "${0%/*}"
 CWD=$(pwd)
 
-COMPILER=pdflatex
 INTERACTION=nonstopmode
 OUTDIR=dist
 JOBNAME=report
-ITERATIONS=3
 PREVIEW=""
 OPEN=false
+SYNCTEX=1
 
 usage() { echo "Usage: $0 [-o]" 1>&2; exit 1; }
 
 while getopts "o" o; do
 	case "${o}" in
 		o)
-			ITERATIONS=1
 			PREVIEW="\def\preview{true}"
 			OPEN=true
 			;;
@@ -30,8 +28,6 @@ while getopts "o" o; do
 done
 shift $((OPTIND-1))
 
-echo "Cleaning up workspace"
-
 rm -rf ${OUTDIR}
 mkdir -p ${OUTDIR}
 
@@ -40,25 +36,21 @@ then
 	printf "\providecommand{\\\version}{%s}" $(echo $CI_BUILD_REF | cut -c1-8) > version.tex
 fi
 
-for j in `seq 1 $ITERATIONS`;
-do
-	echo "Compiling for the $j time..."
+latexmk \
+	-cd \
+	-dvi- \
+	-f \
+	-jobname=$JOBNAME \
+	-outdir=$OUTDIR \
+	-pdf \
+	-ps- \
+	-time \
+	--synctex=${SYNCTEX} \
+	--interaction=${INTERACTION} \
+	-pdflatex='pdflatex %O "\def\dummy{} '${PREVIEW}' \input %S "' \
+	main
 
-	if [ "$j" == "2" ]
-	then
-		biber ${OUTDIR}/${JOBNAME}
-	fi
-
-	$COMPILER \
-		--interaction=${INTERACTION} \
-		-output-directory=${OUTDIR} \
-		-jobname=${JOBNAME} \
-		"\def\dummy{} ${PREVIEW} \input main.tex"
-done
-
-echo "Removing build files..."
-
-rm -f ${OUTDIR}/*.{aux,log,out,xwm,toc,lof,lot,bib,bbl,bcf,blg,xml}
+rm -f ${OUTDIR}/*.{aux,log,out,xwm,toc,lof,lot,bib,bbl,bcf,blg,xml,fls,fdb_latexmk}
 
 echo "Done."
 
