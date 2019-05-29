@@ -1,2 +1,13 @@
 {
+	"latex-workshop.latex.outDir": "./dist",
+	"latex-workshop.view.pdf.external.synctex": {
+		"command": "/Applications/Skim.app/Contents/SharedSupport/displayline",
+		"args": [
+			"-r",
+			"%LINE%",
+			"./dist/report.pdf",
+			"%TEX%"
+		]
+	},
+	"latex-workshop.view.pdf.viewer": "external"
 }

@@ -36,15 +36,9 @@ then
 	printf "\providecommand{\\\version}{%s}" $(echo $CI_BUILD_REF | cut -c1-8) > version.tex
 fi
 
-latexmk \
-	-cd \
-	-dvi- \
-	-f \
+latexmk -cd -dvi- -f -pdf -ps- -time \
 	-jobname=$JOBNAME \
 	-outdir=$OUTDIR \
-	-pdf \
-	-ps- \
-	-time \
 	--synctex=${SYNCTEX} \
 	--interaction=${INTERACTION} \
 	-pdflatex='pdflatex %O "\def\dummy{} '${PREVIEW}' \input %S "' \
