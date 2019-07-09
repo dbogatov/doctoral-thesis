@@ -33,7 +33,7 @@ fi
 
 echo ">>> Testing CSPELL..."
 
-docker run -it -v $(PWD):/code --entrypoint /bin/bash dbogatov/docker-images:cspell-latest -c "cd /code && cspell -c .vscode/cSpell.json document/**/*.tex document/*.tex"
+docker run -it -v $(pwd):/code --entrypoint /bin/bash dbogatov/docker-images:cspell-latest -c "cd /code && cspell -c .vscode/cSpell.json document/**/*.tex document/*.tex"
 
 if [[ $? != 0 ]];
 then
