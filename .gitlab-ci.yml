@@ -11,23 +11,27 @@ variables:
   # username is always "review" (without quotes)
 
 include:
+  # VARIABLES
+  - project: 'templates/ci-snippets'
+    file: 'latex-report/variables.yml'
+
   # BEFORE SCRIPT
   - project: 'templates/ci-snippets'
     file: 'variables.yml'
 
   # LINT
   - project: 'templates/ci-snippets'
-    file: 'latex-report/chktex.yml'
-  
+    file: 'latex/chktex.yml'
+
   - project: 'templates/ci-snippets'
-    file: 'latex-report/cspell.yml'
-    
+    file: 'latex/cspell.yml'
+
   - project: 'templates/ci-snippets'
     file: 'latex-report/metrics.yml'
-    
+
   # BUILD
   - project: 'templates/ci-snippets'
-    file: 'latex-report/build.yml'
+    file: 'latex/build.yml'
   
   # BUILD REVIEW
   - project: 'templates/ci-snippets'
@@ -42,7 +46,10 @@ include:
   
   # RELEASE
   - project: 'templates/ci-snippets'
-    file: 'latex-report/artifacts.yml'
+    file: 'latex/artifacts.yml'
+
+  - project: 'templates/ci-snippets'
+    file: 'latex/pages.yml'
 
 # ADJUSTMENTS
 
