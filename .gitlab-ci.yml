@@ -9,47 +9,59 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
+  CI_REF: &ref 29ad8d44a75cd3abcd172c6cc68dd6a2679480f0
 
 include:
   # VARIABLES
   - project: 'templates/ci-snippets'
     file: 'latex-report/variables.yml'
+    ref: *ref
 
   # BEFORE SCRIPT
   - project: 'templates/ci-snippets'
     file: 'variables.yml'
+    ref: *ref
 
   # LINT
   - project: 'templates/ci-snippets'
     file: 'latex/chktex.yml'
+    ref: *ref
 
   - project: 'templates/ci-snippets'
     file: 'latex/cspell.yml'
+    ref: *ref
 
   - project: 'templates/ci-snippets'
     file: 'latex-report/metrics.yml'
+    ref: *ref
 
   # BUILD
   - project: 'templates/ci-snippets'
     file: 'latex/build.yml'
+    ref: *ref
   
   # BUILD REVIEW
   - project: 'templates/ci-snippets'
     file: 'latex-review-apps/build-review.yml'
+    ref: *ref
   
   # REVIEW
   - project: 'templates/ci-snippets'
     file: 'latex-review-apps/review.yml'
+    ref: *ref
     
   - project: 'templates/ci-snippets'
     file: 'latex-review-apps/stop-review.yml'
+    ref: *ref
   
   # RELEASE
   - project: 'templates/ci-snippets'
     file: 'latex/artifacts.yml'
+    ref: *ref
 
   - project: 'templates/ci-snippets'
     file: 'latex/pages.yml'
+    ref: *ref
 
 # ADJUSTMENTS
 
