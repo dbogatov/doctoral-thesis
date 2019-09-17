@@ -1,6 +1,7 @@
 stages:
 - lint
 - build
+- test
 - build-review
 - review
 - release
@@ -38,6 +39,15 @@ include:
   # BUILD
   - project: 'templates/ci-snippets'
     file: 'latex/build.yml'
+    ref: *ref
+    
+  # TEST
+  - project: 'templates/ci-snippets'
+    file: 'latex-report/embedded-fonts.yml'
+    ref: *ref
+  
+  - project: 'templates/ci-snippets'
+    file: 'latex-report/check-links.yml'
     ref: *ref
   
   # BUILD REVIEW
