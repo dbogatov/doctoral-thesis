@@ -56,9 +56,9 @@ include:
     ref: *ref
   
   # REVIEW
-  - project: 'templates/ci-snippets'
-    file: 'latex-review-apps/review.yml'
-    ref: *ref
+  # - project: 'templates/ci-snippets'
+  #   file: 'latex-review-apps/review.yml'
+  #   ref: *ref
     
   - project: 'templates/ci-snippets'
     file: 'latex-review-apps/stop-review.yml'
@@ -104,8 +104,8 @@ review:
     name: review/$CI_BUILD_REF_NAME
     url: https://$CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
     on_stop: stop_review
-  only:
-    - branches
+  # only:
+  #   - branches
   tags:
   - docker
 
