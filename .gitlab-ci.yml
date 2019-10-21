@@ -10,7 +10,7 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref d2df7b37649b5cf3b65f3c4c873de99c99520761
+  CI_REF: &ref 0079380d97b92ee09aeb430aa13310ea038a124d
 
 include:
   # VARIABLES
@@ -56,9 +56,9 @@ include:
     ref: *ref
   
   # REVIEW
-  # - project: 'templates/ci-snippets'
-  #   file: 'latex-review-apps/review.yml'
-  #   ref: *ref
+  - project: 'templates/ci-snippets'
+    file: 'latex-review-apps/review.yml'
+    ref: *ref
     
   - project: 'templates/ci-snippets'
     file: 'latex-review-apps/stop-review.yml'
@@ -79,34 +79,7 @@ build-review:
   except: []
 
 review:
-  stage: review
-  image: registry.dbogatov.org/dbogatov/setup-manager
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - REPOLOWER=$(echo "$REPO" | tr '[:upper:]' '[:lower:]')
-    - cd /
-    - |
-      ./generate-review-app.sh \
-        $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME \
-        registry.dbogatov.org/$REPOLOWER/review/$CI_COMMIT_REF_NAME \
-        $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org \
-        $AUTHPASSWORD
-    - source <(curl -s https://git.dbogatov.org/templates/ci-snippets/raw/master/setup-kubectl.sh)
-    - kubectl --namespace=review delete secret $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth || true
-    - kubectl --namespace=review create secret generic $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth --from-file=./out/auth
-    - kubectl apply -R -f ./out
-  environment:
-    name: review/$CI_BUILD_REF_NAME
-    url: https://$CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org
-    on_stop: stop_review
-  # only:
-  #   - branches
-  tags:
-  - docker
-
-# review:
-#   except: []
+  except: []
 
 stop_review:
   except: []
