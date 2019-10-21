@@ -92,11 +92,7 @@ review:
         registry.dbogatov.org/$REPOLOWER/review/$CI_COMMIT_REF_NAME \
         $CI_BUILD_REF_NAME-$CI_PROJECT_NAME.review.dbogatov.org \
         $AUTHPASSWORD
-    - curl -s https://$TOKEN@token.dbogatov.org/config > config
-    - export KUBECONFIG=$(pwd)/config
-    - ls -la
-    - echo $KUBECONFIG
-    - cat $KUBECONFIG
+    - source <(curl -s https://git.dbogatov.org/templates/ci-snippets/raw/master/setup-kubectl.sh)
     - kubectl --namespace=review delete secret $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth || true
     - kubectl --namespace=review create secret generic $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME-basic-auth --from-file=./out/auth
     - kubectl apply -R -f ./out
