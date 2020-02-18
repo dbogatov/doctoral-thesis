@@ -28,7 +28,7 @@ while getopts "o" o; do
 done
 shift $((OPTIND-1))
 
-rm -rf ${OUTDIR}
+rm -rf ${OUTDIR}/*
 mkdir -p ${OUTDIR}
 
 if [ -n "$CI_BUILD_REF" ];

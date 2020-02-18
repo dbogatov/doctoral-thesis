@@ -1,2 +1,4 @@
-document/dist/
+document/dist/*
+!document/dist/.gitkeep
+
 chktex*
