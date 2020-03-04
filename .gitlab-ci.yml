@@ -87,6 +87,8 @@ variables:
 artifacts:
   image: dbogatov/docker-images:alpine-extras-latest
   stage: build
+  variables:
+    GIT_STRATEGY: none
   script:
     - echo "Hey"
     # - mv $LATEX_DIST/*.pdf .
@@ -98,6 +100,7 @@ artifacts:
     - echo $CI_JOB_NAME
     - |
       curl --globoff -Ls --header "PRIVATE-TOKEN: $PAT" https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs?scope[]=success&per_page=100 > json.json
+    - cat json.json
     - |
       cat json.json | jq 'map(select( .ref == '\"$CI_COMMIT_REF_NAME\"' and .name == '\"$CI_JOB_NAME\"' )) | sort_by( .finished_at ) | reverse | if length > 0 then .[0] | .id else -1 end'
     - |
