@@ -75,14 +75,14 @@ variables:
 
 # ADJUSTMENTS
 
-build-review:
-  except: []
+# build-review:
+#   except: []
 
-review:
-  except: []
+# review:
+#   except: []
 
-stop_review:
-  except: []
+# stop_review:
+#   except: []
 
 artifacts:
   image: dbogatov/docker-images:alpine-extras-latest
