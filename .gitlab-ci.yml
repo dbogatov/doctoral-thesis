@@ -1,76 +1,89 @@
 stages:
-- lint
-- build
-- test
-- build-review
-- review
-- release
+  - lint
+  - build
+  - test
+  - build-review
+  - review
+  - release
 
 # CHANGE ME!
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref 0079380d97b92ee09aeb430aa13310ea038a124d
+  CI_REF: &ref be644cc6c3fcf6c3b4f7b7a211466df8baf3170a
 
 include:
   # VARIABLES
-  - project: 'templates/ci-snippets'
-    file: 'latex-report/variables.yml'
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/variables.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/variables.yml"
     ref: *ref
 
   # BEFORE SCRIPT
-  - project: 'templates/ci-snippets'
-    file: 'variables.yml'
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/variables.yml
+  - project: "templates/ci-snippets"
+    file: "variables.yml"
     ref: *ref
 
   # LINT
-  - project: 'templates/ci-snippets'
-    file: 'latex/chktex.yml'
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/chktex.yml
+  - project: "templates/ci-snippets"
+    file: "latex/chktex.yml"
     ref: *ref
 
-  - project: 'templates/ci-snippets'
-    file: 'latex/cspell.yml'
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/cspell.yml
+  - project: "templates/ci-snippets"
+    file: "latex/cspell.yml"
     ref: *ref
 
-  - project: 'templates/ci-snippets'
-    file: 'latex-report/metrics.yml'
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/metrics.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/metrics.yml"
     ref: *ref
 
   # BUILD
-  - project: 'templates/ci-snippets'
-    file: 'latex/build.yml'
-    ref: *ref
-    
-  # TEST
-  - project: 'templates/ci-snippets'
-    file: 'latex-report/embedded-fonts.yml'
-    ref: *ref
-  
-  - project: 'templates/ci-snippets'
-    file: 'latex-report/check-links.yml'
-    ref: *ref
-  
-  # BUILD REVIEW
-  - project: 'templates/ci-snippets'
-    file: 'latex-review-apps/build-review.yml'
-    ref: *ref
-  
-  # REVIEW
-  - project: 'templates/ci-snippets'
-    file: 'latex-review-apps/review.yml'
-    ref: *ref
-    
-  - project: 'templates/ci-snippets'
-    file: 'latex-review-apps/stop-review.yml'
-    ref: *ref
-  
-  # RELEASE
-  - project: 'templates/ci-snippets'
-    file: 'latex/artifacts.yml'
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/build.yml
+  - project: "templates/ci-snippets"
+    file: "latex/build.yml"
     ref: *ref
 
-  - project: 'templates/ci-snippets'
-    file: 'latex/pages.yml'
+  # TEST
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/embedded-fonts.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/embedded-fonts.yml"
+    ref: *ref
+
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/check-links.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/check-links.yml"
+    ref: *ref
+
+  # BUILD REVIEW
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/build-review.yml
+  - project: "templates/ci-snippets"
+    file: "latex-review-apps/build-review.yml"
+    ref: *ref
+
+  # REVIEW
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/review.yml
+  - project: "templates/ci-snippets"
+    file: "latex-review-apps/review.yml"
+    ref: *ref
+
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/stop-review.yml
+  - project: "templates/ci-snippets"
+    file: "latex-review-apps/stop-review.yml"
+    ref: *ref
+
+  # RELEASE
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/artifacts.yml
+  - project: "templates/ci-snippets"
+    file: "latex/artifacts.yml"
+    ref: *ref
+
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/pages.yml
+  - project: "templates/ci-snippets"
+    file: "latex/pages.yml"
     ref: *ref
 
 # ADJUSTMENTS
@@ -83,3 +96,14 @@ review:
 
 stop_review:
   except: []
+
+# Uncomment to enable deletion of artifacts of previous jobs
+# artifacts:
+#   artifacts:
+#     expire_in: 1 yrs
+#   after_script:
+#     - |
+#       JOB_ID=$(curl --globoff -Ls --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs?scope[]=success&per_page=100" | jq 'map(select( .ref == '\"$CI_COMMIT_REF_NAME\"' and .name == '\"$CI_JOB_NAME\"' )) | sort_by( .finished_at ) | reverse | if length > 0 then .[0] | .id else -1 end')
+#     - echo "Going to delete artifacts from job $JOB_ID"
+#     - |
+#       curl -s --request DELETE --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs/$JOB_ID/artifacts"
