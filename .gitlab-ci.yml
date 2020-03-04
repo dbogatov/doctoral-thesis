@@ -86,7 +86,7 @@ variables:
 
 artifacts:
   image: dbogatov/docker-images:alpine-extras-latest
-  stage: .pre
+  stage: build
   script:
     - echo "Hey"
     # - mv $LATEX_DIST/*.pdf .
