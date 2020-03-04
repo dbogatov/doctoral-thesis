@@ -10,99 +10,84 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref 0079380d97b92ee09aeb430aa13310ea038a124d
+  CI_REF: &ref 5756dc43fbf9d599f5840b862f8736000591f475
 
-# include:
-#   # VARIABLES
-#   - project: 'templates/ci-snippets'
-#     file: 'latex-report/variables.yml'
-#     ref: *ref
+include:
+  # VARIABLES
+  - project: 'templates/ci-snippets'
+    file: 'latex-report/variables.yml'
+    ref: *ref
 
-#   # BEFORE SCRIPT
-#   - project: 'templates/ci-snippets'
-#     file: 'variables.yml'
-#     ref: *ref
+  # BEFORE SCRIPT
+  - project: 'templates/ci-snippets'
+    file: 'variables.yml'
+    ref: *ref
 
-#   # LINT
-#   - project: 'templates/ci-snippets'
-#     file: 'latex/chktex.yml'
-#     ref: *ref
+  # LINT
+  - project: 'templates/ci-snippets'
+    file: 'latex/chktex.yml'
+    ref: *ref
 
-#   - project: 'templates/ci-snippets'
-#     file: 'latex/cspell.yml'
-#     ref: *ref
+  - project: 'templates/ci-snippets'
+    file: 'latex/cspell.yml'
+    ref: *ref
 
-#   - project: 'templates/ci-snippets'
-#     file: 'latex-report/metrics.yml'
-#     ref: *ref
+  - project: 'templates/ci-snippets'
+    file: 'latex-report/metrics.yml'
+    ref: *ref
 
-#   # BUILD
-#   - project: 'templates/ci-snippets'
-#     file: 'latex/build.yml'
-#     ref: *ref
+  # BUILD
+  - project: 'templates/ci-snippets'
+    file: 'latex/build.yml'
+    ref: *ref
 
-#   # TEST
-#   - project: 'templates/ci-snippets'
-#     file: 'latex-report/embedded-fonts.yml'
-#     ref: *ref
+  # TEST
+  - project: 'templates/ci-snippets'
+    file: 'latex-report/embedded-fonts.yml'
+    ref: *ref
 
-#   - project: 'templates/ci-snippets'
-#     file: 'latex-report/check-links.yml'
-#     ref: *ref
+  - project: 'templates/ci-snippets'
+    file: 'latex-report/check-links.yml'
+    ref: *ref
 
-#   # BUILD REVIEW
-#   - project: 'templates/ci-snippets'
-#     file: 'latex-review-apps/build-review.yml'
-#     ref: *ref
+  # BUILD REVIEW
+  - project: 'templates/ci-snippets'
+    file: 'latex-review-apps/build-review.yml'
+    ref: *ref
 
-#   # REVIEW
-#   - project: 'templates/ci-snippets'
-#     file: 'latex-review-apps/review.yml'
-#     ref: *ref
+  # REVIEW
+  - project: 'templates/ci-snippets'
+    file: 'latex-review-apps/review.yml'
+    ref: *ref
 
-#   - project: 'templates/ci-snippets'
-#     file: 'latex-review-apps/stop-review.yml'
-#     ref: *ref
+  - project: 'templates/ci-snippets'
+    file: 'latex-review-apps/stop-review.yml'
+    ref: *ref
 
-#   # RELEASE
-#   - project: 'templates/ci-snippets'
-#     file: 'latex/artifacts.yml'
-#     ref: *ref
+  # RELEASE
+  - project: 'templates/ci-snippets'
+    file: 'latex/artifacts.yml'
+    ref: *ref
 
-#   - project: 'templates/ci-snippets'
-#     file: 'latex/pages.yml'
-#     ref: *ref
+  - project: 'templates/ci-snippets'
+    file: 'latex/pages.yml'
+    ref: *ref
 
 # ADJUSTMENTS
 
-# build-review:
-#   except: []
+build-review:
+  except: []
 
-# review:
-#   except: []
+review:
+  except: []
 
-# stop_review:
-#   except: []
+stop_review:
+  except: []
 
 artifacts:
-  image: dbogatov/docker-images:alpine-extras-latest
-  stage: build
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - echo "Hey" > lol.txt
-    # - mv $LATEX_DIST/*.pdf .
   after_script:
-    - apk add --update jq
     - |
       JOB_ID=$(curl --globoff -Ls --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs?scope[]=success&per_page=100" | jq 'map(select( .ref == '\"$CI_COMMIT_REF_NAME\"' and .name == '\"$CI_JOB_NAME\"' )) | sort_by( .finished_at ) | reverse | if length > 0 then .[0] | .id else -1 end')
-    - echo $JOB_ID
+    - echo "Going to delete artifacts from job $JOB_ID"
     - |
       curl -s --request DELETE --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs/$JOB_ID/artifacts"
-  # dependencies:
-  #   - build
-  artifacts:
-    paths:
-      - lol.txt
-  tags:
-    - docker
