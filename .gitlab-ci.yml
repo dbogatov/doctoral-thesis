@@ -19,12 +19,6 @@ include:
     file: "latex-report/variables.yml"
     ref: *ref
 
-  # BEFORE SCRIPT
-  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/variables.yml
-  - project: "templates/ci-snippets"
-    file: "variables.yml"
-    ref: *ref
-
   # LINT
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/chktex.yml
   - project: "templates/ci-snippets"
