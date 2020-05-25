@@ -117,8 +117,7 @@ metrics:
       metrics: metrics.txt
   rules:
     - when: on_success
-    - if: |
-        $USE_METRICS == "false"
+    - if: $NOT_USE_METRICS != null
       when: manual
       allow_failure: true
   tags:
