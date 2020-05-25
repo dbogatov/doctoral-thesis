@@ -116,9 +116,9 @@ metrics:
     reports:
       metrics: metrics.txt
   rules:
-    - when: on_success
     - if: $NOT_USE_METRICS != null
       when: manual
       allow_failure: true
+    - when: on_success
   tags:
     - docker
