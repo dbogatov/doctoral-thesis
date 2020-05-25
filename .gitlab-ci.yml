@@ -31,9 +31,9 @@ include:
     ref: *ref
 
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/metrics.yml
-  # - project: "templates/ci-snippets"
-  #   file: "latex-report/metrics.yml"
-  #   ref: *ref
+  - project: "templates/ci-snippets"
+    file: "latex-report/metrics.yml"
+    ref: *ref
 
   # BUILD
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/build.yml
@@ -100,25 +100,3 @@ stop_review:
 #     - echo "Going to delete artifacts from job $JOB_ID"
 #     - |
 #       curl -s --request DELETE --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs/$JOB_ID/artifacts"
-
-metrics:
-  image: dbogatov/docker-images:text-metrics-latest
-  stage: lint
-  script:
-    - echo $USE_METRICS
-    - cd document
-    - pandoc --from latex --to plain -o ../as-text.txt main.tex
-    - cd ..
-    - textstat=$(/text-stat.py $(pwd)/as-text.txt)
-    - echo "text-score $textstat" > metrics.txt
-    - curl -s https://git.dbogatov.org/templates/ci-snippets/raw/master/post-badge.sh | bash /dev/stdin readability readability "$textstat grade" blue $CI_PAGES_URL
-  artifacts:
-    reports:
-      metrics: metrics.txt
-  rules:
-    - if: $NOT_USE_METRICS != null
-      when: manual
-      allow_failure: true
-    - when: on_success
-  tags:
-    - docker
