@@ -11,28 +11,19 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref c57be2460846b995a5a11ccee5765e3c248774e0
-
-merge-from-overleaf:
-  stage: sync
-  script:
-    - git remote add overleaf https://$OVERLEAF_EMAIL:$OVERLEAF_PASS@git.overleaf.com/$OVERLEAF_REPO || true
-    - git remote add origin2 "https://gitlab-ci-token:$PAT@$CI_SERVER_HOST/$CI_PROJECT_PATH.git" || true
-    - git pull overleaf $CI_COMMIT_BRANCH
-    - git push origin2 HEAD:$CI_COMMIT_BRANCH
-  rules:
-    - if: |
-        $OVERLEAF_REPO && $CI_COMMIT_BRANCH == "master"
-      when: on_success
-    - when: never
-  tags:
-    - shell
+  CI_REF: &ref 3be0fd22ba8b09c79b7d3b98ead71ec3d4778315
 
 include:
   # VARIABLES
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/variables.yml
   - project: "templates/ci-snippets"
     file: "latex-report/variables.yml"
+    ref: *ref
+
+  # SYNC
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/merge-from-overleaf.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/merge-from-overleaf.yml"
     ref: *ref
 
   # LINT
