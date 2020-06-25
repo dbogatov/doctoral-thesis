@@ -1,4 +1,5 @@
 stages:
+  - sync
   - lint
   - build
   - test
@@ -13,7 +14,7 @@ variables:
   CI_REF: &ref c57be2460846b995a5a11ccee5765e3c248774e0
 
 merge-from-overleaf:
-  stage: .pre
+  stage: sync
   script:
     - git remote add overleaf https://$OVERLEAF_EMAIL:$OVERLEAF_PASS@git.overleaf.com/$OVERLEAF_REPO || true
     - git remote add origin2 "https://gitlab-ci-token:$PAT@$CI_SERVER_HOST/$CI_PROJECT_PATH.git" || true
