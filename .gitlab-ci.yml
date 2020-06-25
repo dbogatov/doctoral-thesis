@@ -17,7 +17,7 @@ merge-from-overleaf:
   stage: .pre
   script:
     - git remote add overleaf https://$OVERLEAF_EMAIL:$OVERLEAF_PASS@git.overleaf.com/$OVERLEAF_REPO || true
-    - git remote add origin2 "https://gitlab-ci-token:$PAT@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
+    - git remote add origin2 "https://gitlab-ci-token:$PAT@$CI_SERVER_HOST/$CI_PROJECT_PATH.git" || true
     - git pull overleaf $CI_COMMIT_BRANCH
     - git push origin2 HEAD:$CI_COMMIT_BRANCH
   rules:
