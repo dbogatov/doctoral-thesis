@@ -98,6 +98,12 @@ include:
 
 # ADJUSTMENTS
 
+chktex:
+  rules:
+    - if: "$DISABLE_REGULAR_PIPELINE"
+      when: never
+    - when: on_success
+
 build-review:
   except: []
 
