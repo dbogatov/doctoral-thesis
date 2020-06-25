@@ -13,7 +13,6 @@ variables:
   CI_REF: &ref c57be2460846b995a5a11ccee5765e3c248774e0
 
 merge-from-overleaf:
-  image: dbogatov/docker-sources:alpine--git
   stage: .pre
   script:
     - git remote add overleaf https://$OVERLEAF_EMAIL:$OVERLEAF_PASS@git.overleaf.com/$OVERLEAF_REPO || true
@@ -26,7 +25,7 @@ merge-from-overleaf:
       when: on_success
     - when: never
   tags:
-    - docker
+    - shell
 
 include:
   # VARIABLES
@@ -95,7 +94,6 @@ include:
   - project: "templates/ci-snippets"
     file: "latex/pages.yml"
     ref: *ref
-
 # Uncomment to enable deletion of artifacts of previous jobs
 # artifacts:
 #   artifacts:
