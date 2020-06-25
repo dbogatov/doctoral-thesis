@@ -12,6 +12,22 @@ variables:
   # username is always "review" (without quotes)
   CI_REF: &ref 6f38f54d7fffce551e4466df81b6bd9fb146467c
 
+merge-from-overleaf:
+  image: alpine/git # TODO mirror
+  stage: .pre
+  script:
+    - git remote add overleaf https://$OVERLEAF_EMAIL:$OVERLEAF_PASS@git.overleaf.com/$OVERLEAF_REPO
+    - git remote set-url origin "https://gitlab-ci-token:$PAT@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
+    - git pull overleaf $CI_COMMIT_BRANCH
+    - git push origin $CI_COMMIT_BRANCH
+  rules:
+    - if: |
+        $OVERLEAF_REPO && $CI_COMMIT_BRANCH == "master"
+      when: on_success
+    - when: never
+  tags:
+    - shell
+
 include:
   # VARIABLES
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/variables.yml
