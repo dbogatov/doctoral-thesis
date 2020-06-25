@@ -16,7 +16,7 @@ merge-from-overleaf:
   image: alpine/git # TODO mirror
   stage: .pre
   script:
-    - git remote add overleaf https://$OVERLEAF_EMAIL:$OVERLEAF_PASS@git.overleaf.com/$OVERLEAF_REPO
+    - git remote add overleaf https://$OVERLEAF_EMAIL:$OVERLEAF_PASS@git.overleaf.com/$OVERLEAF_REPO || true
     - git remote set-url origin "https://gitlab-ci-token:$PAT@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
     - git pull overleaf $CI_COMMIT_BRANCH
     - git push origin $CI_COMMIT_BRANCH
