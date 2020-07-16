@@ -11,7 +11,7 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref 3be0fd22ba8b09c79b7d3b98ead71ec3d4778315
+  CI_REF: &ref f291cf61d3e45b1f11739fd572a0e0b33bd1302d
 
 include:
   # VARIABLES

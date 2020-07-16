@@ -7,6 +7,8 @@ The up-to-date version of the paper is built in CI and resides as artifact.
 ## How to compile
 
 ```bash
-bash ./document/build.sh # to compile "for release"
+bash ./document/build.sh # to compile
 open ./document/dist/*.pdf # to open
 ```
+
+If using with Overleaf, it suggested to run `git config core.fileMode false`.
