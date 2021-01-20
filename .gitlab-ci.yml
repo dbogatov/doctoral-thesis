@@ -95,15 +95,15 @@ build:
   script:
     - IFS='|' read -r -a args <<< "$BUILD_ARGS"
     - |
-      for index in "${!args[@]}"
+      for arg in "${args[@]}"
       do
-          echo "$index ${args[index]}"
+          echo Building for "build.sh $arg"
+          bash ./$LATEX_BUILD/build.sh $arg
       done
-    # - bash ./$LATEX_BUILD/build.sh
-    # - PAGES=$(wget -q -O - https://git.dbogatov.org/templates/ci-snippets/raw/master/page-count.sh | bash /dev/stdin ${PWD}/$LATEX_DIST/)
-    # - |
-    #   echo "Max pages: $PAGES"
-    # - echo "PAGES_COUNT=$PAGES" >> pages-count.env
+    - PAGES=$(wget -q -O - https://git.dbogatov.org/templates/ci-snippets/raw/master/page-count.sh | bash /dev/stdin ${PWD}/$LATEX_DIST/)
+    - |
+      echo "Max pages: $PAGES"
+    - echo "PAGES_COUNT=$PAGES" >> pages-count.env
   artifacts:
     expire_in: 30 min
     paths:
