@@ -11,8 +11,8 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref f291cf61d3e45b1f11739fd572a0e0b33bd1302d
-  # BUILD_ARGS: " | -d "
+  CI_REF: &ref d81b5fb5d46ea3641a0a0a9595a9f4e8f6021a68
+  BUILD_ARGS: " | -d "
 
 include:
   # VARIABLES
@@ -21,102 +21,72 @@ include:
     file: "latex-report/variables.yml"
     ref: *ref
 
-#   # SYNC
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/merge-from-overleaf.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-report/merge-from-overleaf.yml"
-#     ref: *ref
+  # SYNC
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/merge-from-overleaf.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/merge-from-overleaf.yml"
+    ref: *ref
 
-#   # LINT
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/chktex.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex/chktex.yml"
-#     ref: *ref
+  # LINT
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/chktex.yml
+  - project: "templates/ci-snippets"
+    file: "latex/chktex.yml"
+    ref: *ref
 
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/cspell.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex/cspell.yml"
-#     ref: *ref
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/cspell.yml
+  - project: "templates/ci-snippets"
+    file: "latex/cspell.yml"
+    ref: *ref
 
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/metrics.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-report/metrics.yml"
-#     ref: *ref
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/metrics.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/metrics.yml"
+    ref: *ref
 
-#   # BUILD
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/build.yml
-#   # - project: "templates/ci-snippets"
-#   #   file: "latex/build.yml"
-#   #   ref: *ref
+  # BUILD
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/build.yml
+  - project: "templates/ci-snippets"
+    file: "latex/build.yml"
+    ref: *ref
 
-#   # TEST
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/embedded-fonts.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-report/embedded-fonts.yml"
-#     ref: *ref
+  # TEST
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/embedded-fonts.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/embedded-fonts.yml"
+    ref: *ref
 
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/check-links.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-report/check-links.yml"
-#     ref: *ref
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/check-links.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/check-links.yml"
+    ref: *ref
 
-#   # BUILD REVIEW
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/build-review.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-review-apps/build-review.yml"
-#     ref: *ref
+  # BUILD REVIEW
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/build-review.yml
+  - project: "templates/ci-snippets"
+    file: "latex-review-apps/build-review.yml"
+    ref: *ref
 
-#   # REVIEW
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/review.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-review-apps/review.yml"
-#     ref: *ref
+  # REVIEW
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/review.yml
+  - project: "templates/ci-snippets"
+    file: "latex-review-apps/review.yml"
+    ref: *ref
 
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/stop-review.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-review-apps/stop-review.yml"
-#     ref: *ref
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/stop-review.yml
+  - project: "templates/ci-snippets"
+    file: "latex-review-apps/stop-review.yml"
+    ref: *ref
 
-#   # RELEASE
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/artifacts.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex/artifacts.yml"
-#     ref: *ref
+  # RELEASE
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/artifacts.yml
+  - project: "templates/ci-snippets"
+    file: "latex/artifacts.yml"
+    ref: *ref
 
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/pages.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex/pages.yml"
-#     ref: *ref
-
-build:
-  image: dbogatov/docker-images:latex-latest
-  stage: build
-  variables:
-    BUILD_ARGS: " "
-  script:
-    - IFS='|' read -r -a args <<< "$BUILD_ARGS"
-    - |
-      for arg in "${args[@]}"
-      do
-          echo Building for "build.sh $arg"
-          bash ./$LATEX_BUILD/build.sh $arg
-      done
-    - PAGES=$(wget -q -O - https://git.dbogatov.org/templates/ci-snippets/raw/master/page-count.sh | bash /dev/stdin ${PWD}/$LATEX_DIST/)
-    - |
-      echo "Max pages: $PAGES"
-    - echo "PAGES_COUNT=$PAGES" >> pages-count.env
-  artifacts:
-    expire_in: 30 min
-    paths:
-      - "$LATEX_DIST/*.pdf"
-    reports:
-      dotenv: pages-count.env
-  rules:
-    - if: "$DISABLE_REGULAR_PIPELINE"
-      when: never
-    - when: on_success
-  tags:
-    - docker
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/pages.yml
+  - project: "templates/ci-snippets"
+    file: "latex/pages.yml"
+    ref: *ref
 
 # Uncomment to enable deletion of artifacts of previous jobs
 # artifacts:
