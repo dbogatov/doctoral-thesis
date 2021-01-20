@@ -92,7 +92,7 @@ build:
   image: dbogatov/docker-images:latex-latest
   stage: build
   variables:
-    BUILD_ARGS: ""
+    BUILD_ARGS: " "
   script:
     - IFS='|' read -r -a args <<< "$BUILD_ARGS"
     - |
