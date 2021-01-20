@@ -13,12 +13,12 @@ variables:
   # username is always "review" (without quotes)
   CI_REF: &ref f291cf61d3e45b1f11739fd572a0e0b33bd1302d
 
-# include:
-#   # VARIABLES
-#   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/variables.yml
-#   - project: "templates/ci-snippets"
-#     file: "latex-report/variables.yml"
-#     ref: *ref
+include:
+  # VARIABLES
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/variables.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/variables.yml"
+    ref: *ref
 
 #   # SYNC
 #   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/merge-from-overleaf.yml
