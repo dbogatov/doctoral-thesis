@@ -1,4 +1,6 @@
 document/dist/*
 !document/dist/.gitkeep
 
+*-pdf-converted-to*
+
 chktex*
