@@ -94,7 +94,6 @@ check-links:
   variables:
     BLC_EXCLUDE: ""
   script:
-    - touch junit-report.xml # if no links in PDF file, then no junit report
     - /checker.py $LATEX_DIST/*.pdf > links.txt
     - bli inspect file://links.txt -t 30000 --reporters console,junit --ignore-skipped $BLC_EXCLUDE
   dependencies:
