@@ -98,9 +98,9 @@ check-links:
     - bli inspect file://links.txt -t 30000 --reporters console,junit --ignore-skipped $BLC_EXCLUDE
   dependencies:
     - build
-  artifacts:
-    reports:
-      junit: junit-report.xml
+  # artifacts:
+  #   reports:
+  #     junit: junit-report.xml
   rules:
     - if: "$DISABLE_REGULAR_PIPELINE"
       when: never
