@@ -95,7 +95,6 @@ check-links:
     BLC_EXCLUDE: ""
   script:
     - /checker.py $LATEX_DIST/*.pdf > links.txt
-    - bli --version
     - bli inspect file://links.txt -t 30000 --reporters console,junit --ignore-skipped $BLC_EXCLUDE
   dependencies:
     - build
