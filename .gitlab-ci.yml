@@ -56,9 +56,9 @@ include:
     ref: *ref
 
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/check-links.yml
-  - project: "templates/ci-snippets"
-    file: "latex-report/check-links.yml"
-    ref: *ref
+  # - project: "templates/ci-snippets"
+  #   file: "latex-report/check-links.yml"
+  #   ref: *ref
 
   # BUILD REVIEW
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-review-apps/build-review.yml
@@ -87,6 +87,27 @@ include:
   - project: "templates/ci-snippets"
     file: "latex/pages.yml"
     ref: *ref
+
+check-links:
+  image: dbogatov/docker-images:pdf-link-checker-latest
+  stage: test
+  variables:
+    BLC_EXCLUDE: ""
+  script:
+    - /checker.py $LATEX_DIST/*.pdf > links.txt
+    - bli inspect file://links.txt -t 30000 --reporters console,junit --ignore-skipped $BLC_EXCLUDE
+  dependencies:
+    - build
+  artifacts:
+    reports:
+      junit: junit-report.xml
+  rules:
+    - if: "$DISABLE_REGULAR_PIPELINE"
+      when: never
+    - when: on_success
+  tags:
+    - docker
+
 
 # Uncomment to enable deletion of artifacts of previous jobs
 # artifacts:
