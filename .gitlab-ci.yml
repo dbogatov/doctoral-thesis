@@ -33,10 +33,10 @@ include:
     file: "latex/chktex.yml"
     ref: *ref
 
-  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/cspell.yml
-  - project: "templates/ci-snippets"
-    file: "latex/cspell.yml"
-    ref: *ref
+  # # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/cspell.yml
+  # - project: "templates/ci-snippets"
+  #   file: "latex/cspell.yml"
+  #   ref: *ref
 
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/metrics.yml
   - project: "templates/ci-snippets"
@@ -99,3 +99,27 @@ include:
 #     - echo "Going to delete artifacts from job $JOB_ID"
 #     - |
 #       curl -s --request DELETE --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs/$JOB_ID/artifacts"
+
+cspell:
+  image: dbogatov/docker-images:cspell-latest
+  stage: lint
+  script:
+    - cspell -c .vscode/cSpell.json $LATEX_SRC/**/*.tex $LATEX_SRC/*.tex *.tex
+    - |
+      for character in " ̈" "„" "“" "–"
+      do
+        echo ">>>> Checking $character "
+        ! grep -n $character $LATEX_SRC/**/*.tex $LATEX_SRC/*.tex
+
+        if [[ $? != 0 ]];
+        then
+          echo ">>> FAIL"
+          exit 1
+        fi
+      done
+  rules:
+    - if: "$DISABLE_REGULAR_PIPELINE"
+      when: never
+    - when: on_success
+  tags:
+    - docker
