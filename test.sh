@@ -23,13 +23,17 @@ fi
 
 echo ">>> Testing special characters..."
 
-! grep " ̈" document/**/*.tex document/*.tex
+for character in " ̈" "„" "“" "–"
+do
+	echo ">>>> Checking $character "
+	! grep -n $character document/**/*.tex document/*.tex
 
-if [[ $? != 0 ]];
-then
-	echo ">>> FAIL"
-	exit 1
-fi
+	if [[ $? != 0 ]];
+	then
+		echo ">>> FAIL"
+		exit 1
+	fi
+done
 
 echo ">>> Testing CSPELL..."
 
