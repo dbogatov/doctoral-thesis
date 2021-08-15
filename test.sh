@@ -23,7 +23,7 @@ fi
 
 echo ">>> Testing special characters..."
 
-for character in " ̈" "„" "“" "–"
+for character in " ̈" "„" "“" "–" "’"
 do
 	echo ">>>> Checking $character "
 	! grep -n $character document/**/*.tex document/*.tex
