@@ -26,7 +26,7 @@ echo ">>> Testing special characters..."
 for character in " ̈" "„" "“" "–" "’"
 do
 	echo ">>>> Checking $character "
-	! grep -n $character document/**/*.tex document/*.tex
+	! grep -n $character document/**/*.tex document/*.tex document/*.bib
 
 	if [[ $? != 0 ]];
 	then

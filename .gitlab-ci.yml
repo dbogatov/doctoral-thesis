@@ -11,7 +11,7 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref 2d782be464b01739f1de49edb7f91ffbf481d592
+  CI_REF: &ref 3966e06924895e984fcb56c0789268f77d6b3635
   BUILD_ARGS: " | -d "
 
 include:
@@ -33,10 +33,10 @@ include:
     file: "latex/chktex.yml"
     ref: *ref
 
-  # # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/cspell.yml
-  # - project: "templates/ci-snippets"
-  #   file: "latex/cspell.yml"
-  #   ref: *ref
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/cspell.yml
+  - project: "templates/ci-snippets"
+    file: "latex/cspell.yml"
+    ref: *ref
 
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/metrics.yml
   - project: "templates/ci-snippets"
@@ -87,31 +87,6 @@ include:
   - project: "templates/ci-snippets"
     file: "latex/pages.yml"
     ref: *ref
-
-cspell:
-  image: dbogatov/docker-images:cspell-latest
-  stage: lint
-  script:
-    - cspell -c .vscode/cSpell.json $LATEX_SRC/**/*.tex $LATEX_SRC/*.tex *.tex
-    - |
-      for character in " ̈" "„" "“" "–" "’"
-      do
-        echo ">>>> Checking $character "
-        ! grep -n $character $LATEX_SRC/**/*.tex $LATEX_SRC/*.tex $LATEX_SRC/*.bib
-
-        if [[ $? != 0 ]];
-        then
-          echo ">>> FAIL"
-          exit 1
-        fi
-      done
-  rules:
-    - if: "$DISABLE_REGULAR_PIPELINE"
-      when: never
-    - when: on_success
-  tags:
-    - docker
-
 
 # Uncomment to enable deletion of artifacts of previous jobs
 # artifacts:
