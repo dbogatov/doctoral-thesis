@@ -11,7 +11,7 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref e22b6598661e68740041539bc6d640c59371aaef
+  CI_REF: &ref a5f020a655453149d99aebce9825cc93114eb233
   BUILD_ARGS: " | -d "
 
 include:
@@ -108,19 +108,42 @@ build:
       do
           echo Building for "build.sh $arg"
           bash ./$LATEX_BUILD/build.sh $arg
+          cp $LATEX_DIST/*.bbl .
       done
     - PAGES=$(wget -q -O - https://git.dbogatov.org/templates/ci-snippets/raw/master/page-count.sh | bash /dev/stdin ${PWD}/$LATEX_DIST/)
     - |
       echo "Max pages: $PAGES"
     - echo "PAGES_COUNT=$PAGES" >> pages-count.env
-    - cp $LATEX_DIST/*.bbl .
   artifacts:
     expire_in: 30 min
     paths:
       - "$LATEX_DIST/*.pdf"
-      - "*.bbl"
+      - $LATEX_DEFAULT_JOB.bbl
     reports:
       dotenv: pages-count.env
+  rules:
+    - if: "$DISABLE_REGULAR_PIPELINE"
+      when: never
+    - when: on_success
+  tags:
+    - docker
+
+export-arxiv:
+  stage: release
+  image: dbogatov/docker-images:alpine-extras-latest
+  variables:
+    EXPORT_DIR: export-arxiv
+  script:
+    - rm -rf $LATEX_DIST
+    - mkdir $EXPORT_DIR
+    - cp -r $LATEX_SRC/* $EXPORT_DIR
+    - cp $LATEX_DEFAULT_JOB.bbl $EXPORT_DIR/
+    - zip -r $EXPORT_DIR.zip $EXPORT_DIR
+  dependencies:
+    - build
+  artifacts:
+    paths:
+      - $EXPORT_DIR.zip
   rules:
     - if: "$DISABLE_REGULAR_PIPELINE"
       when: never
