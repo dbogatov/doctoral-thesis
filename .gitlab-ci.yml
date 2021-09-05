@@ -137,7 +137,7 @@ export-arxiv:
     - rm -rf $LATEX_DIST
     - mkdir $EXPORT_DIR
     - cp -r $LATEX_SRC/* $EXPORT_DIR
-    - cp $LATEX_DEFAULT_JOB.bbl $EXPORT_DIR/
+    - cp $LATEX_DEFAULT_JOB.bbl $EXPORT_DIR/main.bbl
     - zip -r $EXPORT_DIR.zip $EXPORT_DIR
   dependencies:
     - build
