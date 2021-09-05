@@ -49,10 +49,10 @@ include:
     ref: *ref
 
   # BUILD
-  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/build.yml
-  - project: "templates/ci-snippets"
-    file: "latex/build.yml"
-    ref: *ref
+  # # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex/build.yml
+  # - project: "templates/ci-snippets"
+  #   file: "latex/build.yml"
+  #   ref: *ref
 
   # TEST
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/embedded-fonts.yml
@@ -93,13 +93,37 @@ include:
     file: "latex/pages.yml"
     ref: *ref
 
-# Uncomment to enable deletion of artifacts of previous jobs
-# artifacts:
-#   artifacts:
-#     expire_in: 1 yrs
-#   after_script:
-#     - |
-#       JOB_ID=$(curl --globoff -Ls --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs?scope[]=success&per_page=100" | jq 'map(select( .ref == '\"$CI_COMMIT_REF_NAME\"' and .name == '\"$CI_JOB_NAME\"' )) | sort_by( .finished_at ) | reverse | if length > 0 then .[0] | .id else -1 end')
-#     - echo "Going to delete artifacts from job $JOB_ID"
-#     - |
-#       curl -s --request DELETE --header "PRIVATE-TOKEN: $PAT" "https://$CI_SERVER_HOST/api/v4/projects/$CI_PROJECT_ID/jobs/$JOB_ID/artifacts"
+build:
+  image: dbogatov/docker-images:latex-latest
+  stage: build
+  script:
+    - IFS='|' read -r -a args <<< "$BUILD_ARGS"
+    - |
+      if [ ${#args[@]} -eq 0 ]
+      then
+        args="${args:-' '}"
+      fi
+    - |
+      for arg in "${args[@]}"
+      do
+          echo Building for "build.sh $arg"
+          bash ./$LATEX_BUILD/build.sh $arg
+      done
+    - PAGES=$(wget -q -O - https://git.dbogatov.org/templates/ci-snippets/raw/master/page-count.sh | bash /dev/stdin ${PWD}/$LATEX_DIST/)
+    - |
+      echo "Max pages: $PAGES"
+    - echo "PAGES_COUNT=$PAGES" >> pages-count.env
+    - cp $LATEX_DIST/*.bbl .
+  artifacts:
+    expire_in: 30 min
+    paths:
+      - "$LATEX_DIST/*.pdf"
+      - "*.bbl"
+    reports:
+      dotenv: pages-count.env
+  rules:
+    - if: "$DISABLE_REGULAR_PIPELINE"
+      when: never
+    - when: on_success
+  tags:
+    - docker

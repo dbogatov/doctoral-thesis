@@ -6,9 +6,9 @@ set -e
 cd "${0%/*}"
 CWD=$(pwd)
 
-INTERACTION=nonstopmode
-OUTDIR=dist
-JOBNAME=report
+: ${INTERACTION:=errorstopmode}
+: ${OUTDIR:=dist}
+: ${JOBNAME:=report}
 DRAFT=""
 FAST=false
 SYNCTEX=1
