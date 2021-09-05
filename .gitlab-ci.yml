@@ -11,7 +11,7 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref 3966e06924895e984fcb56c0789268f77d6b3635
+  CI_REF: &ref dbd95f58abf7ede6653d3a608c0faf02b20f378d
   BUILD_ARGS: " | -d "
 
 include:
@@ -25,6 +25,11 @@ include:
   # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/merge-from-overleaf.yml
   - project: "templates/ci-snippets"
     file: "latex-report/merge-from-overleaf.yml"
+    ref: *ref
+
+  # https://git.dbogatov.org/templates/ci-snippets/-/blob/master/latex-report/merge-to-overleaf.yml
+  - project: "templates/ci-snippets"
+    file: "latex-report/merge-to-overleaf.yml"
     ref: *ref
 
   # LINT
