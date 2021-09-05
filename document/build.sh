@@ -57,7 +57,7 @@ latexmk -cd -dvi- -f -pdf -ps- -time -shell-escape \
 
 if [ $FAST == false ]
 then
-	rm -f ${OUTDIR}/*.{aux,log,out,xwm,toc,lof,lot,bib,bbl,bcf,blg,xml,fls,fdb_latexmk}
+	rm -f ${OUTDIR}/*.{aux,log,out,xwm,toc,lof,lot,bib,bcf,blg,xml,fls,fdb_latexmk}
 fi
 
 echo "Done."
