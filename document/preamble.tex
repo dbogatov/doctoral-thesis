@@ -1,8 +1,9 @@
 % cSpell:disable
 
-\usepackage[a4paper, margin=1in]{geometry}
-
+\usepackage{style/buthesis}
 \usepackage[utf8]{inputenc}
+
+\usepackage{appendix}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{subcaption}
@@ -22,36 +23,14 @@
 \usepackage{cleveref} % must be loaded after hyperref
 
 \usepackage{color}
-
-\let\proof\relax
-\let\endproof\relax
 \usepackage{amsthm}
-\let\proof\relax
-\let\endproof\relax
-
 \usepackage{caption}
 \usepackage[all]{nowidow}
 \usepackage{hyphenat}
 \usepackage{enumitem}
 \usepackage{siunitx}
 
-\usepackage[
-	backend=biber,
-	style=numeric,
-	giveninits=true,
-	sorting=nyvt,
-	maxbibnames=1000
-]{biblatex}
-
-\DeclareFieldFormat%
-	[inproceedings]
-	{booktitle}{\textit{#1}}
-
-\DeclareFieldFormat%
-	[article]
-	{journal}{\textit{#1}}
-
-\bibliography{bibfile}
+\usepackage{natbib}
 
 \graphicspath{{./graphics/}}
 
@@ -61,3 +40,43 @@
 	\epstopdfDeclareGraphicsRule{.pdf}{png}{.png}{convert #1 \OutputFile}
 	\DeclareGraphicsExtensions{.png,.pdf}
 \fi
+
+\usepackage[
+	acronym,
+	nonumberlist,
+	toc,
+	nopostdot,
+	nogroupskip
+]{glossaries}
+\renewcommand*{\glsclearpage}{}
+\renewcommand*{\acronymname}{List of Abbreviations}
+
+\newglossarystyle{gloTable}
+{%
+	% longtable with three columns:
+	\renewenvironment{theglossary}%
+		{\begin{longtable}{ll}}%
+		{\end{longtable}}%
+	% no header:
+	\renewcommand*{\glossaryheader}{}%
+	% no group headings:
+	\renewcommand*{\glsgroupheading}[1]{}%
+	% main (level 0) entries displayed in a row
+	\renewcommand{\glossentry}[2]{%
+		% name in bold:
+		\glsentryitem{##1}\glstarget{##1}{\textbf{\glossentryname{##1}}} &
+		% description in italic
+		\glossentrydesc{##1}\tabularnewline%
+	}%
+	% sub-entries (same as main)
+	\renewcommand{\subglossentry}[3]{\glossentry{##2}{##3}}%
+	% blank row between groups if nogroupskip=false
+	\ifglsnogroupskip%
+		\renewcommand*{\glsgroupskip}{}%
+	\else
+		\renewcommand*{\glsgroupskip}{ & & \tabularnewline}%
+	\fi
+}
+\setglossarystyle{gloTable}
+
+\makeglossaries%

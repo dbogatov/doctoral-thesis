@@ -1,21 +1,94 @@
 % cSpell:disable
 
-\documentclass{article}
+\documentclass[12pt,letterpaper]{report}
 
-	\input{preamble}
+\input{preamble}
 
-	\begin{document}
+\input{glossary}
 
-		\input{meta}
+\begin{document}
 
-		\maketitle
+	\input{meta}
 
-		\begin{abstract}
-			\input{abstract}
-		\end{abstract}
+	\maketitle
+	\cleardoublepage%
 
-		\input{sections/introduction}
+	\copyrightpage%
+	\cleardoublepage%
 
-		\printbibliography%
+	% TODO conditionally uncomment
+	% \approvalpagewithcomment%
+	% \approvalpage%
+	% \cleardoublepage%
 
-	\end{document}
+	\IfFileExists%
+		{frontmatter/quote.tex}
+		{
+			\newpage
+			\input{frontmatter/quote}
+			\cleardoublepage%
+		}
+		{}
+
+	\IfFileExists%
+		{frontmatter/acknowledgments.tex}
+		{
+			\newpage
+			\input{frontmatter/acknowledgments}
+			\cleardoublepage%
+		}
+		{}
+
+	\begin{abstractpage}
+		\input{frontmatter/abstract}
+	\end{abstractpage}
+	\cleardoublepage%
+
+	\IfFileExists%
+		{frontmatter/preface.tex}
+		{
+			\newpage
+			\input{frontmatter/preface}
+			\cleardoublepage%
+		}
+		{}
+
+	\tableofcontents
+	\cleardoublepage%
+
+	\newpage
+	\listoftables
+	\cleardoublepage%
+
+	\newpage
+	\listoffigures
+	\cleardoublepage%
+
+	\glsaddall%
+	\printglossaries%
+	\cleardoublepage%
+
+	\newpage
+	\endofprelim%
+	\cleardoublepage%
+
+	\input{sections/introduction}
+	\cleardoublepage%
+
+	\begin{appendices}
+
+		\input{endmatter/appendices/security-proof}
+
+	\end{appendices}
+
+	\newpage
+	\singlespace%
+
+	\bibliographystyle{apalike}
+	\bibliography{bibfile}
+
+	\cleardoublepage%
+
+	\input{endmatter/cv}
+
+\end{document}
