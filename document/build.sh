@@ -39,7 +39,6 @@ then
 	rm -f ${OUTDIR}/*.*
 	cp ${OUTDIR}/tmp/*.pdf ${OUTDIR} || true
 	rm -rf ${OUTDIR}/tmp
-	mkdir -p ${OUTDIR}/figures
 fi
 
 if [ -n "$CI_BUILD_REF" ];

@@ -58,13 +58,15 @@
 
 	\newpage
 	\listoftables
+	\addcontentsline{toc}{chapter}{\listtablename}
 	\cleardoublepage%
 
 	\newpage
 	\listoffigures
-	\cleardoublepage%
+	\addcontentsline{toc}{chapter}{\listfigurename}
+	% \cleardoublepage%
 
-	\glsaddall%
+	\addtocontents{toc}{\protect\contentsline{chapter}{\protect{}List of Abbreviations}{x}{table:environment}}
 	\printglossaries%
 	\cleardoublepage%
 
@@ -84,8 +86,7 @@
 	\newpage
 	\singlespace%
 
-	\bibliographystyle{apalike}
-	\bibliography{bibfile}
+	\printbibliography%
 
 	\cleardoublepage%
 

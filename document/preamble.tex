@@ -30,7 +30,27 @@
 \usepackage{enumitem}
 \usepackage{siunitx}
 
-\usepackage{natbib}
+\usepackage[
+	backend=biber,
+	style=alphabetic,
+	giveninits=true,
+	sorting=ydnt,
+	maxbibnames=1000
+]{biblatex}
+
+\bibliography{bibfile}
+
+\renewcommand*{\mkbibnamegiven}[1]{%
+	\ifitemannotation{highlight}
+	{\textbf{#1}}
+	{#1}
+}
+
+\renewcommand*{\mkbibnamefamily}[1]{%
+	\ifitemannotation{highlight}
+	{\textbf{#1}}
+	{#1}
+}
 
 \graphicspath{{./graphics/}}
 
@@ -44,7 +64,6 @@
 \usepackage[
 	acronym,
 	nonumberlist,
-	toc,
 	nopostdot,
 	nogroupskip
 ]{glossaries}
@@ -53,20 +72,23 @@
 
 \newglossarystyle{gloTable}
 {%
-	% longtable with three columns:
 	\renewenvironment{theglossary}%
-		{\begin{longtable}{ll}}%
-		{\end{longtable}}%
-	% no header:
-	\renewcommand*{\glossaryheader}{}%
+		{
+			\begin{center}
+				\begin{longtable}{lll}
+		}%
+		{
+				\end{longtable}
+			\end{center}
+		}%
+	\renewcommand*{\glossaryheader}{
+		\hspace*{2em} & \hspace*{\dimexpr\textwidth-2em-4.5in\relax} & \hspace*{4.5in} \tabularnewline%
+	}%
 	% no group headings:
 	\renewcommand*{\glsgroupheading}[1]{}%
 	% main (level 0) entries displayed in a row
 	\renewcommand{\glossentry}[2]{%
-		% name in bold:
-		\glsentryitem{##1}\glstarget{##1}{\textbf{\glossentryname{##1}}} &
-		% description in italic
-		\glossentrydesc{##1}\tabularnewline%
+		\glsentryitem{##1}\glstarget{##1}{\textbf{\glossentryname{##1}}} & \dotfill & \glossentrydesc{##1} \tabularnewline%
 	}%
 	% sub-entries (same as main)
 	\renewcommand{\subglossentry}[3]{\glossentry{##2}{##3}}%
@@ -79,4 +101,6 @@
 }
 \setglossarystyle{gloTable}
 
+\renewcommand*{\glsclearpage}{}
 \makeglossaries%
+\glsaddall%
