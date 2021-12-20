@@ -97,3 +97,7 @@ include:
   - project: "templates/ci-snippets"
     file: "latex/pages.yml"
     ref: *ref
+
+check-links:
+  variables:
+    BLC_EXCLUDE: -s *10.1007* -s *10.1109* -s epsolute.org --accept-codes 403
