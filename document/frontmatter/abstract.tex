@@ -1,1 +1,11 @@
-Abstract goes here.
+As organizations struggle with processing vast amounts of information, outsourcing sensitive data to third parties becomes a necessity.
+To protect the data, various cryptographic techniques are used in outsourced database systems to ensure data privacy while allowing efficient querying.
+
+In this prospectus, I propose components of a new secure and efficient database system, which answers various types of queries, with different privacy guarantees in different security models.
+I start with my survey work on five order-preserving and order-revealing encryption schemes that can be used directly in many database indices, like the B+ tree, and five range query protocols with various trade-offs in terms of security and efficiency.
+This work systematizes the state-of-the-art range query solutions in a snapshot adversary setting and offers some non-obvious observations regarding the efficiency of the constructions.
+I then follow with a recently published work, \epsolute{}, an efficient range query engine in a persistent adversary setting.
+In this work, we achieve security in a setting with a much stronger adversary where she can continuously observe everything on the server, and leaking even the result size can enable a reconstruction attack.
+I then describe ongoing work on secure $k$-nearest-neighbor queries, in which the security is achieved similarly to OPE/ORE solutions --- encrypting the input with a distance-comparison preserving encryption scheme, so the inputs are perturbed, but the query algorithm still produces accurate results.
+Finally, I conclude the presentation with another ongoing work targeting \texttt{JOIN} queries in a persistent adversary setting.
+In this work, we are using an SGX enclave with its limited memory to process \texttt{JOIN} queries in small batches in a way to hide both the result size and access pattern.
