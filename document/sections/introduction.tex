@@ -63,7 +63,7 @@
 			The relevant SQL query can be \texttt{SELECT * FROM t1 WHERE zip = '02215'}.
 
 		\paragraph*{A range query.}
-			This query selects records, whose key lies between two values from an order domain.
+			This query selects records, whose key lies between two values from an ordered domain.
 			The relevant SQL query can be \texttt{SELECT * FROM t1 WHERE age BETWEEN 18 and 65}.
 
 		\paragraph*{A $k$NN query.}
@@ -75,3 +75,34 @@
 			An inner equi-\texttt{JOIN} query is different in that it is run on two tables and it selects all pairs of tuples where search keys of records of both tables are equal.
 			A \texttt{GROUP BY} query is related to \texttt{JOIN} as it is a degraded version of the latter.
 			The relevant SQL query can be \texttt{SELECT * FROM t1 INNER JOIN t2 ON (t1.k = t2.k) GROUP BY zip}.
+
+	\section{Proposal}
+
+		I propose to structure the thesis around the problem of answering the aforementioned four query types securely in a presence of snapshot and persistent adversaries.
+		The thesis will include a rich background on proposed secure query processing solutions and attacks against these solutions.
+		I will explain the components that are needed to construct the solutions, including symmetric encryption, property-preserving encryption, \Gls{oram} and Differential Privacy.
+
+		During my studies, I have proposed an evaluation framework to audit the \gls{ore} schemes and secure range query solution in a snapshot model \cite{ore-benchmark-17}, see \cref{section:range-queries-snapshot}.
+		The work includes five \gls{ope} and \gls{ore} schemes and five secure range query protocols.
+		I analyze the solutions under a common security framework and compare them experimentally under a common testbed.
+
+		In the persistent adversary model, I propose a protocol to answer point and range queries while hiding both the access pattern the result size \cite{epsolute}.
+		The algorithm uses \Gls{oram} to hide the access pattern and Differentially Private sanitizers to obfuscate the communication volume.
+		The construction is parallelized such that the database is split among a number of \Glspl{oram} --- isolated servers executing an \Gls{oram} protocol.
+		I show that his construction is not only secure in a proposed model, but also very efficient --- a typical query complete in less than second.
+
+		For the \knn{} queries, I propose a solution in a snapshot model, similar to \gls{ope}.
+		The idea is to encrypt an input in a way that the distance comparison between two pairs of values is preserved.
+		That is, if $x$ to $y$ was longer than $y$ to $z$, the relation will hold for the encrypted values.
+		I will then verify the utility of the solution by running typical \knn{} applications over the encrypted inputs --- similarity search and location-based queries.
+
+		Finally, I propose to process \texttt{JOIN} queries obliviously, in a presence of persistent adversary, by partitioning the input and processing it inside a secure enclave one partition at a time.
+		The idea is to
+		\begin{enumerate*}[label=(\roman*)] % chktex 36
+			\item create an index over join keys,
+			\item add noise using Differential Privacy,
+			\item partition the index by join keys in way that the partition fits in the enclave,
+			\item and do the cross join within partition inside the enclave.
+		\end{enumerate*}
+
+	Following are extended description of these proposed solutions.

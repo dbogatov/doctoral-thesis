@@ -10,7 +10,7 @@ CWD=$(pwd)
 
 echo ">>> Testing CHKTEX..."
 
-chktex -eall -n22 -n46 -n30 -n3 -e16 -I0 -v2 -o chktex.out document/**/*.tex document/*.tex &> /dev/null
+chktex -eall -n22 -n2 -n46 -n30 -n3 -e16 -I0 -v2 -o chktex.out document/**/*.tex document/*.tex &> /dev/null
 cat chktex.out
 if [ -s chktex.out ];
 then
