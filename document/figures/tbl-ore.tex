@@ -4,7 +4,7 @@
 	\renewcommand{\arraystretch}{1.5}
 	\centering
 	\captionsetup{width=\textwidth}
-	\caption{
+	\caption[Primitive usage by OPE / ORE schemes]{
 		Primitive usage by OPE / ORE schemes.
 		Ordered by security rank --- most secure below.
 		$n$ is the input length in bits, $d$ is a block size for Lewi-Wu~\cite{lewi-wu-ore} scheme, $\lambda$ is a PRF output size, $N$ is a total data size, \textbf{HG} is a hyper-geometric distribution sampler, \textbf{PPH} is a property-preserving hash with $h$-bit outputs built with bilinear maps and \textbf{bolded} are weak points of the schemes.
@@ -18,7 +18,7 @@
 
 		\toprule
 
-		BCLO~\cite{crypt-db-ope}					& $\bm{n}$ \textbf{HG}										& none										& $2n$																				& \textbf{$\approx$ Top half of the bits}								\\
+		BCLO~\cite{bclo-ope}						& $\bm{n}$ \textbf{HG}										& none										& $2n$																				& \textbf{$\approx$ Top half of the bits}								\\
 
 		\midrule
 

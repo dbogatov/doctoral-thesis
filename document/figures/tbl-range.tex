@@ -1,0 +1,45 @@
+% cSpell:ignore Kerschbaum captionsetup
+
+\begin{sidewaystable}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+	\captionsetup{width=\textwidth}
+	\caption{
+		Performance of protocols.
+		Ordered by security rank --- most secure below.
+		$N$ is a total data size, $B$ is an {\IO} page size, $L$ is a POPE tree branching factor, $r$ is the result size in records and \textbf{bolded} are weak points of the protocols.
+		All values are in $\mathcal{O}$ notation.
+	}\label{table:range}
+	\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} l c c c c c } % chktex 26
+
+		\toprule
+
+		\multirow{2}{*}{Protocol}						& \multicolumn{2}{c}{{\IO} requests}																													& \multirow{2}{*}{Leakage}	& \multicolumn{2}{c}{Communication}																		\\ \cline{2-3} \cline{5-6}
+		\rule{0pt}{10pt}								& Construction										& Query																								&							& Construction										& Query 											\\
+
+		\toprule
+
+		{\BPlus} tree with ORE							& $\log_B \frac{N}{B}$								& $\log_B \frac{N}{B} + \frac{r}{B}$																& \textbf{Same as ORE}		& $1$												& $1$												\\
+		\midrule
+
+		Kerschbaum~\cite{florian-protocol}				& $\bm{\frac{N}{B}}$								& $\log_2 \frac{N}{B} + \frac{r}{B}$																& \textbf{Total order}		& $\log_2 N$										& $\log_2 N$										\\
+
+		\midrule
+
+		POPE~\cite{pope} warm							& \multirow{2}{*}{$1$}								& $\log_L \frac{N}{B} + \frac{r}{B}$																& \textbf{Partial order}	& \multirow{2}{*}{$1$}								& $\log_L N$										\\
+
+		POPE~\cite{pope} cold							& 													& $\bm{{\nicefrac{N}{B}}}$																			& Fully hiding				& 													& $\bm{N}$											\\
+
+		\midrule
+
+		Logarithmic-BRC~\cite{practical-range-search}	& \textbf{---}										& $\bm{r}$																							& Same as SSE				& \textbf{---}										& $\log_2 N$										\\
+
+		\midrule
+
+		\multirow{2}{*}{ORAM}							& \multirow{2}{*}{$\bm{{ \log^2 \frac{N}{B} }}$}	& \multirow{2}{*}{$\bm{{ \log_2 \frac{N}{B} \left( \log_B \frac{N}{B} + \frac{r}{B} \right) }}$}	& Fully hiding				& \multirow{2}{*}{$\bm{{ \log^2 \frac{N}{B} }}$}	& \multirow{2}{*}{$\bm{{ \log^2 \frac{N}{B} }}$}	\\
+														&													&																									& (access pattern)			&													&													\\
+
+		\bottomrule
+
+	\end{tabular*}
+\end{sidewaystable}
