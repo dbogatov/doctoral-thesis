@@ -3,7 +3,7 @@
 
 	\section{Order-revealing encryption}
 
-		One of the ways to run a range query in a presence of a snapshot adversary is to use a conventional database range index, such as \BPlus{} tree~\cite{b-tree}, and encrypt the values in the index in a way that preserves their comparison result.
+		One of the ways to run a range query in the presence of a snapshot adversary is to use a conventional database range index, such as \BPlus{} tree~\cite{b-tree}, and encrypt the values in the index in a way that preserves their comparison result.
 		This is exactly what \gls{ope} does.
 		\gls{ope} is a scheme, a tuple of algorithms \algo{OPE.KeyGen}, \algo{OPE.Enc} and \algo{OPE.Dec}, that generate a kay, encrypt and decrypt a number respectively with a property that if $x$ was smaller, greater or equal to $y$, then their respective ciphertexts will maintain the relation.
 		\gls{ore} works similarly except that the ciphertexts are not necessarily numbers and a comparison is an explicit algorithm \algo{ORE.Cmp} over hte ciphertexts.

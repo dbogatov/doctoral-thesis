@@ -78,7 +78,7 @@
 
 	\section{Proposal}
 
-		I propose to structure the thesis around the problem of answering the aforementioned four query types securely in a presence of snapshot and persistent adversaries.
+		I propose to structure the thesis around the problem of answering the aforementioned four query types securely in the presence of snapshot and persistent adversaries.
 		The thesis will include a rich background on proposed secure query processing solutions and attacks against these solutions.
 		I will explain the components that are needed to construct the solutions, including symmetric encryption, property-preserving encryption, \Gls{oram} and Differential Privacy.
 
@@ -96,7 +96,7 @@
 		That is, if $x$ to $y$ was longer than $y$ to $z$, the relation will hold for the encrypted values.
 		I will then verify the utility of the solution by running typical \knn{} applications over the encrypted inputs --- similarity search and location-based queries.
 
-		Finally, I propose to process \texttt{JOIN} queries obliviously, in a presence of persistent adversary, by partitioning the input and processing it inside a secure enclave one partition at a time.
+		Finally, I propose to process \texttt{JOIN} queries obliviously, in the presence of persistent adversary, by partitioning the input and processing it inside a secure enclave one partition at a time.
 		The idea is to
 		\begin{enumerate*}[label=(\roman*)] % chktex 36
 			\item create an index over join keys,

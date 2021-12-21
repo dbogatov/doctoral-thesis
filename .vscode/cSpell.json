@@ -10,6 +10,7 @@
 		"equi",
 		"hypergeometric",
 		"oram",
+		"parallelizable",
 		"statefulness",
 		"untrusted"
 	],

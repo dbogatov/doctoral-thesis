@@ -1,0 +1,31 @@
+\chapter{Range and point queries in a persistent model}\label{section:range-queries-persistent}
+\thispagestyle{myheadings}
+
+	A persistent adversary is capable of observing not only the data at any point in time (like the snapshot attacker), but also all processes and communication on the server, including the network messages and their size and access pattern to the storage.
+	A series of attacks starting with a seminal work of \textcite{generic-attacks-kellaris} showed that the query result size~\cite{generic-attacks-kellaris, state-of-uniform, attacks-improved-reconstruction, pump-volume-attacks, volume-range-attacks} and access pattern~\cite{multidimensional-range-queries, inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} alone can enable reconstruction attacks.
+	The attacks against access pattern typically exploit the fact that some records are accessed more often that others and in the same query as some others.
+	The adversary maps this knowledge to some public auxiliary data and query set and guesses the values correctly with non-negligible probability.
+	Attacks on communication volume are more elaborate and use the fact that there are a well-defined number of distinct interval queries over the domain.
+	\cite{generic-attacks-kellaris}, for example, constructs a polynomial with the observed number of queries that return different number of records, and solve it deriving the exact reconstruction.
+
+	Generic way to protect the access pattern is \gls{oram}, an interactive client-server protocol that conceals the access pattern from the observing adversary by making at least $\bigO{\log n}$ extra requests.
+	A na\"{\i}ve solution is to simply proxy all requests through the \gls{oram} protocol, but it is generally inefficient and not trivially parallelizable.
+
+	Protecting against communication volume leakage usually involves returning a number of extra fake records and letting the client filter them out locally.
+	Where approaches differ is in the number of these fake records.
+	A na\"{\i}ve way of adding a constant amount of noise or even sampling one uniformly is insecure since such noise can be filtered out by the adversary either immediately (constant noise), or after observing a certain number of queries (uniform noise).
+	Another dimension to the problem is how much noise to add to have a provable guarantee and yet add the smallest amount of noise possible.
+
+	The most effective approach is sampling noise using \gls{dp}.
+	\gls{dp} is a guarantee on a query algorithm that takes a database and returns some result.
+	The guarantee states that for two neighboring databases (that differ in one record), probability that the adversary will understand by looking at the output, which of the two databases was used as an input is bounded.
+	More formally, the \gls{dp} is defined in \cref{definition:dp}.
+
+	\begin{definition}[Differential Privacy, adapted from~\cite{our-data-ourselves, differential-privacy-original}]\label{definition:dp}
+		A randomized algorithm \algo{A} is $(\epsilon, \delta)$-differentially private if for all $\database_1 \sim \database_2 \in \searchKeyDomain^\dataSize$, and for all subsets $\mathcal{O}$ of the output space of \algo{A},
+		\[
+			\probability{ \algo{A}{ \database_1 } \in \mathcal{O} } \leq \exp(\epsilon) \cdot \probability{ \algo{A}{ \database_2 } \in \mathcal{O} } + \delta \; .
+		\]
+	\end{definition}
+
+	The 
