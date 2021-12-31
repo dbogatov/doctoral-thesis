@@ -37,7 +37,12 @@ done
 
 echo ">>> Testing CSPELL..."
 
-docker run -it -v "$(pwd)":/code --entrypoint /bin/bash dbogatov/docker-images:cspell-latest -c "cd /code && cspell -c .vscode/cSpell.json document/**/*.tex document/*.tex"
+if cspell -V; then
+	cspell -c .vscode/cSpell.json document/**/*.tex document/*.tex
+else
+	echo "Will use Docker. Or install with: npm install -g cspell"
+	docker run -it -v "$(pwd)":/code --entrypoint /bin/bash dbogatov/docker-images:cspell-latest -c "cd /code && cspell -c .vscode/cSpell.json document/**/*.tex document/*.tex"
+fi
 
 if [[ $? != 0 ]];
 then
