@@ -3,17 +3,21 @@
 	"language": "en",
 	"words": [
 		"Bogatov",
+		"cdpodb",
 		"chktex",
 		"ciphertext",
 		"ciphertexts",
 		"Dmytro",
 		"equi",
+		"fanout",
 		"hypergeometric",
 		"oram",
 		"parallelizable",
 		"pseudocode",
+		"queryset",
 		"statefulness",
-		"untrusted"
+		"untrusted",
+		"vely"
 	],
 	"flagWords": [
 		"yu",

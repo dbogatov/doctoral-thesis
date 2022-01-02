@@ -35,11 +35,13 @@
 \usepackage{rotating}
 \usepackage[
 	colorlinks = true,
-	linkcolor = Fuchsia,
+	linkcolor = PineGreen,
 	urlcolor  = JungleGreen,
-	citecolor = magenta
+	citecolor = Turquoise
 ]{hyperref}
-\usepackage{cleveref} % must be loaded after hyperref
+\usepackage[noabbrev,capitalise]{cleveref} % must be loaded after hyperref
+
+\AtBeginEnvironment{appendices}{\crefalias{chapter}{appendix}}
 
 \usepackage{color}
 \usepackage{amsthm}
@@ -49,6 +51,11 @@
 \usepackage[inline]{enumitem}
 \usepackage{siunitx}
 \usepackage[mathscr]{eucal}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\usepackage{textcomp}
+\usepackage{array}
+\usepackage{calc}
 
 \usepackage[
 	backend=biber,
@@ -93,17 +100,30 @@
 
 \newglossarystyle{gloTable}
 {%
+	\newlength\aglslong%
+	\settowidth\aglslong{\widthof{\textbf{CCP-ODB}}}
+
+	\newlength\aglsleft%
+	\setlength{\aglsleft}{\dimexpr\aglslong+0.1em\relax}
+
+	\newlength\aglsright%
+	\setlength{\aglsright}{\widthof{Computationally DP Outsourced Database System}}
+
+	\newlength\aglscenter%
+	\setlength{\aglscenter}{\dimexpr\linewidth-\aglsright-\aglsleft\relax}
+
 	\renewenvironment{theglossary}%
-		{
-			\begin{center}
-				\begin{longtable}{lll}
-		}%
-		{
-				\end{longtable}
-			\end{center}
-		}%
-	\renewcommand*{\glossaryheader}{
-		\hspace*{2em} & \hspace*{\dimexpr\textwidth-2em-4.5in\relax} & \hspace*{4.5in} \tabularnewline%
+	{
+		\begin{center}
+			\begin{longtable}{
+				>{\raggedright}p{\aglsleft}
+				p{\aglscenter}
+				>{\raggedright}p{\aglsright}
+			}
+	}%
+	{
+			\end{longtable}
+		\end{center}
 	}%
 	% no group headings:
 	\renewcommand*{\glsgroupheading}[1]{}%

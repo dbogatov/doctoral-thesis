@@ -16,7 +16,7 @@
 		A line of research targets securing outsourced database systems, but often achieves protection at a cost of efficiency that is too high for a solution to be viable for practical applications.
 		In this prospectus, I will cover the constructions that are used to answer different types of database queries in the outsourced model while providing both provable security and practical efficiency guarantees.
 
-		\subsection{Model}\label{proposal:intro:model}
+		\subsection{Model}\label{section:proposal:intro:model}
 
 			In this work, I consider \emph{an outsourced database system} model, adapted from \cite{generic-attacks-kellaris} and \cite{epsolute}.
 
@@ -101,7 +101,7 @@
 		\subsection{Solution}
 
 			Our work addresses these shortcomings.
-			We proposed a common framework where all analyzed solutions follow the same formal protocol, a variant of outsourced database from \cref{proposal:intro:model}.
+			We proposed a common framework where all analyzed solutions follow the same formal protocol, a variant of outsourced database from \cref{section:proposal:intro:model}.
 			The schemes and protocols are also tested against the same security definition, a variant of simulation-based security game where simulator has a leakage function that is different for each solution.
 			Lastly, all protocols are implemented in the same language and runtime, and are using the same cryptographic primitive implementations.
 
@@ -123,6 +123,164 @@
 
 			We also analyzed dedicated range query protocols from \cite{florian-protocol,pope,practical-range-search} and two more baselines.
 			Baselines are chosen at the extremes of performance / security spectrum --- a plaintext \BPlus{} tree and a \BPlus{} tree in \acrshort{oram}.
-			Intuitively, all solutions should lie between the baselines in both performance and security, but we show that at least performance-wise it is not the case.
+			Intuitively, all solutions should lie between the baselines in both performance and security, but we show that at least performance-wise it is not the case (see one of the plots in \cref{figure:ore}).
 
-			Please see \cref{table:ore} and \cref{table:range} in \cref{appendix:ore-results} for the analytical results for each solution, and \cite{ore-benchmark-17} for experimental results.
+			Please see \cref{table:ore,table:range} in \cref{appendix:ore-results} for the analytical results for each solution, and \cite{ore-benchmark-17} for experimental results.
+
+			\include{figures/fig-ore}
+
+	\section{Range and point queries in a persistent model}\label{section:range-queries-persistent}
+
+		\subsection{Motivation and Background}
+
+			A persistent adversary is capable of observing not only the data at any point in time (like the snapshot attacker), but also all processes and communication on the server, including the network messages, their size and the access pattern to the storage.
+			A series of attacks starting with a seminal work of \textcite{generic-attacks-kellaris} showed that the query result size~\cite{generic-attacks-kellaris, state-of-uniform, attacks-improved-reconstruction, pump-volume-attacks, volume-range-attacks} and access pattern~\cite{multidimensional-range-queries, inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} alone can enable reconstruction attacks.
+			The attacks against access pattern typically exploit the fact that some records are accessed more often that others and in the same query as others.
+			The adversary maps this knowledge to some public auxiliary dataset and queryset and guesses the values correctly with a non-negligible probability.
+			Attacks on communication volume are more elaborate and use the fact that there are a well-defined number of distinct interval queries over the domain.
+			\textcite{generic-attacks-kellaris}, for example, construct a polynomial with the observed number of queries that return different number of records, and solve it deriving the exact reconstruction.
+
+			Generic way to protect the access pattern is the \acrfull{oram}, an interactive client-server protocol that conceals the access pattern from the observing adversary by making at least $\bigO{\log n}$ extra requests.
+			A na\"{\i}ve solution is to simply proxy all requests through the \acrshort{oram} protocol, but it is generally inefficient and not trivially parallelizable.
+
+			Protecting against communication volume leakage usually involves returning a number of extra fake records and letting the client filter them out locally.
+			Where approaches differ is in the number of these fake records.
+			A na\"{\i}ve way of adding a constant amount of noise or even sampling noise uniformly is insecure since such noise can be filtered out by the adversary either immediately (constant noise), or after observing a certain number of queries (uniform noise).
+			Another dimension to the problem is how much noise to add to have a provable guarantee and yet add the smallest amount of noise possible.
+
+			\subsubsection{Differential Privacy}
+
+				The most effective approach is sampling noise using \acrfull{dp}.
+				\acrshort{dp} is a guarantee on a query algorithm that takes a database and returns some result.
+				The guarantee states that for two neighboring databases (that differ in one record), probability that the adversary will understand by looking at the output, which of the two databases was used as an input, is bounded.
+				More formally, the \acrshort{dp} is defined in \cref{definition:dp}.
+
+				\begin{definition}[Differential Privacy, adapted from~\cite{our-data-ourselves, differential-privacy-original}]\label{definition:dp}
+					A randomized algorithm \algo{A} is $(\epsilon, \delta)$-differentially private if for all $\database_1 \sim \database_2 \in \searchKeyDomain^\dataSize$, and for all subsets $\mathcal{O}$ of the output space of \algo{A},
+					\[
+						\probability{ \algo{A}{ \database_1 } \in \mathcal{O} } \leq \exp(\epsilon) \cdot \probability{ \algo{A}{ \database_2 } \in \mathcal{O} } + \delta \; .
+					\]
+				\end{definition}
+
+				One way to make sense of this definition is the following.
+				Probabilities are taken over the coins of algorithm \algo{A}, which answers a query based on a dataset.
+				A natural instantiation of \algo{A} is a view of a distinguishing adversary \adversary{}, who tries to guess which of the two datasets was used.
+				The expression in \cref{definition:dp} then bounds the advantage of \adversary{} with $\epsilon$ and $\delta$ parameters.
+				Note that $\exp( x ) \approx 1 + x + \frac{x^2}{2!}$ and for sufficiently small $x$ the last term is negligible.
+				If we put $\epsilon + 1$ in place of $\exp( \epsilon )$, it becomes clear that $\epsilon$ is the exact value by which two probabilities are allowed to differ.
+				For $\epsilon = 0$, they have to be equal, for $\epsilon = 0.01$, probabilities may differ by \SI{1}{\percent}.
+				Therefore, $\epsilon$ is called \emph{a privacy budget} of a \acrshort{dp} system.
+				$\delta$ term is additive and therefore must be small by itself.
+				This term is essentially a probability that the entire system fails, for example, if \algo{A} is a randomized algorithm which fails with a certain chance, this probability will be $\delta$.
+				For instance, a PathORAM \cite{path-oram} algorithm can have a stash overflow with a bounded probability \cite[Theorem 1]{path-oram} and it will cause the entire algorithm to fail.
+				If PathORAM is used in a \acrshort{dp} system then this probability, however small, bounded and negligible, will have to be accounted for in $\delta$.
+
+				Note that \cref{definition:dp} describes a property of \algo{A} and not a construction method.
+				To construct \algo{A}, the seminal \cite{differential-privacy-original} offers an algorithm called \acrfull{lpa}.
+				The idea is to tune the noise sampled from Laplacian distribution to the \emph{sensitivity} of a query, defined as the change of output with respect to change in input.
+				For example, if a change in one record of the dataset causes a change in the output value of at most one (e.g., a count query), then the sensitivity is 1.
+				\cite{differential-privacy-original} proves that if one adds $\algo{Laplace}{0, \frac{\mathsf{sensitivity}}{\epsilon}}$ to the real result of a query, the resulting mechanism is $\epsilon$-\acrshort{dp}.
+
+				Lastly, instead of generating and adding noise each query, it is possible to generate noisy values once, embed them into the data and release the sanitized data without compromising privacy guarantees.
+				The intuition is that once the noise is embedded in the dataset, adversary can run a regular query over it and the entire query will still be \acrshort{dp}.
+				Such methods are collectively called \emph{sanitization}, and there are known bounds for point and range queries, for pure ($\delta = 0$) and approximate ($\delta > 0$) \acrshort{dp} \cite{bounds-on-sample-complexity,private-learning-and-sanitization,non-interactive-database-privacy,dp-under-observation,dp-release,privately-learning-thresholds}.
+
+		\subsection{Security definition}
+
+			In this work we aim for the most practical definition of security, which needs to capture both access pattern and communication volume protection and yet be feasible enough so that an efficient system exists that can satisfy it.
+			In \epsolute{} \cite{epsolute} we propose a definition of computationally \acrshort{dp} outsourced database.
+
+			\begin{definition}[\acrfull{cdpodb} from Definition 3.1 in \cite{epsolute}]\label{definition:cdpodb}
+				We say that an outsourced database system \protocol{} is $(\epsilon, \delta)$-computationally differentially private (a.k.a.\acrshort{cdpodb}) if for every polynomial time distinguishing adversary \adversary{}, for every neighboring databases $\database \sim \database^\prime$, and for every query sequence $\fromNtoM{\query}{1}{m} \in \querySet^m$ where $m = \mathsf{poly}(\lambda)$,
+
+				\begin{multline*}
+					\probability{\adversary \left( 1^\lambda, \view{\protocol, \server}{\database, \fromNtoM{\query}{1}{m}} \right) = 1 } \leq \\
+					\exp{\epsilon} \cdot \probability{\adversary \left( 1^\lambda, \view{\protocol ,\server}{\database^\prime, \fromNtoM{\query}{1}{m}} \right) = 1} + \delta + \negl \; ,
+				\end{multline*}
+				the probability is over the randomness of the distinguishing adversary \adversary{} and the protocol \protocol{}.
+			\end{definition}
+
+			First thing to note in this definition is that unlike in prior works where only a part of \adversary{}'s view is \acrshort{dp}-protected (e.g., only access pattern in \cite{differential-obliviousness,differential-obliviousness-followup}), here the entire view of the adversary is protected.
+			That is, if \emph{anything} that is visible during the protocols execution to a persistent adversary can be used to distinguish the neighboring datasets, the adversary wins and the system fails to satisfy the definition.
+			Subsequently, it implies protection against both access pattern and communication volume, since they are both a part of the view and if adversary sees either of them, she can distinguish.
+
+			Also note that the \acrshort{cdpodb} system is \acrshort{dp}, but not necessarily semantically secure.
+			A semantically secure database would have had probabilities almost equal (or, in \cref{definition:cdpodb}, $\epsilon = 0$).
+			The trade-off has been made to allow a construction of an efficient system.
+			While a na\"{\i}ve solution that satisfies semantically secure definition would return entire dataset every query, constructing a practical instantiation is hard, is not necessarily possible, and remains an open problem.
+
+			The negligible term $\negl$ at the end was added to account for computational (as opposed to information-theoretical) nature of the definition.
+			In information-theoretical system the security is guaranteed by the clear mathematical proof that the adversary can do nothing better than brute-force the system (e.g., iterating over one-time-pad keys).
+			A computational security definition relies on the fact that the adversary simply does not have enough resources to break a system, which may or may not hold true in the future.
+			For example, the problems of finding a discrete logarithm and factorization are only assumed to be hard, as are standardized block ciphers, such as AES \cite{aes-nist}.
+			Therefore, if we want to allow a system to use these cryptographic blocks for security, we must include it in the definition.
+
+			Finally, note the query sequence $\fromNtoM{\query}{1}{m} \in \querySet$ is fixed.
+			The definition is non-adaptive in a sense that the user \user{} must not choose the next query based on the result of the previous one.
+			In \cite[Section 3.1.1]{epsolute} we prove by example why this limitation is inherent and an no efficient system can be built that allows adaptive queries.
+
+		\subsection{\epsolute{}}
+
+			In \epsolute{} \cite{epsolute}, we develop a method of answering point and range queries that satisfies \cref{definition:cdpodb}.
+			In the heart of the construction is using \acrshort{oram} to hide access pattern and \acrshort{dp} to add extra fake records to the result to hide communication volume.
+
+			\acrshort{oram} component is straightforward --- communication between \user{} and \server{} is routed thorough the \acrshort{oram} protocol.
+			This approach, however, substantially increases the overhead, which I will will address in \cref{section:range-queries-persistent:parallel-epsolute}.
+
+			To properly and optimally add noise to the true result we make use of sanitizers for point and range query types.
+			For point queries, we construct a histogram from the domain values.
+			We put the number of records for the domain value plus the noise sampled from the Laplacian distribution into each bin.
+
+			\input{figures/fig-sanitizer}
+
+			For the range queries we use a hierarchical sanitizer \cite{hierarchical-methods-for-dp}, see example on \cref{figure:sanitizer}.
+			We first split continuous domain into bins.
+			Then we build a \fanout{}-ary tree over domain bins and put the number of records plus noise into each node.
+			The leaves get values same way as in histogram, and intermediate node value is a sum of counts of all records in all children bins plus a single noise sample.
+			Compared to plain histogram, this construction has a benefit that if the range is wide we can answer the query using only the intermediate node and not all leaf nodes.
+			Since each bin is now associated with $\ceil{\log_\fanout B}$ nodes, where $B$ is the number of bins, we amplify our noise respectively.
+
+			Note that the Laplacian distribution is symmetrical and unbounded, so if we sample from a zero-mean distribution some of the samples will be negative.
+			Since we do not allow negative noise and since na\"{\i}vely truncating the distribution will break \acrshort{dp} guarantees, we need to shift the mean of the distribution.
+			Doing so will only increase the noise thereby maintaining the guarantees.
+			We have analytically derived the smallest mean of the distribution to ensure that the samples are non-negative for the entire histogram or tree with a set probability $\delta$.
+			These values are
+			\[
+				\mu_{\mathsf{point}} = \ceil{ -\frac{ \ln \left( 2 - 2 \sqrt[\domainSize]{1 - \delta} \right) }{ \epsilon } } \quad \text{and} \quad \mu_{\mathsf{range}} = \ceil{ -\frac{ \ln{ (2 - 2 \sqrt[\mathsf{nodes}]{ 1 - \delta } ) } \cdot \log_{\fanout} \domainSize }{\epsilon} }
+			\]
+			for domain size \domainSize{} and the number of nodes in a tree $\mathsf{nodes}$.
+
+			With this prerequisites we construct the actual setup and query protocols.
+			See visualization of \protocolQuery{} in \cref{figure:epsolute}.
+			\begin{itemize}
+				\item
+					Setup protocol \protocolSetup{}
+					\begin{enumerate}
+						\item
+							On input a dataset \database{}, \user{} creates and keeps locally an inverted index over the records mapping the search keys \searchKey{} to record IDs \recordID{}.
+						\item
+							\user{} and \server{} engage into the \acrshort{oram} protocol, where \user{} is a client.
+							\user{} stores all records by their IDs.
+						\item
+							\user{} constructs a sanitized structure \serverDS{}, a \acrshort{dp}-histogram for point queries or a \acrshort{dp}-tree for range queries, over the domain of the dataset and posts it to \server{}.
+					\end{enumerate}
+				\item
+					Query protocol \protocolQuery{}
+					\begin{enumerate}
+						\item
+							On input a query \query{}, \user{} looks up record IDs in its local index.
+						\item
+							\user{} requests \serverDS{} from \server{} and uses it to calculate the total number of requests $c$ (the number of true records for the query plus noise).
+						\item
+							\user{} and \server{} engage into the \acrshort{oram} protocol, where \user{} is a client.
+							\user{} loads $c$ records where these requests include all true records and the rest are random and non-repeating.
+						\item
+							\user{} prunes the fake records and returns the true ones.
+					\end{enumerate}
+			\end{itemize}
+
+			\input{figures/fig-epsolute}
+
+			This method, to which I will refer to as \emph{a single-threaded \epsolute{}}, is a \acrlong{cdpodb} as defined in \cref{definition:cdpodb}, see proof in \cite[Section 4.2]{epsolute}.
+
+		\subsection{Parallel \epsolute{}}\label{section:range-queries-persistent:parallel-epsolute}
