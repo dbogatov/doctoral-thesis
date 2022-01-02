@@ -284,3 +284,68 @@
 			This method, to which I will refer to as \emph{a single-threaded \epsolute{}}, is a \acrlong{cdpodb} as defined in \cref{definition:cdpodb}, see proof in \cite[Section 4.2]{epsolute}.
 
 		\subsection{Parallel \epsolute{}}\label{section:range-queries-persistent:parallel-epsolute}
+
+			While the single-threaded \epsolute{} is an efficient \acrshort{cdpodb} in sense that it returns only a fraction of total records per query, it is still slow in practice because of the $\bigO{\log \dataSize \log \domainSize}$ overhead due to \acrshort{oram} and \acrshort{dp}-sanitizer.
+			To bring the construction closer to real-world demands in performance we devise a parallel solution.
+
+			\subsubsection{A choice of separate vs shared sanitized dataset}
+
+				A natural approach is to split the dataset \database{} into \oramsNumber{} partitions and run parallel \acrshort{oram} protocols against a distributed \server{}.
+				The partitioning part is not hard --- we split records by the hash of their unique ID and we construct smaller (and thus logarithmically faster) \acrshortpl{oram} over the partitions along with \oramsNumber{} inverted indices on \user{}.
+				However, we need to decide how we sample \acrshort{dp} noise in this setting.
+				The two approaches are generating a separate \serverDS{} per partition or using a shared \serverDS{}.
+
+				When generating a separate \acrshort{dp}-sanitized dataset \serverDS{} per partition there are two competing effects on performance.
+				On the one hand, each thread on average returns a \nicefrac{1}{m} fraction of the result from an \acrshort{oram} with overhead $\log \frac{n}{m}$.
+				On the other hand, each thread now adds independent noise, which results in \oramsNumber{} amplification of noise.
+				Moreover, due to \acrshort{dp} composition theorem \cite{privacy-integrated-queries,differential-privacy-original,our-data-ourselves} for disjoint datasets, the privacy budget of the system is the privacy budget of the least private component.
+				Since we cannot assume that the distribution of resulting records in all queries is always uniform, we bound a worst-case scenario of a single \acrshort{oram} having most of the result records.
+				In \cite[Section 5.1]{epsolute} we have found that the noise is amplified by an extra $\left( 1 + \sqrt{ \frac{-3 m \log \delta}{k_0} } \right)$ factor, where $k_0$ is the number of true records for a query.
+
+				When generating a single shared \serverDS{} for all \oramsNumber{} partitions, we need to ensure that the total number of records returned by each thread is the same.
+				We reuse the amplification factor from previous approach and set new $\tilde{k}_0 = k_0 + \frac{\log^{1.5} N}{\epsilon}$ for range queries and $\tilde{k}_0 = k_0 + \frac{\log N}{\epsilon}$ for point queries due to the use of \acrshort{dp} sanitizers.
+				The total generated noise is now larger but it is now split among \oramsNumber{} threads and it grows slower than linear in \oramsNumber{}.
+
+				Comparing these two methods we conclude that in most cases the shared \serverDS{} is faster (i.e., results in fewer total fetched records), especially for an increasing parallelization factor.
+				First, the former method is not guaranteed to have a uniform load among threads.
+				In fact, while on average the amount of work per thread may be smaller, there may be a single disproportionally overloaded thread, which would cause the entire system to slow down.
+				Second, while the number of true records per thread will decrease linearly for the former method, the noise factor will stay constant and will at larger \oramsNumber{} dominate the amount of work precluding further scalability.
+				The latter method is more scalable in this regard since the amount of work decreases linearly while the amount of noise increases only logarithmically with the number of threads.
+
+			\subsubsection{The construction}
+
+				With this analysis I present an upgraded construction, \emph{a parallel \epsolute{}}, see \cref{figure:parallel-epsolute}.
+				The core protocol is similar to single-threaded version except some of the operations are distributed and executed in parallel.
+				\begin{itemize}
+					\item
+						Setup protocol \protocolSetup{}
+						\begin{enumerate}
+							\item
+								On input a dataset \database{}, \user{} partitions it into \oramsNumber{} segments \fromNtoM{\database}{1}{\oramsNumber} by a hash of record IDs \recordID{}.
+								\user{} then creates and keeps locally \oramsNumber{} inverted indices over the records mapping the search keys \searchKey{} to record IDs \recordID{} in a respective partition.
+							\item
+								\user{} and distributed \server{} engage into \oramsNumber{} \acrshort{oram} protocols, where \user{} is a client.
+								\user{} stores all records by their IDs in respective \server{} partitions.
+							\item
+								\user{} constructs a sanitized structure \serverDS{} (or \oramsNumber{} such structures depending on the choice of method) over the domain of the dataset and posts it to \server{}.
+						\end{enumerate}
+					\item
+						Query protocol \protocolQuery{}
+						\begin{enumerate}
+							\item
+								On input a query \query{}, \user{} looks up record IDs in its local indices.
+							\item
+								\user{} requests \serverDS{} (one or multiple) from \server{} and uses it to calculate the total number of requests $c$.
+								Depending on the choice of method, \user{} prepares a sequence of requests to \server{}.
+							\item
+								\user{} and \server{} engage into \oramsNumber{} \acrshort{oram} protocols, where \user{} is a client.
+								\user{} loads a total of $c$ records where these requests include all true records and the rest are random and non-repeating.
+							\item
+								\user{} waits for the last thread to finish, prunes the fake records and returns the true ones.
+						\end{enumerate}
+				\end{itemize}
+
+				As a purely practical optimization, instead of making a single client \acrshort{vm} engage into \oramsNumber{} (up to 128 in the experiments) connections and heavy cryptographic threads, we logically split \user{} into a principal \acrshort{vm}, which handles main logic, and a set of helper \acrshortpl{vm} that only engage in a number of \acrshort{oram} protocols.
+
+				\include{figures/fig-parallel-epsolute}
+
