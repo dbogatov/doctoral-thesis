@@ -349,3 +349,19 @@
 
 				\include{figures/fig-parallel-epsolute}
 
+		\subsection{Experimental evaluation}
+
+			To empirically verify the efficiency and practicality of our solution, we have implemented the construction and have run an extensive set of experiments.
+			We have designed the experiments to
+			\begin{enumerate*}[label=(\alph*)] % chktex 36
+				\item compare our system to competing proposed systems,
+				\item measure the storage overhead,
+				\item tune the parameters of the system and observe the effect on performance,
+				\item see how the system scales,
+				\item understand the quantitative impact of our optimizations, and
+				\item measure the impact of supporting multiple attributes.
+			\end{enumerate*}
+
+			For the default setting we ran range queries in the parallel \epsolute{} using shared \serverDS{} method.
+			Client \acrshort{vm} managed $\oramsNumber = 64$ threads, which are split among 8 lightweight \acrshort{oram} \acrshortpl{vm}.
+			Client \user{} and server \server{} are located in geographically different regions, with ping time between the regions \SI{12}{\milli\second} and effective bandwidth 
