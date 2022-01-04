@@ -134,13 +134,13 @@
 		\subsection{Motivation and Background}
 
 			A persistent adversary is capable of observing not only the data at any point in time (like the snapshot attacker), but also all processes and communication on the server, including the network messages, their size and the access pattern to the storage.
-			A series of attacks starting with a seminal work of \textcite{generic-attacks-kellaris} showed that the query result size~\cite{generic-attacks-kellaris, state-of-uniform, attacks-improved-reconstruction, pump-volume-attacks, volume-range-attacks} and access pattern~\cite{multidimensional-range-queries, inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} alone can enable reconstruction attacks.
-			The attacks against access pattern typically exploit the fact that some records are accessed more often that others and in the same query as others.
+			A series of attacks starting with a seminal work of \textcite{generic-attacks-kellaris} showed that the query result size~\cite{generic-attacks-kellaris, state-of-uniform, attacks-improved-reconstruction, pump-volume-attacks, volume-range-attacks} and access pattern~\cite{multidimensional-range-queries, inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} alone could enable reconstruction attacks.
+			The attacks against access pattern typically exploit the fact that some records are accessed more often than others and in the same query as others.
 			The adversary maps this knowledge to some public auxiliary dataset and queryset and guesses the values correctly with a non-negligible probability.
 			Attacks on communication volume are more elaborate and use the fact that there are a well-defined number of distinct interval queries over the domain.
-			\textcite{generic-attacks-kellaris}, for example, construct a polynomial with the observed number of queries that return different number of records, and solve it deriving the exact reconstruction.
+			\textcite{generic-attacks-kellaris}, for example, construct a polynomial with the observed number of queries that return a different number of records, and solve it deriving the exact reconstruction.
 
-			Generic way to protect the access pattern is the \acrfull{oram}, an interactive client-server protocol that conceals the access pattern from the observing adversary by making at least $\bigO{\log n}$ extra requests.
+			A generic way to protect the access pattern is the \acrfull{oram}, an interactive client-server protocol that conceals the access pattern from the observing adversary by making at least $\bigO{\log n}$ extra requests.
 			A na\"{\i}ve solution is to simply proxy all requests through the \acrshort{oram} protocol, but it is generally inefficient and not trivially parallelizable.
 
 			Protecting against communication volume leakage usually involves returning a number of extra fake records and letting the client filter them out locally.
@@ -152,7 +152,7 @@
 
 				The most effective approach is sampling noise using \acrfull{dp}.
 				\acrshort{dp} is a guarantee on a query algorithm that takes a database and returns some result.
-				The guarantee states that for two neighboring databases (that differ in one record), probability that the adversary will understand by looking at the output, which of the two databases was used as an input, is bounded.
+				The guarantee states that for two neighboring databases (that differ in one record), the probability that the adversary will understand by looking at the output, which of the two databases was used as an input, is bounded.
 				More formally, the \acrshort{dp} is defined in \cref{definition:dp}.
 
 				\begin{definition}[Differential Privacy, adapted from~\cite{our-data-ourselves, differential-privacy-original}]\label{definition:dp}
@@ -162,7 +162,7 @@
 					\]
 				\end{definition}
 
-				One way to make sense of this definition is the following.
+				One way to interpret this definition is the following.
 				Probabilities are taken over the coins of algorithm \algo{A}, which answers a query based on a dataset.
 				A natural instantiation of \algo{A} is a view of a distinguishing adversary \adversary{}, who tries to guess which of the two datasets was used.
 				The expression in \cref{definition:dp} then bounds the advantage of \adversary{} with $\epsilon$ and $\delta$ parameters.
@@ -171,7 +171,8 @@
 				For $\epsilon = 0$, they have to be equal, for $\epsilon = 0.01$, probabilities may differ by \SI{1}{\percent}.
 				Therefore, $\epsilon$ is called \emph{a privacy budget} of a \acrshort{dp} system.
 				$\delta$ term is additive and therefore must be small by itself.
-				This term is essentially a probability that the entire system fails, for example, if \algo{A} is a randomized algorithm which fails with a certain chance, this probability will be $\delta$.
+				This term is essentially a probability that the entire system fails.
+				For example, if \algo{A} is a randomized algorithm that fails with a certain chance, this probability will be $\delta$.
 				For instance, a PathORAM \cite{path-oram} algorithm can have a stash overflow with a bounded probability \cite[Theorem 1]{path-oram} and it will cause the entire algorithm to fail.
 				If PathORAM is used in a \acrshort{dp} system then this probability, however small, bounded and negligible, will have to be accounted for in $\delta$.
 
@@ -182,7 +183,7 @@
 				\cite{differential-privacy-original} proves that if one adds $\algo{Laplace}{0, \frac{\mathsf{sensitivity}}{\epsilon}}$ to the real result of a query, the resulting mechanism is $\epsilon$-\acrshort{dp}.
 
 				Lastly, instead of generating and adding noise each query, it is possible to generate noisy values once, embed them into the data and release the sanitized data without compromising privacy guarantees.
-				The intuition is that once the noise is embedded in the dataset, adversary can run a regular query over it and the entire query will still be \acrshort{dp}.
+				The intuition is that once the noise is embedded in the dataset, the adversary can run a regular query over it and the entire query will still be \acrshort{dp}.
 				Such methods are collectively called \emph{sanitization}, and there are known bounds for point and range queries, for pure ($\delta = 0$) and approximate ($\delta > 0$) \acrshort{dp} \cite{bounds-on-sample-complexity,private-learning-and-sanitization,non-interactive-database-privacy,dp-under-observation,dp-release,privately-learning-thresholds}.
 
 		\subsection{Security definition}
@@ -191,7 +192,7 @@
 			In \epsolute{} \cite{epsolute} we propose a definition of computationally \acrshort{dp} outsourced database.
 
 			\begin{definition}[\acrfull{cdpodb} from Definition 3.1 in \cite{epsolute}]\label{definition:cdpodb}
-				We say that an outsourced database system \protocol{} is $(\epsilon, \delta)$-computationally differentially private (a.k.a.\acrshort{cdpodb}) if for every polynomial time distinguishing adversary \adversary{}, for every neighboring databases $\database \sim \database^\prime$, and for every query sequence $\fromNtoM{\query}{1}{m} \in \querySet^m$ where $m = \mathsf{poly}(\lambda)$,
+				We say that an outsourced database system \protocol{} is $(\epsilon, \delta)$-computationally differentially private (a.k.a.\acrshort{cdpodb}) if for every polynomial time distinguishing adversary \adversary{}, for every pair of neighboring databases $\database \sim \database^\prime$, and for every query sequence $\fromNtoM{\query}{1}{m} \in \querySet^m$ where $m = \mathsf{poly}(\lambda)$,
 
 				\begin{multline*}
 					\probability{\adversary \left( 1^\lambda, \view{\protocol, \server}{\database, \fromNtoM{\query}{1}{m}} \right) = 1 } \leq \\
@@ -201,43 +202,43 @@
 			\end{definition}
 
 			First thing to note in this definition is that unlike in prior works where only a part of \adversary{}'s view is \acrshort{dp}-protected (e.g., only access pattern in \cite{differential-obliviousness,differential-obliviousness-followup}), here the entire view of the adversary is protected.
-			That is, if \emph{anything} that is visible during the protocols execution to a persistent adversary can be used to distinguish the neighboring datasets, the adversary wins and the system fails to satisfy the definition.
-			Subsequently, it implies protection against both access pattern and communication volume, since they are both a part of the view and if adversary sees either of them, she can distinguish.
+			That is, if \emph{anything} that is visible during the execution of the protocols to a persistent adversary can be used to distinguish the neighboring datasets, the adversary wins and the system fails to satisfy the definition.
+			Subsequently, it implies protection against both access pattern and communication volume, since they are both a part of the view and if the adversary sees either of them, she can distinguish.
 
 			Also note that the \acrshort{cdpodb} system is \acrshort{dp}, but not necessarily semantically secure.
 			A semantically secure database would have had probabilities almost equal (or, in \cref{definition:cdpodb}, $\epsilon = 0$).
-			The trade-off has been made to allow a construction of an efficient system.
+			The trade-off has been made to allow construction of an efficient system.
 			While a na\"{\i}ve solution that satisfies semantically secure definition would return entire dataset every query, constructing a practical instantiation is hard, is not necessarily possible, and remains an open problem.
 
-			The negligible term $\negl$ at the end was added to account for computational (as opposed to information-theoretical) nature of the definition.
-			In information-theoretical system the security is guaranteed by the clear mathematical proof that the adversary can do nothing better than brute-force the system (e.g., iterating over one-time-pad keys).
+			The negligible term $\negl$ at the end was added to account for the computational (as opposed to the information-theoretical) nature of the definition.
+			In the information-theoretical system the security is guaranteed by the clear mathematical proof that the adversary can do nothing better than brute-force the system (e.g., iterating over one-time-pad keys).
 			A computational security definition relies on the fact that the adversary simply does not have enough resources to break a system, which may or may not hold true in the future.
 			For example, the problems of finding a discrete logarithm and factorization are only assumed to be hard, as are standardized block ciphers, such as AES \cite{aes-nist}.
-			Therefore, if we want to allow a system to use these cryptographic blocks for security, we must include it in the definition.
+			Therefore, if we want to allow a system to use these cryptographic blocks for security, we must include the negligible term in the definition.
 
 			Finally, note the query sequence $\fromNtoM{\query}{1}{m} \in \querySet$ is fixed.
-			The definition is non-adaptive in a sense that the user \user{} must not choose the next query based on the result of the previous one.
-			In \cite[Section 3.1.1]{epsolute} we prove by example why this limitation is inherent and an no efficient system can be built that allows adaptive queries.
+			The definition is non-adaptive meaning that the user \user{} must not choose the next query based on the result of the previous one.
+			In \cite[Section 3.1.1]{epsolute} we prove by example why this limitation is inherent and no efficient system can be built that would allow adaptive queries.
 
 		\subsection{\epsolute{}}
 
 			In \epsolute{} \cite{epsolute}, we develop a method of answering point and range queries that satisfies \cref{definition:cdpodb}.
-			In the heart of the construction is using \acrshort{oram} to hide access pattern and \acrshort{dp} to add extra fake records to the result to hide communication volume.
+			At the heart of the construction is the use of \acrshort{oram} to hide the access pattern and \acrshort{dp} to add extra fake records to the result to hide communication volume.
 
-			\acrshort{oram} component is straightforward --- communication between \user{} and \server{} is routed thorough the \acrshort{oram} protocol.
-			This approach, however, substantially increases the overhead, which I will will address in \cref{section:range-queries-persistent:parallel-epsolute}.
+			\acrshort{oram} component is straightforward --- communication between \user{} and \server{} is routed through the \acrshort{oram} protocol.
+			This approach, however, substantially increases the overhead, which I will address in \cref{section:range-queries-persistent:parallel-epsolute}.
 
-			To properly and optimally add noise to the true result we make use of sanitizers for point and range query types.
+			To optimally add noise to the true result we make use of sanitizers for point and range query types.
 			For point queries, we construct a histogram from the domain values.
 			We put the number of records for the domain value plus the noise sampled from the Laplacian distribution into each bin.
 
 			\input{figures/fig-sanitizer}
 
-			For the range queries we use a hierarchical sanitizer \cite{hierarchical-methods-for-dp}, see example on \cref{figure:sanitizer}.
-			We first split continuous domain into bins.
+			For the range queries we use a hierarchical sanitizer \cite{hierarchical-methods-for-dp}, see example in \cref{figure:sanitizer}.
+			We first split the continuous domain into bins.
 			Then we build a \fanout{}-ary tree over domain bins and put the number of records plus noise into each node.
-			The leaves get values same way as in histogram, and intermediate node value is a sum of counts of all records in all children bins plus a single noise sample.
-			Compared to plain histogram, this construction has a benefit that if the range is wide we can answer the query using only the intermediate node and not all leaf nodes.
+			The leaves get values the same way as in histogram, and intermediate node value is a sum of counts of all records in all children bins plus a single noise sample.
+			Compared to a plain histogram, this construction has the benefit that if the range is wide we can answer the query using only the intermediate node and not all leaf nodes.
 			Since each bin is now associated with $\ceil{\log_\fanout B}$ nodes, where $B$ is the number of bins, we amplify our noise respectively.
 
 			Note that the Laplacian distribution is symmetrical and unbounded, so if we sample from a zero-mean distribution some of the samples will be negative.
@@ -250,7 +251,7 @@
 			\]
 			for domain size \domainSize{} and the number of nodes in a tree $\mathsf{nodes}$.
 
-			With this prerequisites we construct the actual setup and query protocols.
+			With these prerequisites we construct the actual setup and query protocols.
 			See visualization of \protocolQuery{} in \cref{figure:epsolute}.
 			\begin{itemize}
 				\item
@@ -285,7 +286,7 @@
 
 		\subsection{Parallel \epsolute{}}\label{section:range-queries-persistent:parallel-epsolute}
 
-			While the single-threaded \epsolute{} is an efficient \acrshort{cdpodb} in sense that it returns only a fraction of total records per query, it is still slow in practice because of the $\bigO{\log \dataSize \log \domainSize}$ overhead due to \acrshort{oram} and \acrshort{dp}-sanitizer.
+			While the single-threaded \epsolute{} is an efficient \acrshort{cdpodb} in the sense that it returns only a fraction of total records per query, it is still slow in practice because of the $\bigO{\log \dataSize \log \domainSize}$ overhead due to \acrshort{oram} and \acrshort{dp}-sanitizer.
 			To bring the construction closer to real-world demands in performance we devise a parallel solution.
 
 			\subsubsection{A choice of separate vs shared sanitized dataset}
@@ -298,7 +299,7 @@
 				When generating a separate \acrshort{dp}-sanitized dataset \serverDS{} per partition there are two competing effects on performance.
 				On the one hand, each thread on average returns a \nicefrac{1}{m} fraction of the result from an \acrshort{oram} with overhead $\log \frac{n}{m}$.
 				On the other hand, each thread now adds independent noise, which results in \oramsNumber{} amplification of noise.
-				Moreover, due to \acrshort{dp} composition theorem \cite{privacy-integrated-queries,differential-privacy-original,our-data-ourselves} for disjoint datasets, the privacy budget of the system is the privacy budget of the least private component.
+				Moreover, due to the \acrshort{dp} composition theorem \cite{privacy-integrated-queries,differential-privacy-original,our-data-ourselves} for disjoint datasets, the privacy budget of the system is the privacy budget of the least private component.
 				Since we cannot assume that the distribution of resulting records in all queries is always uniform, we bound a worst-case scenario of a single \acrshort{oram} having most of the result records.
 				In \cite[Section 5.1]{epsolute} we have found that the noise is amplified by an extra $\left( 1 + \sqrt{ \frac{-3 m \log \delta}{k_0} } \right)$ factor, where $k_0$ is the number of true records for a query.
 
@@ -315,7 +316,7 @@
 			\subsubsection{The construction}
 
 				With this analysis I present an upgraded construction, \emph{a parallel \epsolute{}}, see \cref{figure:parallel-epsolute}.
-				The core protocol is similar to single-threaded version except some of the operations are distributed and executed in parallel.
+				The core protocol is similar to the single-threaded version except some of the operations are distributed and executed in parallel.
 				\begin{itemize}
 					\item
 						Setup protocol \protocolSetup{}
@@ -364,28 +365,40 @@
 
 			For the default setting we ran range queries in the parallel \epsolute{} using shared \serverDS{} method.
 			Client \acrshort{vm} managed $\oramsNumber = 64$ threads, which are split among 8 lightweight \acrshort{oram} \acrshortpl{vm}.
-			Client \user{} and server \server{} are located in geographically distributed regions, with the ping time between the regions \SI{12}{\milli\second} and effective bandwidth \SI{150}{\mega\byte\per\second}.
-			In this proposal I will focus on comparing \epsolute{} to relevant systems and on \epsolute{}'s scalability.
-			I refer to the full work for the rest of experimental findings \cite[Section 6]{epsolute}.
+			Client \user{} and server \server{} are located in geographically distributed regions, with the ping time between the regions \SI{12}{\milli\second} and the effective bandwidth \SI{150}{\mega\byte\per\second}.
+			In this section I will focus on comparing \epsolute{} to relevant systems and on \epsolute{}'s scalability.
+			I refer to the full work for the rest of the experimental findings \cite[Section 6]{epsolute}.
 
 			\subsubsection{Against relevant solutions}
 
-				We compared \epsolute{} to conventional \acrshort{sql} \glsdisp{rdbms}{RDBMS's}, PostgreSQL and MySQL, to a linear scan approach and to Shrinkwrap \cite{shrinkwrap}.
-				\glsdisp{rdbms}{RDBMS's} were configured for maximum performance and zero security.
-				Linear scan is a strawman approach, which downloads the entire server state every query, decrypts the dataset and then runs the query locally.
-				Shrinkwrap \cite{shrinkwrap} is a construction that executes federated \acrshort{sql} queries securely.
+				In \cite{epsolute}, we compared \epsolute{}
+				\begin{enumerate*}[label=(\alph*)] % chktex 36
+					\item to conventional \acrshort{sql} \acrshortpl{rdbms} (PostgreSQL and MySQL),
+					\item to a linear scan approach, and
+					\item to Shrinkwrap \cite{shrinkwrap}.
+				\end{enumerate*}
+
+				\acrshortpl{rdbms} are highly optimized for range queries --- the records indexed by search keys are typically stored continuously in-order and the database streams back these blocks very efficiently.
+				As a baseline approach, \acrshortpl{rdbms} were configured for maximum performance and minimum security.
+
+				Linear scan is a strawman approach, which downloads the entire encrypted dataset every query, decrypts it and then runs the query locally.
+				This is the opposite baseline of maximum security and poorest performance.
+				Such approach is not entirely theoretical: some commercial \acrshortpl{rdbms} exhibit linear scan behavior when configured for maximum security, for example MS-SQL Always Encrypted with Randomized Encryption \cite{mssql-always-enc} and Oracle Column Transparent Data Encryption \cite{oracle-tde}.
+
+				Shrinkwrap \cite{shrinkwrap} is a construction that executes federated \acrshort{sql} queries securely, albeit inefficiently.
 				To hide communication volume it fully pads the intermediate results of the sub-queries (although it ``shrinks'' the output before passing it to the next stage).
 				To hide the access pattern, the algorithm does a linear scan over the entire input.
 				Moreover, to process the encrypted data (e.g., evaluate a predicate), the whole program is compiled into garbled circuits \cite{yao-circuits,emp-toolkit}.
 
 				\input{figures/fig-mechanisms}
 
-				\epsolute{} is efficient --- while answering a query in \SI{840}{\milli\second}, it is only 8 to 4 times slower than a typical \acrlong{rdbms}, 18 times faster than the scan, and three orders of magnitude faster than the Shrinkwrap, see \cref{figure:mechanisms}.
+				We conclude that \epsolute{} is efficient --- while answering a query in \SI{840}{\milli\second}, it is only 8 to 4 times slower than a typical \acrlong{rdbms}, 18 times faster than the scan, and three orders of magnitude faster than the Shrinkwrap, see \cref{figure:mechanisms}.
 
 			\subsubsection{Scalability}
 
-				To measure scalability we have run parallel \epsolute{} with shared and separate \acrshort{dp}-sanitized datasets \serverDS{} for varying number of threads \oramsNumber{}.
+				To measure scalability we have run parallel \epsolute{} with shared and separate \acrshort{dp}-sanitized datasets \serverDS{} for a varying number of threads \oramsNumber{}.
 				For a truly scalable system we would observe a drop in overhead roughly proportional to the increase in parallelization factor \oramsNumber{}.
 				We confirm experimentally that \epsolute{} is scalable when a shared \serverDS{} is used as a method of noise generation, see \cref{figure:scalability}.
+				The noise dominates the performance of separate \serverDS{} method for higher number of threads, while separate \serverDS{} method continues to scale.
 
 				\input{figures/fig-scalability}
