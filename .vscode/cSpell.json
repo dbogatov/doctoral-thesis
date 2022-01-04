@@ -7,9 +7,11 @@
 		"chktex",
 		"ciphertext",
 		"ciphertexts",
+		"descriptionplural",
 		"Dmytro",
 		"equi",
 		"fanout",
+		"hyperball",
 		"hypergeometric",
 		"oram",
 		"parallelizable",
@@ -18,9 +20,7 @@
 		"statefulness",
 		"strawman",
 		"untrusted",
-		"vely",
-		"descriptionplural",
-		
+		"vely"
 	],
 	"flagWords": [
 		"yu",
