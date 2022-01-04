@@ -5,42 +5,43 @@
 	\centering
 	\captionsetup{width=\textwidth}
 	\caption[Primitive usage by OPE / ORE schemes]{
-		\cite[Table 1]{ore-benchmark-17}.
+		\cite[Tables 1 and 4]{ore-benchmark-17}.
 		Primitive usage by OPE / ORE schemes.
 		Ordered by security rank --- most secure below.
 		$n$ is the input length in bits, $d$ is a block size for Lewi-Wu~\cite{lewi-wu-ore} scheme, $\lambda$ is a PRF output size, $N$ is a total data size, \textbf{HG} is a hyper-geometric distribution sampler, \textbf{PPH} is a property-preserving hash with $h$-bit outputs built with bilinear maps and \textbf{bolded} are weak points of the schemes.
+		Values in parentheses are simulation-derived. $N = 10^3$, $n = 32$, $d = 2$, $\lambda = 128$ and $h = 128$ in this simulation.
 	}\label{table:ore}
 	\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} l c c c c c } % chktex 26
 
 		\toprule
 
-		\multirow{2}{*}{Scheme}						& \multicolumn{2}{c}{Primitive usage}																	& Ciphertext size,																	& Leakage																\\ \cline{2-3}
-		\rule{0pt}{10pt}							& Encryption												& Comparison								& or state size																		& (In addition to inherent total order)									\\
+		\multirow{2}{*}{Scheme}						& \multicolumn{2}{c}{Primitive usage (number of invocations)}														& \multirow{2}{*}{\makecell{Ciphertext size, \\ or state size (bits)}}					&  \multirow{2}{*}{\makecell{Leakage \\ (in addition to inherent total order)}}				\\ \cline{2-3}
+		\rule{0pt}{10pt}							& Encryption														& Comparison									& 																						& 																							\\
 
 		\toprule
 
-		BCLO~\cite{bclo-ope}						& $\bm{n}$ \textbf{HG}										& none										& $2n$																				& \textbf{$\approx$ Top half of the bits}								\\
+		\cite{bclo-ope}								& $\bm{n}$ (41) \textbf{HG}											& none											& $2n$ (64)																				& \textbf{$\approx$ Top half of the bits}													\\
 
 		\midrule
 
-		CLWW~\cite{clww-ore}						& $n$ PRF 													& none										& $2n$																				& \textbf{Most-significant differing bit}								\\
+		\cite{clww-ore}								& $n$ (32) PRF 														& none											& $2n$ (64)																				& \textbf{Most-significant differing bit}													\\
 
 		\midrule
 
-		\multirow{3}{*}{Lewi-Wu~\cite{lewi-wu-ore}}	& \boldmath{} $\nicefrac{2n}{d}$ \unboldmath{} \textbf{PRP}	& \multirow{3}{*}{$\frac{n}{2d}$ Hash}		& \multirow{3}{*}{$\frac{n}{d} \left(\lambda + n + 2^{d + 1} \right) + \lambda$}	& \multirow{3}{*}{Most-significant differing block}						\\
-													& $2 \frac{n}{d} \left( 2^d + 1 \right)$ PRF				&											&																					&																		\\
-													& $\frac{n}{d} 2^d$ Hash									&											&																					&																		\\
+		\multirow{3}{*}{\cite{lewi-wu-ore}}			& \boldmath{} $\nicefrac{2n}{d}$ \unboldmath{} (32) \textbf{PRP}	& \multirow{3}{*}{$\frac{n}{2d}$ (9) Hash}		& 																						& \multirow{3}{*}{Most-significant differing block}											\\
+													& $2 \frac{n}{d} \left( 2^d + 1 \right)$ (160) PRF					&												& $\frac{n}{d} \left(\lambda + n + 2^{d + 1} \right) + \lambda$							&																							\\
+													& $\frac{n}{d} 2^d$ (64) Hash										&												& (2816)																				&																							\\
 
 
 		\midrule
 
-		\multirow{3}{*}{CLOZ~\cite{cloz-ore}}		& $n$ PRF													& \multirow{3}{*}{$\bm{n^2}$ \textbf{PPH}}	& \multirow{3}{*}{$n \cdot h$}														& Equality pattern														\\
-													& $n$ PPH													&											&																					& of the most-significant												\\
-													& 1 PRP														&											&																					& differing bit															\\
+		\multirow{3}{*}{\cite{cloz-ore}}			& $n$ (32) PRF													& \multirow{3}{*}{$\bm{n^2}$ (1046) \textbf{PPH}}	& \multirow{3}{*}{$n \cdot h$ (4096)}													& \multirow{3}{*}{\makecell{Equality pattern \\ of the most-significant \\ differing bit}}	\\
+													& $n$ (32) PPH													&													&																						& 																							\\
+													& 1 PRP															&													&																						& 																							\\
 
 		\midrule
 
-		FH-OPE~\cite{fh-ope}						& 1 Traversal												& {3 Traversals}							& $\bm{3 \cdot n \cdot N}$															& Insertion order														\\
+		\cite{fh-ope}								& 1 Traversal													& 3 Traversals										& $\bm{3 \cdot n \cdot N}$ (86842)														& Insertion order																			\\
 
 		\bottomrule
 
