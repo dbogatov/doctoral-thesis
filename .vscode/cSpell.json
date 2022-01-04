@@ -16,8 +16,11 @@
 		"pseudocode",
 		"queryset",
 		"statefulness",
+		"strawman",
 		"untrusted",
-		"vely"
+		"vely",
+		"descriptionplural",
+		
 	],
 	"flagWords": [
 		"yu",

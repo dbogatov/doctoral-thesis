@@ -107,9 +107,9 @@
 
 			We have paid extra attention to how we quantify the performance.
 			Published works typically claim that they have implemented the algorithm in some language and ran it on a server many times measuring the wall-clock time.
-			Such metric is deeply flawed since it only measures just that --- the wall-clock time it took for a particular machine to execute a particular code that references particular implementations of primitives and makes (or even does not make) \IO{} requests to particular hardware.
+			Such metric is deeply flawed since it only measures just that --- the wall-clock time it took for a particular machine to execute a particular code that references particular implementations of primitives and makes (or even does not make) \acrshort{io} requests to particular hardware.
 			What we offer is a metric that drops all these ``particulars'' (i.e., dependencies) from the protocol execution.
-			On top of having all solutions implemented in the same language and using same primitives, instead of measuring the time we count the number fo times an \acrshort{ore} scheme makes use of a primitive and a protocol makes an \IO{} request.
+			On top of having all solutions implemented in the same language and using same primitives, instead of measuring the time we count the number fo times an \acrshort{ore} scheme makes use of a primitive and a protocol makes an \acrshort{io} request.
 			This metric is much more demonstrative: one can always get a wall-clock time estimate given these counts and the specs of the hardware.
 			Moreover, we can analyze these counts theoretically from the pseudocode and then verify them practically after running the code.
 
@@ -351,7 +351,7 @@
 
 		\subsection{Experimental evaluation}
 
-			To empirically verify the efficiency and practicality of our solution, we have implemented the construction and have run an extensive set of experiments.
+			To empirically verify the efficiency and practicality of our solution, we have implemented the construction in C++ \cite{github-epsolute} and have run an extensive set of experiments.
 			We have designed the experiments to
 			\begin{enumerate*}[label=(\alph*)] % chktex 36
 				\item compare our system to competing proposed systems,
@@ -364,4 +364,28 @@
 
 			For the default setting we ran range queries in the parallel \epsolute{} using shared \serverDS{} method.
 			Client \acrshort{vm} managed $\oramsNumber = 64$ threads, which are split among 8 lightweight \acrshort{oram} \acrshortpl{vm}.
-			Client \user{} and server \server{} are located in geographically different regions, with ping time between the regions \SI{12}{\milli\second} and effective bandwidth 
+			Client \user{} and server \server{} are located in geographically distributed regions, with the ping time between the regions \SI{12}{\milli\second} and effective bandwidth \SI{150}{\mega\byte\per\second}.
+			In this proposal I will focus on comparing \epsolute{} to relevant systems and on \epsolute{}'s scalability.
+			I refer to the full work for the rest of experimental findings \cite[Section 6]{epsolute}.
+
+			\subsubsection{Against relevant solutions}
+
+				We compared \epsolute{} to conventional \acrshort{sql} \glsdisp{rdbms}{RDBMS's}, PostgreSQL and MySQL, to a linear scan approach and to Shrinkwrap \cite{shrinkwrap}.
+				\glsdisp{rdbms}{RDBMS's} were configured for maximum performance and zero security.
+				Linear scan is a strawman approach, which downloads the entire server state every query, decrypts the dataset and then runs the query locally.
+				Shrinkwrap \cite{shrinkwrap} is a construction that executes federated \acrshort{sql} queries securely.
+				To hide communication volume it fully pads the intermediate results of the sub-queries (although it ``shrinks'' the output before passing it to the next stage).
+				To hide the access pattern, the algorithm does a linear scan over the entire input.
+				Moreover, to process the encrypted data (e.g., evaluate a predicate), the whole program is compiled into garbled circuits \cite{yao-circuits,emp-toolkit}.
+
+				\input{figures/fig-mechanisms}
+
+				\epsolute{} is efficient --- while answering a query in \SI{840}{\milli\second}, it is only 8 to 4 times slower than a typical \acrlong{rdbms}, 18 times faster than the scan, and three orders of magnitude faster than the Shrinkwrap, see \cref{figure:mechanisms}.
+
+			\subsubsection{Scalability}
+
+				To measure scalability we have run parallel \epsolute{} with shared and separate \acrshort{dp}-sanitized datasets \serverDS{} for varying number of threads \oramsNumber{}.
+				For a truly scalable system we would observe a drop in overhead roughly proportional to the increase in parallelization factor \oramsNumber{}.
+				We confirm experimentally that \epsolute{} is scalable when a shared \serverDS{} is used as a method of noise generation, see \cref{figure:scalability}.
+
+				\input{figures/fig-scalability}

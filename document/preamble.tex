@@ -33,11 +33,14 @@
 \usepackage{multirow}
 \usepackage{bm}
 \usepackage{rotating}
+\definecolor{BrightRed}{RGB}{204, 0, 0}
+\definecolor{DarkRed}{RGB}{102, 0, 0}
+\definecolor{MidRed}{RGB}{143, 0, 0}
 \usepackage[
 	colorlinks = true,
-	linkcolor = PineGreen,
-	urlcolor  = JungleGreen,
-	citecolor = Turquoise
+	linkcolor = DarkRed,
+	urlcolor = MidRed,
+	citecolor = BrightRed,
 ]{hyperref}
 \usepackage[noabbrev,capitalise]{cleveref} % must be loaded after hyperref
 
@@ -49,13 +52,18 @@
 \usepackage[all]{nowidow}
 \usepackage{hyphenat}
 \usepackage[inline]{enumitem}
-\usepackage{siunitx}
+\usepackage[binary-units]{siunitx}
 \usepackage[mathscr]{eucal}
 \usepackage{longtable}
 \usepackage{threeparttable}
 \usepackage{textcomp}
 \usepackage{array}
 \usepackage{calc}
+
+\sisetup{
+	group-minimum-digits = 4,
+	per-mode = symbol
+}
 
 \usepackage[
 	backend=biber,
@@ -95,6 +103,7 @@
 	nopostdot,
 	nogroupskip
 ]{glossaries}
+% \usepackage{acronym}
 \renewcommand*{\glsclearpage}{}
 \renewcommand*{\acronymname}{List of Abbreviations}
 
