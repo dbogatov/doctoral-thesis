@@ -4,41 +4,42 @@
 	\renewcommand{\arraystretch}{1.5}
 	\centering
 	\captionsetup{width=\textwidth}
-	\caption[Performance of protocols]{
+	\caption[Performance of the range query protocols]{
 		\cite[Table 2]{ore-benchmark-17}.
-		Performance of protocols.
+		Performance of the range query protocols.
 		Ordered by security rank --- most secure below.
 		$N$ is a total data size, $B$ is an \acrshort{io} page size, $L$ is a POPE tree branching factor, $r$ is the result size in records and \textbf{bolded} are weak points of the protocols.
-		All values are in $\mathcal{O}$ notation.
+		The cell content is structured as follows: top value is the analytical result in $\mathcal{O}$ notation, bottom value is the number of requests for \acrshort{io} requests or number of messages and their total size for communication.
+		In these experiments, $N = 247K$, $B = \SI{4}{\kilo\byte}$, $r \approx 247K \cdot \SI{0.5}{\percent} = 1235$, and $L = 60$.
 	}\label{table:range}
 	\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} l c c c c c } % chktex 26
 
 		\toprule
 
-		\multirow{2}{*}{Protocol}						& \multicolumn{2}{c}{\acrshort{io} requests}																											& \multirow{2}{*}{Leakage}	& \multicolumn{2}{c}{Communication}																		\\ \cline{2-3} \cline{5-6}
-		\rule{0pt}{10pt}								& Construction										& Query																								&							& Construction										& Query 											\\
+		\multirow{2}{*}{Protocol}		& \multicolumn{2}{c}{\acrshort{io} requests}																															& \multirow{2}{*}{Leakage}						& \multicolumn{2}{c}{Communication}																														\\ \cline{2-3} \cline{5-6}
+		\rule{0pt}{10pt}				& Construction												& Query																										&												& Construction																& Query 																	\\
 
 		\toprule
 
-		{\BPlus} tree with ORE							& $\log_B \frac{N}{B}$								& $\log_B \frac{N}{B} + \frac{r}{B}$																& \textbf{Same as ORE}		& $1$												& $1$												\\
-		\midrule
-
-		Kerschbaum~\cite{florian-protocol}				& $\bm{\frac{N}{B}}$								& $\log_2 \frac{N}{B} + \frac{r}{B}$																& \textbf{Total order}		& $\log_2 N$										& $\log_2 N$										\\
+		{\BPlus} tree with ORE			& \makecell{$\log_B \frac{N}{B}$ \\ 3 requests}				& \makecell{$\log_B \frac{N}{B} + \frac{r}{B}$ \\ 44 requests}												& \textbf{Same as ORE}							& \makecell{$1$ \\ 2 / \SI{177}{\byte}}										& \makecell{$1$ \\ 2 / \SI{342}{\byte}}										\\
 
 		\midrule
 
-		POPE~\cite{pope} warm							& \multirow{2}{*}{$1$}								& $\log_L \frac{N}{B} + \frac{r}{B}$																& \textbf{Partial order}	& \multirow{2}{*}{$1$}								& $\log_L N$										\\
-
-		POPE~\cite{pope} cold							& 													& $\bm{{\nicefrac{N}{B}}}$																			& Fully hiding				& 													& $\bm{N}$											\\
+		\cite{florian-protocol}			& \makecell{$\bm{\frac{N}{B}}$ \\ 494 requests}				& \makecell{$\log_2 \frac{N}{B} + \frac{r}{B}$ \\ 17 requests}												& \textbf{Total order}							& \makecell{$\log_2 N$ \\ 40 / \SI{671}{\byte}}								& \makecell{$\log_2 N$ \\ 86 / \SI{1453}{\byte}}							\\
 
 		\midrule
 
-		Logarithmic-BRC~\cite{practical-range-search}	& \textbf{---}										& $\bm{r}$																							& Same as SSE				& \textbf{---}										& $\log_2 N$										\\
+		\cite{pope} warm				& \multirow{2}{*}{\makecell{$1$ \\ 1 request}}				& \makecell{$\log_L \frac{N}{B} + \frac{r}{B}$ \\ 300 requests}												& \textbf{Partial order}						& \multirow{2}{*}{\makecell{$1$ \\ 2 / \SI{32}{\byte}}}						& \makecell{$\log_L N$ \\ 914 / \SI{347}{\kilo\byte}}						\\ \cline{1-1} \cline{3-3} \cline{6-6}
+
+		\cite{pope} cold				& 															& \makecell{$\bm{{\nicefrac{N}{B}}}$ \\ 2175 requests}														& Fully hiding									& 																			& \makecell{$\bm{N}$ \\ 498K / \SI{9}{\mega\byte}}							\\
 
 		\midrule
 
-		\multirow{2}{*}{ORAM}							& \multirow{2}{*}{$\bm{{ \log^2 \frac{N}{B} }}$}	& \multirow{2}{*}{$\bm{{ \log_2 \frac{N}{B} \left( \log_B \frac{N}{B} + \frac{r}{B} \right) }}$}	& Fully hiding				& \multirow{2}{*}{$\bm{{ \log^2 \frac{N}{B} }}$}	& \multirow{2}{*}{$\bm{{ \log^2 \frac{N}{B} }}$}	\\
-														&													&																									& (access pattern)			&													&													\\
+		\cite{practical-range-search}	& \textbf{---}												& \makecell{$\bm{r}$ \\ 40 requests}																		& Same as SSE									& \textbf{---}																& \makecell{$\log_2 N$ \\ 2 / \SI{391}{\byte}}								\\
+
+		\midrule
+
+		ORAM							& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ 31 requests}	& \makecell{$\bm{{ \log_2 \frac{N}{B} \left( \log_B \frac{N}{B} + \frac{r}{B} \right) }}$ \\ 185 requests}	& \makecell{Fully hiding \\ (access pattern)}	& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ 143 / \SI{18}{\kilo\byte} }	& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ 490 / \SI{63}{\kilo\byte} }	\\
 
 		\bottomrule
 
