@@ -437,6 +437,7 @@
 			The scheme works by amplifying the input vector length by a secret factor, then constructing a $d$-dimensional $\beta$-radius hyperball, and finally setting the vector's tip to a uniformly sampled point on that ball.
 			The decryption uses the same secret seed and thus constructs the same amplification factor and the same ball, then makes the inverse arithmetic steps to derive the original vector.
 			The security of the scheme thus depends on the maximum amount of amplification, the radius of the hyperball $\beta$ and the size of seed for the samplers.
+			As the construction operates on real numbers, an open question remains on how to avoid negative side-effects of floating point numbers bit representation.
 			I refer to the original paper \cite{dcpe} for the detailed $\beta$-\acrshort{dcpe} construction.
 
 		\subsection{The setup and query protocols}
