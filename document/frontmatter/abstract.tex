@@ -2,9 +2,9 @@ As organizations struggle with processing vast amounts of information, outsourci
 To protect the data, various cryptographic techniques are used in outsourced database systems to ensure data privacy while allowing efficient querying.
 
 In this prospectus, I propose a definition and components of a new secure and efficient outsourced database system, which answers various types of queries, with different privacy guarantees in different security models.
-I start with my survey work on five order-preserving and order-revealing encryption schemes that can be used directly in many database indices, like the B+ tree, and five range query protocols with various trade-offs in terms of security and efficiency.
+I start with my survey work on five order-preserving and order-revealing encryption schemes that can be used directly in many database indices, such as the B+ tree, and five range query protocols with various trade-offs in terms of security and efficiency.
 This work systematizes the state-of-the-art range query solutions in a snapshot adversary setting and offers some non-obvious observations regarding the efficiency of the constructions.
-I then follow with a recently published work, \epsolute{}, an efficient range query engine in a persistent adversary model.
+I then follow with a recently published work, \epsolute{} --- an efficient range query engine in a persistent adversary model.
 In this work, we achieve security in a setting with a much stronger adversary where she can continuously observe everything on the server, and leaking even the result size can enable a reconstruction attack.
 We propose a definition, construction, analysis and experimental evaluation of a system that provably hides both access pattern and communication volume, while remaining efficient.
 Finally, I describe an ongoing work on secure \acrlong{knn} queries, in which the security is achieved similarly to \acrshort{ope}/\acrshort{ore} solutions --- encrypting the input with an approximate \acrlong{dcpe} scheme, so that the inputs are perturbed, but the query algorithm still produces accurate results.
