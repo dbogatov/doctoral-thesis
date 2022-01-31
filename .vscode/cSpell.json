@@ -1,5 +1,5 @@
 {
-	"version": "0.1",
+	"version": "0.2",
 	"language": "en",
 	"words": [
 		"Bogatov",
@@ -22,7 +22,13 @@
 		"strawman",
 		"untrusted",
 		"vely",
-		"Zamani"
+		"Zamani",
+		"homomorphic",
+		"BCLO",
+		"CLWW",
+		"Lewi",
+		"CLOZ",
+		"Kerschbaum"
 	],
 	"flagWords": [
 		"yu",

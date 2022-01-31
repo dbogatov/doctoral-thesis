@@ -1,0 +1,60 @@
+\chapter{\acrshort{knn} queries in the snapshot model}
+\thispagestyle{myheadings}
+
+	Nearest neighbor search is a type of optimization problem that, given a set of objects and a distance metric, requires finding the object closest to a given object according to the distance metric.
+	A \acrfull{knn} search is a subtype of a general nearest neighbor problem where $k$ closest objects are requested.
+	Applications that use \acrshort{knn} search only need to define the objects and the metric.
+	For example, a street map application would define the 2D coordinates of the buildings as objects and Euclidean distance as a metric, then the query could be ``give 5 restaurants closest to the current user position''.
+	A document search application would define the keyword vector for a document as an object and an inner product distance as a metric, then the query could be ``give 3 documents most similar to the given text'' (similar applications may search images, videos and sounds).
+
+	To run a \acrshort{knn} query securely in an outsourced database model, I propose to use an approach similar to \acrshort{ore} for range queries.
+	While to run a range query one needs to be able to \emph{compare} the ciphertexts (exactly what \acrshort{ore} does), to run a \acrshort{knn} query one needs to know \emph{a distance comparison} between pairs of ciphertexts.
+	That is, one needs to maintain (or reveal) an order of distances of all pairs of encrypted objects.
+	For example, if $x$ was further from $y$ than $z$ was, then the encryption of $x$ needs to be further from the encryption of $y$ than the encryption of $z$ is.
+
+	Although such a \acrfull{dcpe} scheme would allow running the query with absolute accuracy, the construction would suffer from the same security issues that the \acrshort{ore} methods did.
+	Most of all, while \acrshort{ore}-encrypted dataset reveals the total order, the \acrshort{dcpe}-encrypted values will reveal \emph{the total relative position} of all elements.
+	The exact distances will be hidden (subject to the \acrshort{dcpe} scheme's leakage), but the relative position is a substantial leakage that may lead to reconstruction attacks.
+	To mitigate the leakage we may use a form of \emph{an approximate} \acrshort{dcpe}, which ideally would add controlled noise or inaccuracy to the relative distances.
+
+	\section{\acrlong{dcpe}}
+
+		A candidate approximate \acrshort{dcpe} scheme has been proposed by \textcite{dcpe}.
+		The scheme provides the following guarantee on its ciphertexts
+		\begin{multline*}
+			\forall x, y, z \in \mathbb{X} : \algo{Dist}{x, y} < \algo{Dist}{x, z} - \beta \\
+			\implies \algo{Dist}{f(x), f(y)} < \algo{Dist}{f(x), f(z)}
+		\end{multline*}
+		where $\mathbb{X} \subseteq \mathbb{R}^d$ is the set of $d$-dimensional vectors of real numbers, \algo{Dist} is the inner product distance over elements in $\mathbb{X}$, and $\beta$ is the approximation factor.
+		Parameter $\beta$ partially defines the security of the encrypted set --- the larger $\beta$, the fewer distance comparisons are preserved, the less accurate the search and the reconstruction attacks would be.
+		\textcite{dcpe} prove protection against membership inference attacks \cite{memebership-inference-attacks-knn} (whether an individual is in the database or not), and against approximate frequency-finding attacks (how many times the element appears in the set, see \cite{leakage-abuse-grubs-2017} for \acrshort{ore} frequency attacks).
+		As for the choice of $\beta$, \cite{dcpe} proves that $\beta \approx \sqrt{\max N}$ would hide about half of the inputs bits, for $\max N$ being the maximum vector length in the dataset.
+
+		The scheme works by amplifying the input vector length by a secret factor, then constructing a $d$-dimensional $\beta$-radius hyperball, and finally setting the vector's tip to a uniformly sampled point on that ball.
+		The decryption uses the same secret seed and thus constructs the same amplification factor and the same ball, then makes the inverse arithmetic steps to derive the original vector.
+		The security of the scheme thus depends on the maximum amount of amplification, the radius of the hyperball $\beta$ and the size of seed for the samplers.
+		As the construction operates on real numbers, an open question remains on how to avoid negative side-effects of floating point numbers bit representation.
+		I refer to the original paper \cite{dcpe} for the detailed $\beta$-\acrshort{dcpe} construction.
+
+	\section{\acrshort{knn} search accuracy}
+
+		With the $\beta$-\acrshort{dcpe} as a component, we can model the protocols similar to \acrshort{ore} ones.
+		In the setup protocol \protocolSetup{}, \user{} simply encrypts the entire input, one vector at a time, and sends the encrypted data over to \server{}.
+		In the query protocol \protocolQuery{}, \user{} encrypts the query with \acrshort{dcpe}, sends the ciphertext to \server{}, while \server{} runs a standard \acrshort{knn} search against the ciphertext.
+		$k$ encrypted vectors are then returned to \user{}, who decrypts them as the last step.
+		These protocols run for a single set of secrets including $\beta$.
+		To measure the effect of different levels of security on search accuracy, I propose to repeat the experiments for different values of $\beta$.
+
+		For the choice of the dataset, I suggest using the established information retrieval \acrshort{trec} test collections.
+		Such collection consists of a set of documents, a set of topics (questions) and a corresponding set of relevance judgments (correct answers).
+		To use the test collection, we need to convert the documents and queries into vectors.\footnote{
+			Hamed Zamani has collaborated with us and provided the vectorized data and query sets.
+		}
+		A benefit of using a \acrshort{trec} dataset is being able to evaluate relevant metrics over the produced results, for example, \acrshort{mrr} \cite{mrr} and \acrshort{dcg} \cite{dcg}.
+		We can then track how these metrics, along with the simpler edit distance and set difference over the result, degrade with higher security.
+
+		Lastly, for an actual implementation I suggest using an existing component for the bare \acrshort{knn} search.
+		\acrshort{faiss}~\cite{faiss} is a \acrshort{gpu}-enabled library for efficient similarity search and clustering of dense vectors.
+		Given that the \acrshort{trec} vectors are $d = 768$ dimensional with a maximum Euclidean length of 11, \acrshort{faiss} seems to be an ideal candidate.
+
+	\section{Security against attacks}
