@@ -22,16 +22,22 @@
 	keys
 ]{cryptocode}
 \usepackage{appendix}
+\usepackage{adjustbox}
+\usepackage[ruled]{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{balance}
+\usepackage{diagbox}
 \usepackage{mathtools}
 \usepackage{nicefrac}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{bm}
+\usepackage{interval}
 \usepackage{rotating}
 \definecolor{BrightRed}{RGB}{204, 0, 0}
 \definecolor{DarkRed}{RGB}{102, 0, 0}
@@ -47,6 +53,7 @@
 \AtBeginEnvironment{appendices}{\crefalias{chapter}{appendix}}
 
 \usepackage{color}
+\usepackage{colortbl}
 \usepackage{amsthm}
 \usepackage{caption}
 \usepackage[all]{nowidow}
@@ -123,7 +130,7 @@
 	\setlength{\aglsleft}{\dimexpr\aglslong+0.1em\relax}
 
 	\newlength\aglsright%
-	\setlength{\aglsright}{\widthof{Computationally DP Outsourced Database System}}
+	\setlength{\aglsright}{\widthof{Health Insurance Portability and Accountability Act}}
 
 	\newlength\aglscenter%
 	\setlength{\aglscenter}{\dimexpr\linewidth-\aglsright-\aglsleft\relax}
@@ -161,9 +168,6 @@
 \renewcommand*{\glsclearpage}{}
 \makeglossaries%
 \glsaddall%
-
-\newtheorem{theorem}{Theorem}
-\newtheorem{definition}{Definition}
 
 \newcommand{\crypte}{Crypt$\epsilon$}
 \newcommand{\epsolute}{\ensuremath{\mathcal{E}}p\-so\-lu\-te}
@@ -243,11 +247,64 @@
 
 \newcommand{\fromNtoM}[3]{\ensuremath{#1_#2, \ldots, #1_#3}}
 \newcommand{\probability}[1]{\ensuremath{\textnormal{Pr}\left[ #1 \right]}} % chktex 35
-
 \newcommand{\efficiency}[2]{\ensuremath{\left( \bigO{ #1 }, \ifthenelse{\equal{#2}{0}}{#2}{\bigO{ #2 }} \right)}}
-
 \newcommand{\semitransp}[2][35]{\color{fg!#1}#2}
 
 \newcommand{\BPlus}{B\raisebox{.35\height}{\scalebox{.8}{+}}}
 \newcommand{\IO}{I/O}
 \newcommand{\knn}{\ensuremath{k}NN}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+% Add bidirectional arrow to cryptocode
+\makeatletter
+	\newcommandx*{\sendmessageboth}[2][1=<->]{%
+		\sendmessage{#1}{#2}%
+	}
+	\WithSuffix\newcommand\sendmessageboth*[2][\pcdefaultmessagelength]{%
+		\begingroup%
+			\renewcommand{\@pcsendmessagetop}{\let\halign\@pc@halign$\begin{aligned}#2\end{aligned}$}% chktex 21
+			\sendmessage{<->}{length=#1}%
+		\endgroup%
+	}
+	\renewcommand{\pccomment}[1]{{\rhd\;\text{\scriptsize#1}}} % chktex 21
+\makeatother
+
+\newcommand{\pcinput}[1]{\textbf{Input:}\ #1}
+\newcommand{\pcouput}[1]{\textbf{Output:}\ #1}
+
+\definecolor{lightGrey}{RGB}{220,220,220}
+
+% https://tex.stackexchange.com/a/1248/97712
+% https://tex.stackexchange.com/a/268845/97712
+\makeatletter
+	\let\orgdescriptionlabel\descriptionlabel%
+	\renewcommand*{\descriptionlabel}[1]{%
+		\let\orglabel\label%
+		\let\label\@gobble% chktex 21
+		\phantomsection%
+		\protected@edef\@currentlabel{#1\unskip}% chktex 21
+		\let\label\orglabel
+		\orgdescriptionlabel{#1}%
+	}
+\makeatother
+
+% https://github.com/arnomi/cryptocode/issues/5
+\AtBeginDocument{
+	\pcfixhyperref%
+	\makeatletter
+		\crefformat{@pclinenumber}{line~#2#1#3}
+		\Crefformat{@pclinenumber}{Line~#2#1#3}
+		\crefrangeformat{@pclinenumber}{lines~#3#1#4 to~#5#2#6}
+		\Crefrangeformat{@pclinenumber}{Lines~#3#1#4 to~#5#2#6}
+	\makeatother
+}

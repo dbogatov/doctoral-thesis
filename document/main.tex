@@ -58,6 +58,11 @@
 	\cleardoublepage%
 
 	\newpage
+	\listofalgorithms%
+	\addcontentsline{toc}{chapter}{\listalgorithmname}
+	\cleardoublepage%
+
+	\newpage
 	\listoftables
 	\addcontentsline{toc}{chapter}{\listtablename}
 	\cleardoublepage%
@@ -67,7 +72,7 @@
 	\addcontentsline{toc}{chapter}{\listfigurename}
 	% \cleardoublepage%
 
-	\addtocontents{toc}{\protect\contentsline{chapter}{\protect{}List of Acronyms}{x}{table:environment}}
+	\addtocontents{toc}{\protect\contentsline{chapter}{\protect{}List of Acronyms}{xii}{link}}
 	\printglossaries%
 	\cleardoublepage%
 
@@ -83,7 +88,7 @@
 	\cleardoublepage%
 	\input{sections/snapshot-range-queries}
 	\cleardoublepage%
-	\input{sections/persistent-range-queries}
+	\input{sections/persistent-range-queries/persistent-range-queries}
 	\cleardoublepage%
 	\input{sections/snapshot-knn-queries}
 	\cleardoublepage%

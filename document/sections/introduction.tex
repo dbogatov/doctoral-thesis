@@ -60,19 +60,19 @@
 			\paragraph*{A point query.}
 				This query selects records whose key is equal to a given value.
 				The domain of the point value does not have to be ordered; it can be categorical, like color names.
-				The relevant SQL query can be
+				The relevant \acrshort{sql} query can be
 
 				\texttt{SELECT * FROM t1 WHERE zip = '02215'}.
 
 			\paragraph*{A range query.}
 				This query selects records whose key lies between two values from an ordered domain.
-				The relevant SQL query can be
+				The relevant \acrshort{sql} query can be
 
 				\texttt{SELECT * FROM t1 WHERE age BETWEEN 18 and 65}.
 
 			\paragraph*{A \acrshort{knn} query.}
 				\acrlong{knn} query selects $k$ records whose keys are ``closest'' to a given value.
 				This query type requires a definition of distance metric over the domain of search keys, for example, simple Euclidean distance.
-				The relevant SQL query can be
+				The relevant \acrshort{sql} query can be
 
 				\texttt{SELECT * FROM t1 ORDER BY location <-> '(29.9691,-95.6972)' LIMIT 5}. % chktex 36

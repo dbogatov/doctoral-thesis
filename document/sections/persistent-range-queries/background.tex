@@ -1,0 +1,128 @@
+\section{Background}\label{section:background}
+
+	In this section we describe \emph{an outsourced database system} adapted from~\cite{generic-attacks-kellaris}, a base for our own model (\cref{section:dpodb}), and the constructions we will use as building blocks in our solution.
+
+	\subsection{Outsourced Database System}
+
+		We abstract a database as a collection of \dataSize{} records \record{}, each with a unique identifier \recordID{}, associated with search keys \searchKey{}: \databaseDef{}.
+		We assume that all records have an identical fixed bit-length, and that search keys are elements of the domain $\searchKeyDomain = \{ 1, \ldots, \domainSize \}$ for some $\domainSize \in \NN$.
+		Outsourced database systems support search keys on multiple attributes, with a set of search keys for each of the attributes of a record.
+		For the ease of presentation, we describe the model for a single indexed attribute and then show how to extend it to support multiple attributes.
+
+		A query is a predicate $\query: \searchKeyDomain \to \bin$.
+		Evaluating a query \query{} on a database \database{} results in $\query( \database ) = \{ \record_i : \query( \searchKey_i ) = 1 \}$, all records whose search keys satisfy $\query$.
+
+		Let \querySet{} be a set of queries.
+		An \emph{outsourced database system} for queries in \querySet{} consists of two protocols between two \emph{stateful} parties: a user \user{} and a server \server{} (adapted from \cite{generic-attacks-kellaris}): % chktex 2
+		\begin{description}
+			\item[Setup protocol \protocolSetup{}:]
+				\user{} receives as input a database \databaseDef{}; \server{} has no input.
+				The output for \server{} is a data structure \serverDS{}; \user{} has no output besides its state.
+
+			\item[Query protocol \protocolQuery{}:]
+				\user{} has a query $\query \in \querySet$ produced in the setup protocol as input; \server{} has as input \serverDS{} produced in the setup protocol.
+				\user{} outputs $\query( \database )$; \server{} has no formal output.
+				(Both parties may update their internal states.)
+		\end{description}
+
+		For correctness, we require that for any database \databaseDef{} and query $\query \in \querySet$, it holds that running \protocolSetup{} and then \protocolQuery{} on the corresponding inputs yields for $\user{}$ the correct output $\{ \record_i : \query( \searchKey_i ) = 1 \}$ with overwhelming probability over the coins of the above runs.
+		We call the protocol $\eta$-wrong if this probability is at least $1 - \eta$.
+
+	\subsection{Differential Privacy and Sanitization}\label{section:building-blocks:dp}
+
+		Differential privacy is a definition of privacy in analysis that protects information that is specific to individual records.
+		More formally, we call databases $\database_1 \in \searchKeyDomain^\dataSize$ and $\database_2 \in \searchKeyDomain^\dataSize$ over domain \searchKeyDomain{} \emph{neighboring} (denoted $\database_1 \sim \database_2$) if they differ in exactly one record.
+
+		\begin{definition}[\cite{our-data-ourselves, differential-privacy-original}]
+
+			A randomized algorithm \algo{A} is $(\epsilon, \delta)$-differentially private if for all $\database_1 \sim \database_2 \in \searchKeyDomain^\dataSize$, and for all subsets $\mathcal{O}$ of the output space of \algo{A},
+			\[
+				\probability{ \algo{A}{ \database_1 } \in \mathcal{O} } \leq \exp(\epsilon) \cdot \probability{ \algo{A}{ \database_2 } \in \mathcal{O} } + \delta \; .
+			\]
+			The probability is taken over the random coins of \algo{A}.
+		\end{definition}
+
+		When $\delta = 0$ we omit it and say that \algo{A} preserves \emph{pure} differential privacy, otherwise (when $\delta > 0$) we say that \algo{A} preserves \emph{approximate} differential privacy.
+
+		We will use mechanisms for answering count queries with differential privacy.
+		Such mechanisms perturb their output to mask out the effect of any single record on their outcome.
+		The simplest method for answering count queries with differential privacy is the \acrfull{lpa}~\cite{differential-privacy-original} where random noise drawn from a Laplace distribution is added to the count to be published.
+		The noise is scaled so as to hide the effect any single record can have on the count.
+		More generally, the \acrshort{lpa} can be used to approximate any statistical result by scaling the noise to the \emph{sensitivity} of the statistical analysis.\footnote{
+			The \emph{sensitivity} of a query \query{} mapping databases into $\RR^\domainSize$ is defined to be $\Delta(\query) = \max_{\database_1 \sim \database_2 \in \searchKeyDomain^\dataSize} \norm{ \query(\database_1) - \query(\database_2) }_1$.
+		}
+
+		\begin{theorem}[adapted Theorem 1 from~\cite{differential-privacy-original}]\label{theorem:lpa}
+			Let $\query : \database \to \RR^\domainSize$.
+			An algorithm \algo{A} that adds independently generated noise from a zero-mean Laplace distribution with scale $\lambda = \nicefrac{\Delta(\query)}{\epsilon}$ to each of the \domainSize{} coordinates of $\query(\database)$, satisfies $\epsilon$-differential privacy.
+		\end{theorem}
+
+		While \cref{theorem:lpa} is an effective and simple way of answering a single count query, we will need to answer a sequence of count queries, ideally, without imposing a bound on the length of this sequence.
+		We will hence make use of \emph{sanitization} algorithms.
+
+		\begin{definition}\label{definition:dp-danitizer}
+			Let \querySet{} be a collection of queries.
+			An $(\epsilon, \delta, \alpha, \beta)$-differentially private sanitizer for \querySet{} is a pair of algorithms $(\algo{A}, \algo{B})$ such that:
+			\begin{itemize}
+				\item $A$ is $(\epsilon, \delta)$-differentially private, and
+				\item on input a dataset $\database = \fromNtoM{d}{1}{\dataSize} \in \searchKeyDomain^\dataSize$, \algo{A} outputs a data structure \serverDS{} such that with probability $1 - \beta$ for all $\query \in \querySet$, $\abs{ \algo{B}{ \serverDS, \query } - \sum_i \query(d_i) } \leq \alpha$.
+			\end{itemize}
+		\end{definition}
+
+		\begin{remark}\label{remark:dp-sanitizer-guarantees}
+			Given an $(\epsilon, \delta, \alpha, \beta)$-differentially private sanitizer as in \cref{definition:dp-danitizer} one can replace the answer $\algo{B}{ \serverDS, \query }$ with $\textsc{B}^\prime ( \serverDS, \allowbreak \query ) = \algo{B}{ \serverDS, \query } + \alpha$.
+			Hence, with probability $1 - \beta$, for all $\query \in \querySet$, $0 \leq \algo{\ensuremath{\textsc{B}^\prime}}{ \serverDS, \query } - \sum_i \query(d_i) \leq 2 \alpha$.
+			We will hence assume from now on that sanitizers have this latter guarantee on their error.
+		\end{remark}
+
+		The main idea of \emph{sanitization} (a.k.a.\ private data release) is to release specific noisy statistics on a private dataset once, which can then be combined in order to answer an arbitrary number of queries without violating privacy.
+		Depending on the query type and the notion of differential privacy (i.e., pure or approximate), different upper bounds on the error have been proven.
+		Omitting the dependency on $\epsilon,\delta$, in case of point queries over domain size \domainSize{}, pure differential privacy results in $\alpha = \bigTheta{\log \domainSize}$~\cite{bounds-on-sample-complexity}, while for approximate differential privacy $\alpha = \bigO{1}$~\cite{private-learning-and-sanitization}.
+		For range queries over domain size \domainSize{}, these bounds are $\alpha = \bigTheta{\log \domainSize}$ for pure differential privacy~\cite{non-interactive-database-privacy,dp-under-observation}, and $\alpha = \bigO{(\log^{*} \domainSize)^{1.5}}$ for approximate differential privacy (with an almost matching lower bound of $\alpha = \bigOmega{\log^{*} \domainSize}$)~\cite{private-learning-and-sanitization, dp-release, privately-learning-thresholds}.
+		More generally, \textcite{non-interactive-database-privacy} showed that any finite query set \querySet{} can be sanitized, albeit non-efficiently.
+
+		% \log^{*} is "iterated logarithm" : https://en.wikipedia.org/wiki/iterated_logarithm
+
+		\subsubsection*{Answering point and range queries with differential privacy}
+
+			Utilizing the \acrshort{lpa} for answering point queries results in error $\alpha = \bigO{\log \domainSize}$.
+			A practical solution for answering range queries with error bounds very close to the optimal ones is the hierarchical method~\cite{dp-under-observation, accuracy-dp-histograms, dp-wavelet}.
+			The main idea is to build an aggregate tree on the domain, and add noise to each node proportional to the tree height (i.e., noise scale logarithmic in the domain size \domainSize{}).
+			Then, every range query is answered using the minimum number of tree nodes.
+			\textcite{hierarchical-methods-for-dp} showed that the hierarchical algorithm of \textcite{accuracy-dp-histograms}, when combined with their proposed optimizations, offers the lowest error.
+
+		\subsubsection*{Composition}
+
+			Finally, we include a \emph{composition} theorem (adapted from \cite{privacy-integrated-queries}) based on \cite{differential-privacy-original,our-data-ourselves}. % chktex 2
+			It concerns executions of multiple differentially private mechanisms on non-disjoint and disjoint inputs.
+
+			\begin{theorem}\label{theorem:composition}
+				Let \fromNtoM{\algo{A}}{1}{r} be mechanisms, such that each $\algo{A}_i$ provides $\epsilon_i$-differential privacy.
+				Let \fromNtoM{\database}{1}{r} be pairwise non-disjoint (resp., disjoint) datasets.
+				Let $\algo{A}$ be another mechanism that executes $\algo{A}_1(\database_1), \ldots, \algo{A}_r(\database_r)$ using independent randomness for each $\algo{A}_i$, and returns their outputs.
+				Then, mechanism $\algo{A}$ is $\left( \sum_{i=1}^r \epsilon_i \right)$-differentially private (resp., $\left( \max_{i=1}^r \epsilon_i \right)$-differentially private).
+			\end{theorem}
+
+	\subsection{\acrlong{oram}}\label{section:building-blocks:oram}
+
+		Informally, \acrfull{oram} is a mechanism that lets a user hide their access pattern to remote storage.
+		An adversarial server can monitor the actual accessed locations, but she cannot tell a read from a write, the content of the block or even whether the same logical location is being referenced.
+		The notion was first defined by \textcite{oram-theory} and \textcite{oram-original}.
+
+		More formally, a $(\eta_1, \eta_2)$-\acrshort{oram} protocol is a two-party protocol between a user \user{} and a server \server{} who stores a memory array.
+		In each round, the user \user{} has input $(o, a, d)$, where $o$ is an access type (\oramRead{} or \oramWrite{}), $a$ is a memory address and $d$ is a new data value, or $\bot$ for read operation.
+		The input of \server{} is the current array.
+		Via the protocol, the server updates the memory or returns to \user{} the data stored at the requested memory location, respectively.
+		We speak of a sequence of such operations as a program \oramProgram{} being \emph{executed under the \acrshort{oram}}.
+
+		An \acrshort{oram} protocol must satisfy correctness and security.
+		Correctness requires that \user{} obtains the correct output of the computation except with at most probability $\eta_1$.
+		For security, we require that for every user \user{} there exists a simulator $\simulator_\oram$ which provides a simulation of the server's view in the above experiment given only the number of operations.
+		That is, the output distribution of $\simulator_\oram (c)$ is indistinguishable from $\algo{View}_\server$ with probability at most $\eta_2$ after $c$ protocol rounds.
+
+		\acrshort{oram} protocols are generally stateful, after each execution the client and server states are updated.
+		\emph{For brevity, throughout the paper we will assume the \acrshort{oram} state updates are implicit, including the encryption key \queryKey{} generated and maintained by the client.}
+
+		Some existing efficient \acrshort{oram} protocols are Square Root \acrshort{oram} \cite{oram-theory}, Hierarchical \acrshort{oram} \cite{oram-original}, Binary-Tree \acrshort{oram} \cite{binary-tree-oram}, Interleave Buffer Shuffle Square Root \acrshort{oram} \cite{shortest-path-oram}, TP-ORAM \cite{tp-oram}, PathORAM \cite{path-oram} and TaORAM \cite{taostore}. % chktex 2
+		For detailed descriptions of each protocol, we recommend the work of \textcite{oram-survey-feifei}.
+		The latter three \acrshortpl{oram} achieve the lowest communication and storage overheads, $\bigO{\log \dataSize}$ and \bigO{\dataSize}, respectively.
