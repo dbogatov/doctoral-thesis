@@ -1,4 +1,4 @@
-\section{An efficient Parallel \texorpdfstring{\epsolute{}}{Epsolute}}\label{section:prallel-dp-oram}
+\section{An efficient Parallel \texorpdfstring{\epsolute{}}{Epsolute}}\label{section:range-persistent:prallel-dp-oram}
 
 	While the previously described scheme is a secure and correct \acrshort{cdpodb}, a single-threaded implementation may be prohibitively slow in practice.
 	To bring the performance closer to real-world requirements, we need to be able to scale the algorithm horizontally.
@@ -13,7 +13,7 @@
 
 	\subsection{\texorpdfstring{No-$\gamma$-method}{No-gamma-method}: \acrshort{dp} structure per \acrshort{oram}}
 
-		In \protocolNoGamma{}, for each \acrshort{oram} / subset of the dataset, we build a \acrshort{dp} index the same way as described in \cref{section:dp-oram}.
+		In \protocolNoGamma{}, for each \acrshort{oram} / subset of the dataset, we build a \acrshort{dp} index the same way as described in \cref{section:range-persistent:dp-oram}.
 		We note that \cref{theorem:composition} for disjoint datasets applies to this construction: the privacy budget $\epsilon$ for the construction is the largest (least private) among the $\epsilon$'s of the \acrshort{dp} indices for each \acrshort{oram} / subset of the dataset.
 
 		The communication efficiency changes because
@@ -55,7 +55,7 @@
 		In our experiments, we set \oramsNumber{} as a constant depending on the infrastructure.
 		However, if \oramsNumber{} is set as $\bigO{\log n}$, the total communication overhead of the construction will still exceed the lower-bound presented in~\cite{multi-server-orams}.
 
-	\subsection{\texorpdfstring{$\gamma$-method}{Gamma-method}: shared \acrshort{dp} structure}\label{section:prallel-dp-oram:gamma}
+	\subsection{\texorpdfstring{$\gamma$-method}{Gamma-method}: shared \acrshort{dp} structure}\label{section:range-persistent:prallel-dp-oram:gamma}
 
 		In \protocolGamma{}, we maintain a single shared \acrshort{dp} structure \serverDS{}.
 		When a query is issued, we must ensure that the number of records retrieved from every \acrshort{oram} is the same.
@@ -79,16 +79,16 @@
 		A shared \acrshort{dp} structure is created with the sanitizer \algo{A} (\cref{algorithm:dp-oram-parallel:gamma:setup:line-7}).
 		In \cref{algorithm:dp-oram-parallel} \protocolQuery{}, the total number of \acrshort{oram} requests is computed once (\cref{algorithm:dp-oram-parallel:gamma:query:line-4}).
 		\Crefrange{algorithm:dp-oram-parallel:gamma:query:line-5}{algorithm:dp-oram-parallel:gamma:query:line-7} repeat for each \acrshort{oram} and operate on the subset of records stored in the given \acrshort{oram}.
-		Note that \user{} and \server{} implicitly maintain \oramsNumber{} \acrshort{oram} states, and the algorithm uses the $(\algo{A}, \algo{B})$ sanitizer defined in \cref{section:dp-oram}.
+		Note that \user{} and \server{} implicitly maintain \oramsNumber{} \acrshort{oram} states, and the algorithm uses the $(\algo{A}, \algo{B})$ sanitizer defined in \cref{section:range-persistent:dp-oram}.
 
 		Note that we guarantee privacy and access pattern protection on a record level.
 		Each \acrshort{oram} gets accessed at least once (much more than once for a typical query) thus the existence of a particular result record in a particular \acrshort{oram} is hidden.
 
-	\subsection{Practical improvements}\label{section:dp-improvements}
+	\subsection{Practical improvements}\label{section:range-persistent:dp-improvements}
 
 		Here we describe the optimizations aimed at bringing the construction's performance to the real-world demands.
 
-		\subsubsection{\acrshort{oram} request batching}\label{section:dp-improvements:oram-batching}
+		\subsubsection{\acrshort{oram} request batching}\label{section:range-persistent:dp-improvements:oram-batching}
 
 			We have noticed that although the entire set of \acrshort{oram} requests for each query is known in advance, the requests are still executed sequentially.
 			To address this inefficiency, we have designed a way to combine the requests in a batch and reduce the number of network requests to the bare minimum.
@@ -105,7 +105,7 @@
 			The security guarantees of PathORAM are maintained with this optimization, since the security proof in \cite[Section 3.6]{path-oram} still holds. % chktex 2
 			Randomized encryption, statistically independent remapping of leaves, and stash processing do not change.
 
-		\subsubsection{Lightweight \acrshort{oram} servers}\label{section:dp-improvements:three-tier}
+		\subsubsection{Lightweight \acrshort{oram} servers}\label{section:range-persistent:dp-improvements:three-tier}
 
 			We have found in our experiments that na\"{\i}ve increase of the number of \acrshort{cpu} cores and gigabytes of memory does not translate into linear performance improvement after some threshold.
 			Investigating the observation we have found that the \epsolute{} protocol, executing parallel \acrshort{oram} protocols, is highly intensive with respect to main memory access, cryptographic operations and network usage.

@@ -1,4 +1,4 @@
-\section{Experimental Evaluation}\label{section:experiments}
+\section{Experimental Evaluation}\label{section:range-persistent:experiments}
 
 	We have implemented our solution as a modular client-server application in C++.
 	We open-sourced all components of the software set: PathORAM~\cite{github-path-oram} and B+ tree~\cite{github-b-plus-tree} implementations and the main query executor~\cite{github-epsolute}.
@@ -33,7 +33,7 @@
 	For \ref{item:question-optimizations} we have run the default setting with our optimizations toggled. % chktex 2
 	Lastly, for \ref{item:question-attributes} we have used two datasets to construct two indices and then queried each of the attributes. % chktex 2
 
-	\subsection{Data sets}\label{section:experiments:data-sets}
+	\subsection{Data sets}\label{section:range-persistent:experiments:data-sets}
 
 		We used two real and one synthetic datasets --- California public pay pension database 2019~\cite{ca-employees-dataset} (referred to as ``CA employees''), Public Use Microdata Sample from US Census 2018~\cite{pums-dataset} (referred to as ``PUMS'') and synthetic uniform dataset.
 		We have used salary / wages columns of the real datasets, and the numbers in the uniform set also represent salaries.
@@ -50,10 +50,10 @@
 		Each of the datasets has a number of corresponding query sets.
 		Each query set has a selectivity or range size, and is sampled either uniformly or following the dataset distribution (using its \acrshort{cdf}).
 
-	\subsection{Default setting}\label{section:experiments:default-setting}
+	\subsection{Default setting}\label{section:range-persistent:experiments:default-setting}
 
-		The default setting uses the \protocolGamma{} from \cref{section:prallel-dp-oram} and lightweight \acrshort{oram} machines from \cref{section:dp-improvements:three-tier,figure:three-tier}.
-		We choose the \protocolGamma{} because it outperforms \protocolNoGamma{} in all experiments (see \textbf{\ref{item:question-scalability}} in \cref{section:experiments:results}).
+		The default setting uses the \protocolGamma{} from \cref{section:range-persistent:prallel-dp-oram} and lightweight \acrshort{oram} machines from \cref{section:range-persistent:dp-improvements:three-tier,figure:three-tier}.
+		We choose the \protocolGamma{} because it outperforms \protocolNoGamma{} in all experiments (see \textbf{\ref{item:question-scalability}} in \cref{section:range-persistent:experiments:results}).
 		In the setting, there are 64 Redis services (8 services per one Redis server \acrshort{vm}), 8 \acrshort{oram} machines communicating with 8 Redis services each, and the client, which communicates with these 8 \acrshort{oram} machines.
 		We have empirically found this configuration optimal for the compute nodes and network that we used in the experiments.
 		\acrshort{oram} and Redis servers run on GCP \texttt{n1-standard-16} \acrshortpl{vm} (Ubuntu 18.04), in regions \texttt{us-east4} and \texttt{us-east1} respectively.
@@ -75,7 +75,7 @@
 	\subsection{\acrshort{rdbms}, Linear Scan and Shrinkwrap}
 
 		On top of varying the parameters, we have run similar workloads using alternative mechanisms --- extremes representing highest performance or highest privacy.
-		Unless stated otherwise, the client and the server are in the trusted and untrusted regions respectively, with the network configuration as in \cref{section:experiments:default-setting}.
+		Unless stated otherwise, the client and the server are in the trusted and untrusted regions respectively, with the network configuration as in \cref{section:range-persistent:experiments:default-setting}.
 
 		\subsubsection*{Relational databases}
 
@@ -102,7 +102,7 @@
 			We note that although the complexity of a Shrinkwrap query is $\bigO{n \log n}$ due to the sorting step, its functionality is richer as it supports more relational operators, like \texttt{JOIN}, \texttt{GROUP BY} and aggregation.
 			We also note that since MySQL, PostgreSQL and Shrinkwrap are not parallelized within the query, experiments using more \acrshortpl{cpu} do not yield higher performance.
 
-	\subsection{Results and Observations}\label{section:experiments:results}
+	\subsection{Results and Observations}\label{section:range-persistent:experiments:results}
 
 		After running the experiments, we have made the following observations.
 		Note that we report results based on the default setting.
@@ -117,7 +117,7 @@
 			\item
 				\epsolute{} is scalable: using \protocolGamma{} with the lightweight \acrshort{oram} machines, the increase in the number of threads translates into linear performance boost.
 			\item
-				The optimizations proposed in \cref{section:dp-improvements} provide up to an order of magnitude performance gain.
+				The optimizations proposed in \cref{section:range-persistent:dp-improvements} provide up to an order of magnitude performance gain.
 			\item
 				\epsolute{} efficiently supports multiple indexed attributes.
 				The overhead and the client storage increase slightly due to a lower privacy budget and extra local indices.
@@ -248,11 +248,11 @@
 
 			\cref{table:optimizations} demonstrates the boosts our improvements provide; when combined, the speedup is up to an order of magnitude.
 
-			\acrshort{oram} request batching (\cref{section:dp-improvements:oram-batching}) makes the biggest difference.
+			\acrshort{oram} request batching (\cref{section:range-persistent:dp-improvements:oram-batching}) makes the biggest difference.
 			We have run the default setting with and without the batching.
 			The overhead is substantially smaller because far fewer \acrshort{io} requests are being made, which implies benefits across the full stack: download, re-encryption and upload.
 
-			Using lightweight \acrshort{oram} machines (\cref{section:dp-improvements:three-tier}) makes a difference when scaling.
+			Using lightweight \acrshort{oram} machines (\cref{section:range-persistent:dp-improvements:three-tier}) makes a difference when scaling.
 			In the default setting, 64 parallel threads quickly saturate the memory access and network channel, while spreading computation among nodes removes the bottleneck.
 
 		\subsubsection*{\textbf{\texorpdfstring{\ref{item:question-attributes}:}{} multiple attributes}}
@@ -260,7 +260,7 @@
 			\input{figures/fig-attributes}
 
 			\epsolute{} supports multiple indexed attributes.
-			In \cref{section:dp-oram:multiple-attributes} we described that the performance implications amount to having an index \indexI{} and a \acrshort{dp} structure \serverDS{} per attribute and sharing the privacy budget $\epsilon$ among all attributes.
+			In \cref{section:range-persistent:dp-oram:multiple-attributes} we described that the performance implications amount to having an index \indexI{} and a \acrshort{dp} structure \serverDS{} per attribute and sharing the privacy budget $\epsilon$ among all attributes.
 			As shown in \cref{table:storage}, \indexI{} and \serverDS{} are the smallest components of the client storage.
 			To observe the query performance impact, we have used the default dataset with domains $10^4$ and $10^6$ as indexed attributes \emph{A} and \emph{B} respectively.
 			We ran queries against only \emph{A}, only \emph{B} and against both attributes in alternating fashion.

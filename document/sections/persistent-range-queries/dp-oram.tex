@@ -1,6 +1,6 @@
-\section{\texorpdfstring{\epsolute{}}{Epsolute}}\label{section:dp-oram}
+\section{\texorpdfstring{\epsolute{}}{Epsolute}}\label{section:range-persistent:dp-oram}
 
-	In this section we present a construction, \epsolute{}, that satisfies the security definition in \cref{section:dpodb}, detailing algorithms for both range and point query types.
+	In this section we present a construction, \epsolute{}, that satisfies the security definition in \cref{section:range-persistent:dpodb}, detailing algorithms for both range and point query types.
 	We also provide efficiency guarantees for approximate and pure \acrshort{dp} versions of \epsolute{}.
 
 	\subsection{General construction}
@@ -41,7 +41,7 @@
 			\user{} fetches the records, both real and fake, from \server{} using the \acrshort{oram} protocol (\cref{algorithm:dp-oram:query:line-6}).
 			The output of \user{} is the filtered set of records requested by the query $\query{}$; final \acrshort{oram} states of \server{} and \user{} are implicit (\cref{algorithm:dp-oram:query:line-7}).
 
-		The protocols for point and range queries only differ in sanitizer implementations, see \cref{section:dp-oram:point,section:dp-oram:range}.
+		The protocols for point and range queries only differ in sanitizer implementations, see \cref{section:range-persistent:dp-oram:point,section:range-persistent:dp-oram:range}.
 		Note above that in any execution of \protocolQuery{} we have $c \geq \query(\database)$ with overwhelming probability $1 - \beta$ (by using sanitizers satisfying \cref{remark:dp-sanitizer-guarantees}), and thus the protocol is well-defined and its accuracy is $1 - \beta$.
 		Also note that the \acrshort{dp} parameter $\delta$ is lower-bounded by $\beta$ because sampling negative noise, however improbable, violates privacy, and therefore the final construction is $(\epsilon, \beta)$-\acrshort{dp}.
 
@@ -98,8 +98,8 @@
 		\begin{proof}
 			By using \acrshort{oram}, we store only the original data once and hence, we get optimal storage efficiency.
 
-			The communication efficiency depends on the upper bound of the error for each sanitizer when $\delta > 0$, as described in \cref{section:building-blocks:dp} and \cref{remark:dp-sanitizer-guarantees}.
-			The most efficient \acrshort{oram} protocol to date has $\bigO{\log \dataSize}$ communication overhead (see \cref{section:building-blocks:oram}).
+			The communication efficiency depends on the upper bound of the error for each sanitizer when $\delta > 0$, as described in \cref{section:range-persistent:building-blocks:dp} and \cref{remark:dp-sanitizer-guarantees}.
+			The most efficient \acrshort{oram} protocol to date has $\bigO{\log \dataSize}$ communication overhead (see \cref{section:range-persistent:building-blocks:oram}).
 		\end{proof}
 
 		\begin{corollary}\label{corollary:comm-efficiency-pure-dp}
@@ -113,16 +113,16 @@
 		\end{corollary}
 
 		\begin{proof}
-			Similarly, we derive the proof by considering the use of \acrshort{oram} and the upper bound of the error for each sanitizer when $\delta = 0$ in \cref{section:building-blocks:dp}.
+			Similarly, we derive the proof by considering the use of \acrshort{oram} and the upper bound of the error for each sanitizer when $\delta = 0$ in \cref{section:range-persistent:building-blocks:dp}.
 		\end{proof}
 
-	\subsection{Extending to multiple attributes}\label{section:dp-oram:multiple-attributes}
+	\subsection{Extending to multiple attributes}\label{section:range-persistent:dp-oram:multiple-attributes}
 
 		We will now describe how \epsolute{} supports multiple indexed attributes and what the privacy and performance implications are.
 		The na\"{\i}ve way is to simply duplicate the entire stack of states of \user{} and \server{}, and during the query use the states whose attribute the query targets.
 		However, \epsolute{} design allows to keep the most expensive part of the state --- the \acrshort{oram} state --- shared for all attributes and both types of queries.
 		Specifically, the index \indexI{} and \acrshort{dp} structure \serverDS{} are generated per attribute and query type, while \user{} and \server{} \acrshort{oram} states are generated once.
-		This design is practical since \serverDS{} is tiny and index \indexI{} is relatively small compared to \acrshort{oram} states, see \cref{section:experiments}.
+		This design is practical since \serverDS{} is tiny and index \indexI{} is relatively small compared to \acrshort{oram} states, see \cref{section:range-persistent:experiments}.
 
 		We note that in case the indices grow large in number, it is practical to outsource them to the adversarial server using \acrshort{oram} and download only the ones needed for each query.
 		In terms of privacy, the solution is equivalent to operating different \epsolute{} instances because \acrshort{oram} hides the values of records and access patterns entirely.
@@ -130,7 +130,7 @@
 
 		Next, we choose two \acrshort{dp} sanitizers for our system, for point and for range queries, and calculate the $\alpha$ values to make them output positive values with high probability, consistent with \cref{remark:dp-sanitizer-guarantees}.
 
-	\subsection{\texorpdfstring{\epsolute{}}{Epsolute} for point queries}\label{section:dp-oram:point}
+	\subsection{\texorpdfstring{\epsolute{}}{Epsolute} for point queries}\label{section:range-persistent:dp-oram:point}
 
 		For point queries, we use the \acrshort{lpa} method as the sanitizer to ensure pure differential privacy.
 		Specifically, for every histogram bin, we draw noise from the Laplace distribution with mean $\alpha_p$ and scale $\lambda = \nicefrac{1}{\epsilon}$.
@@ -149,7 +149,7 @@
 
 	\input{figures/alg-paralell-dp-oram}
 
-	\subsection{\texorpdfstring{\epsolute{}}{Epsolute} for range queries}\label{section:dp-oram:range}
+	\subsection{\texorpdfstring{\epsolute{}}{Epsolute} for range queries}\label{section:range-persistent:dp-oram:range}
 
 		For range queries, we implement the aggregate tree method as the sanitizer.
 		Specifically, we build a complete \fanout{}-ary tree on the domain, for a given \fanout{}.

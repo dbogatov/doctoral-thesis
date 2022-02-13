@@ -1,12 +1,12 @@
-\section{Differentially private outsourced database systems}\label{section:dpodb}
+\section{Differentially private outsourced database systems}\label{section:range-persistent:dpodb}
 
 	In this section we present our model, \emph{differentially private outsourced database system}, \acrshort{cdpodb}, its security definition, query types and efficiency measures.
-	It is an extension of the outsourced database model in \cref{section:background}.
+	It is an extension of the outsourced database model in \cref{section:range-persistent:background}.
 
-	\subsection{Adversarial model}\label{section:dpodb:adversarial-models}
+	\subsection{Adversarial model}\label{section:range-persistent:dpodb:adversarial-models}
 
 		We consider an honest-but-curious polynomial time adversary that attempts to breach differential privacy with respect to the input database \database{}.
-		We observe later in \cref{section:dpodb:adversarial-models:adaptive} that it is impossible to completely hide the number of records returned on each query without essentially returning all the database records on each query.
+		We observe later in \cref{section:range-persistent:dpodb:adversarial-models:adaptive} that it is impossible to completely hide the number of records returned on each query without essentially returning all the database records on each query.
 		This, in turn, means that different query sequences may be distinguished, and, furthermore, that differential privacy may not be preserved if the query sequence depends on the content of the database records.
 		We hence, only require the protection of differential privacy with respect to every fixed query sequence.
 		Furthermore, we relax to computational differential privacy (following~\cite{computational-dp}).
@@ -27,7 +27,7 @@
 		We note that security and differential privacy in this model imply protection against communication volume and access pattern leakages and thus prevent a range of attacks, such as \cite{leakage-abuse-attacks-cash-15,inference-attacks-naveed-15,generic-attacks-kellaris}. % chktex 2
 	\end{remark}
 
-	\subsubsection{On impossibility of adaptive queries}\label{section:dpodb:adversarial-models:adaptive}
+	\subsubsection{On impossibility of adaptive queries}\label{section:range-persistent:dpodb:adversarial-models:adaptive}
 
 		Non-adaptivity in our \acrshort{cdpodb} definition does not reflect a deficiency of our specific protocol but rather an inherent source of leakage when the queries may depend on the decrypted data.
 		Consider an adaptive \acrshort{cdpodb} definition that does not fix the query sequence \fromNtoM{q}{1}{m} in advance but instead an arbitrary (efficient) user \user{} chooses them during the protocol execution with \server{}.
