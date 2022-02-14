@@ -32,7 +32,7 @@
 		Thus, we do not allow channels for all protocols in our analysis.
 
 		Also, as noted by the authors, if $L = n^{\epsilon}$ for $0 < \epsilon < 1$, then the amortized costs become $\bigO{1}$.
-		While this is true, in our analysis the choice of $L$ depends on the storage volume block size for {\IO} optimizations, instead of the client's volatile storage capacity.
+		While this is true, in our analysis the choice of $L$ depends on the storage volume block size for \acrshort{io} optimizations, instead of the client's volatile storage capacity.
 		Thus, the costs remain logarithmic.
 
 		Search bandwidth depends heavily on the current state of the tree.
@@ -40,10 +40,10 @@
 		When the tree is completely sorted (after a large number of uniform queries), the bandwidth will be similar to that of a standard {\BPlus} tree --- $\bigO{L \log_L N + r}$.
 		The average case is hard to compute; however, authors prove an upper bound on bandwidth after $n$ insertions and $m$ queries --- $\bigO{m L \log_L n + n \log_L m + n \log_L (\lg n) }$.
 
-		POPE tree is not optimized for {\IO} the way B-tree is.
+		POPE tree is not optimized for \acrshort{io} the way B-tree is.
 		Search complexity is hard to analyze as is bandwidth complexity.
 		In the worst-case (first query), all blocks need to be accessed $\bigO{\frac{N}{B} + \frac{r}{B}}$.
-		In the best-case all nodes occupy exactly one block and {\IO} complexity is the same as with {\BPlus} tree $\bigO{\log_L \frac{N}{B} + \frac{r}{B}}$.
+		In the best-case all nodes occupy exactly one block and \acrshort{io} complexity is the same as with {\BPlus} tree $\bigO{\log_L \frac{N}{B} + \frac{r}{B}}$.
 		The average case is in between and matters get worse as the node is not guaranteed to occupy a single block due to the buffers of arbitrary size.
 
 		Client's persistent storage is negligibly small --- it stores the encryption key.
@@ -59,6 +59,6 @@
 		Furthermore, \cite{pope} does not stress the fact that after alternating insertions and queries, it may happen that some intermediate buffers are not empty, thus returning buffers between endpoints must include intermediate buffers as well. % chktex 2
 		The consequence is that the whole subtree is traversed between paths to endpoints, unlike the {\BPlus} tree case where only leaves are involved.
 
-		Finally, POPE tree is not optimized for {\IO} operations.
+		Finally, POPE tree is not optimized for \acrshort{io} operations.
 		Even if $L$ is chosen so that the node fits in the block, only leaves and only after some number of searches will optimally fit in blocks.
-		Arbitrary sized buffers of intermediate nodes and the lack of underflow requirement do not allow for {\IO} optimization.
+		Arbitrary sized buffers of intermediate nodes and the lack of underflow requirement do not allow for \acrshort{io} optimization.

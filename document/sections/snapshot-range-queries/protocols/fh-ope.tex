@@ -1,6 +1,6 @@
 \subsection{FH-OPE}
 
-	Frequency-hiding OPE by \textcite{fh-ope} is a stateful scheme that hides the frequency of the plaintexts, so the adversary is unable to construct a frequency histogram.
+	Frequency-hiding \acrshort{ope} by \textcite{fh-ope} is a stateful scheme that hides the frequency of the plaintexts, so the adversary is unable to construct a frequency histogram.
 
 	This scheme is stateful, which means that the client needs to keep a data structure and update it with every encryption and decryption.
 	The data structure is a binary search tree where the node's value is the plaintext and node's position in a tree is the ciphertext.
@@ -12,7 +12,7 @@
 	This way, the invariant of the tree --- intervals of the same plaintexts do not overlap --- is maintained.
 	The ciphertext generated from the new node's position is returned.
 
-	Due to randomized ciphertexts, the comparison algorithm is more complicated than in the regular deterministic OPE\@.
+	Due to randomized ciphertexts, the comparison algorithm is more complicated than in the regular deterministic \acrshort{ope}.
 	To properly compare ciphertexts, the algorithm needs to know the boundaries --- the minimum and maximum ciphertexts for a particular plaintext.
 	The client is responsible for traversing the tree to find the plaintext for the ciphertext and then minimum and maximum ciphertext values.
 	Having these values, the comparison is trivial --- equality is a check that the value is within the boundaries, and other comparison operators are similar.
@@ -31,7 +31,7 @@
 		This definition has been criticized in \cite{florian-def-critique}, who claim that the definition is imprecise and propose an enhanced definition along with a small change to construction to satisfy this new definition.
 		Both schemes leak the insertion order, because it affects the tree structure.
 		We do not know of any attacks against this leakage, but it does not mean they cannot exist.
-		\textcite{leakage-abuse-grubs-2017} describe an attack against this scheme (binomial attack), but it applies to any perfectly secure (leaking only total order) frequency-hiding OPE\@.
+		\textcite{leakage-abuse-grubs-2017} describe an attack against this scheme (binomial attack), but it applies to any perfectly secure (leaking only total order) frequency-hiding \acrshort{ope}.
 
 	\subsubsection{Analysis and implementation challenges}
 
