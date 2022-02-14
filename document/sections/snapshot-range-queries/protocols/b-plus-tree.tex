@@ -9,7 +9,7 @@
 	Performance overhead would be that of using the ORE scheme's $\compare$ routine instead of a plain comparison.
 	Space overhead would be that of storing ciphertexts instead of plaintexts.
 
-	In this paper, we have implemented a typical {\BPlus} tree~\cite{b-tree} (with a proper deletion algorithm~\cite{b-plus-tree-deletion}) as a data structure.
+	In this paper, we have implemented a typical {\BPlus} tree \cite{b-tree} (with a proper deletion algorithm \cite{b-plus-tree-deletion}) as a data structure.
 
 	For protocols, we also analyze the {\IO} performance and the communication cost.
 	In particular, we are interested in the expected number of {\IO} requests the server would have made to the secondary storage, and the number and size of messages parties would have exchanged.
@@ -20,5 +20,5 @@
 
 	\subsubsection{Security}
 		The leakage of this protocol consists of leakage of the underlying ORE scheme plus whatever information about insertion order is available in the {\BPlus} tree.
-		Please note that Lewi-Wu~\cite{lewi-wu-ore} ORE is particularly well-suited in this construction with its left / right framework, because only the semantically secure side of the ciphertext is stored in the structure.
+		Please note that Lewi-Wu \cite{lewi-wu-ore} ORE is particularly well-suited in this construction with its left / right framework, because only the semantically secure side of the ciphertext is stored in the structure.
 		In this case, the ORE leakage becomes only the total order and the security of the protocol is comparable with other non-ORE constructions.

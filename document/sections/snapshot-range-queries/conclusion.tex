@@ -6,17 +6,17 @@
 	ORE-based {\BPlus} tree protocol is provably {\IO} optimal and can potentially be extended by using another data structure with ORE\@.
 	Its security/performance trade off is tunable by choosing and parametrizing the underlying ORE scheme.
 	Each scheme we considered has its own unique advantages and drawbacks.
-	BCLO~\cite{bclo-ope} is the least secure scheme in the benchmark, but is stateless and produces numerical ciphertexts, so it may be used in the databases without any modifications.
-	Frequency-hiding OPE~\cite{fh-ope} also has this property, hides the frequency of the ciphertexts, but is stateful and requires uniform input.
-	Lewi-Wu~\cite{lewi-wu-ore} is easily customizable in terms of tuning performance to security ratio, and it offers the security benefits of left / right framework --- particuarly useful for {\BPlus} tree.
-	CLWW~\cite{clww-ore} provides weaker security guarantees but is the fastest scheme in the benchmark.
+	BCLO \cite{bclo-ope} is the least secure scheme in the benchmark, but is stateless and produces numerical ciphertexts, so it may be used in the databases without any modifications.
+	Frequency-hiding OPE \cite{fh-ope} also has this property, hides the frequency of the ciphertexts, but is stateful and requires uniform input.
+	Lewi-Wu \cite{lewi-wu-ore} is easily customizable in terms of tuning performance to security ratio, and it offers the security benefits of left / right framework --- particuarly useful for {\BPlus} tree.
+	CLWW \cite{clww-ore} provides weaker security guarantees but is the fastest scheme in the benchmark.
 
-	Kerschbaum protocol~\cite{florian-protocol} offers semantically secure ciphertexts, hiding the location of the smallest and largest of them, and has a simple implementation.
+	Kerschbaum protocol \cite{florian-protocol} offers semantically secure ciphertexts, hiding the location of the smallest and largest of them, and has a simple implementation.
 	The protocol is well-suited for bulk insertions and scales well.
 
 	\balance%
 
-	POPE~\cite{pope} offers a ``deferred'' {\BPlus} tree implementation.
+	POPE \cite{pope} offers a ``deferred'' {\BPlus} tree implementation.
 	By deferring the sorting of its ciphertexts, POPE remains more secure for the small number of queries.
 	POPE has the fastest insertion routine and does not reveal the order of most of its ciphertexts.
 	It will be more performant for the systems where there are a lot more insertions than queries.

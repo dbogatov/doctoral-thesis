@@ -1,6 +1,6 @@
 \section{Background}\label{section:range-persistent:background}
 
-	In this section we describe \emph{an outsourced database system} adapted from~\cite{generic-attacks-kellaris}, a base for our own model (\cref{section:range-persistent:dpodb}), and the constructions we will use as building blocks in our solution.
+	In this section we describe \emph{an outsourced database system} adapted from \cite{generic-attacks-kellaris}, a base for our own model (\cref{section:range-persistent:dpodb}), and the constructions we will use as building blocks in our solution.
 
 	\subsection{Outsourced Database System}
 
@@ -46,13 +46,13 @@
 
 		We will use mechanisms for answering count queries with differential privacy.
 		Such mechanisms perturb their output to mask out the effect of any single record on their outcome.
-		The simplest method for answering count queries with differential privacy is the \acrfull{lpa}~\cite{differential-privacy-original} where random noise drawn from a Laplace distribution is added to the count to be published.
+		The simplest method for answering count queries with differential privacy is the \acrfull{lpa} \cite{differential-privacy-original} where random noise drawn from a Laplace distribution is added to the count to be published.
 		The noise is scaled so as to hide the effect any single record can have on the count.
 		More generally, the \acrshort{lpa} can be used to approximate any statistical result by scaling the noise to the \emph{sensitivity} of the statistical analysis.\footnote{
 			The \emph{sensitivity} of a query \query{} mapping databases into $\RR^\domainSize$ is defined to be $\Delta(\query) = \max_{\database_1 \sim \database_2 \in \searchKeyDomain^\dataSize} \norm{ \query(\database_1) - \query(\database_2) }_1$.
 		}
 
-		\begin{theorem}[adapted Theorem 1 from~\cite{differential-privacy-original}]\label{theorem:lpa}
+		\begin{theorem}[adapted Theorem 1 from \cite{differential-privacy-original}]\label{theorem:lpa}
 			Let $\query : \database \to \RR^\domainSize$.
 			An algorithm \algo{A} that adds independently generated noise from a zero-mean Laplace distribution with scale $\lambda = \nicefrac{\Delta(\query)}{\epsilon}$ to each of the \domainSize{} coordinates of $\query(\database)$, satisfies $\epsilon$-differential privacy.
 		\end{theorem}
@@ -77,8 +77,8 @@
 
 		The main idea of \emph{sanitization} (a.k.a.\ private data release) is to release specific noisy statistics on a private dataset once, which can then be combined in order to answer an arbitrary number of queries without violating privacy.
 		Depending on the query type and the notion of differential privacy (i.e., pure or approximate), different upper bounds on the error have been proven.
-		Omitting the dependency on $\epsilon,\delta$, in case of point queries over domain size \domainSize{}, pure differential privacy results in $\alpha = \bigTheta{\log \domainSize}$~\cite{bounds-on-sample-complexity}, while for approximate differential privacy $\alpha = \bigO{1}$~\cite{private-learning-and-sanitization}.
-		For range queries over domain size \domainSize{}, these bounds are $\alpha = \bigTheta{\log \domainSize}$ for pure differential privacy~\cite{non-interactive-database-privacy,dp-under-observation}, and $\alpha = \bigO{(\log^{*} \domainSize)^{1.5}}$ for approximate differential privacy (with an almost matching lower bound of $\alpha = \bigOmega{\log^{*} \domainSize}$)~\cite{private-learning-and-sanitization, dp-release, privately-learning-thresholds}.
+		Omitting the dependency on $\epsilon,\delta$, in case of point queries over domain size \domainSize{}, pure differential privacy results in $\alpha = \bigTheta{\log \domainSize}$ \cite{bounds-on-sample-complexity}, while for approximate differential privacy $\alpha = \bigO{1}$ \cite{private-learning-and-sanitization}.
+		For range queries over domain size \domainSize{}, these bounds are $\alpha = \bigTheta{\log \domainSize}$ for pure differential privacy \cite{non-interactive-database-privacy,dp-under-observation}, and $\alpha = \bigO{(\log^{*} \domainSize)^{1.5}}$ for approximate differential privacy (with an almost matching lower bound of $\alpha = \bigOmega{\log^{*} \domainSize}$) \cite{private-learning-and-sanitization, dp-release, privately-learning-thresholds}.
 		More generally, \textcite{non-interactive-database-privacy} showed that any finite query set \querySet{} can be sanitized, albeit non-efficiently.
 
 		% \log^{*} is "iterated logarithm" : https://en.wikipedia.org/wiki/iterated_logarithm
@@ -86,7 +86,7 @@
 		\subsubsection*{Answering point and range queries with differential privacy}
 
 			Utilizing the \acrshort{lpa} for answering point queries results in error $\alpha = \bigO{\log \domainSize}$.
-			A practical solution for answering range queries with error bounds very close to the optimal ones is the hierarchical method~\cite{dp-under-observation, accuracy-dp-histograms, dp-wavelet}.
+			A practical solution for answering range queries with error bounds very close to the optimal ones is the hierarchical method \cite{dp-under-observation, accuracy-dp-histograms, dp-wavelet}.
 			The main idea is to build an aggregate tree on the domain, and add noise to each node proportional to the tree height (i.e., noise scale logarithmic in the domain size \domainSize{}).
 			Then, every range query is answered using the minimum number of tree nodes.
 			\textcite{hierarchical-methods-for-dp} showed that the hierarchical algorithm of \textcite{accuracy-dp-histograms}, when combined with their proposed optimizations, offers the lowest error.

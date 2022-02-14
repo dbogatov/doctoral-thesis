@@ -27,8 +27,8 @@
 		It is possible to operate over arbitrary-length numbers, but the performance overhead would be substantial.
 		We did a quick micro-benchmark in {\Csharp} and the overhead of using \texttt{BigInteger} is 15--20 times for basic arithmetic operations.
 
-		This scheme satisfies IND-FAOCPA definition (introduced along with the scheme~\cite{fh-ope}), meaning that it does not leak the equality or relative distance between the plaintexts.
-		This definition has been criticized in~\cite{florian-def-critique}, who claim that the definition is imprecise and propose an enhanced definition along with a small change to construction to satisfy this new definition.
+		This scheme satisfies IND-FAOCPA definition (introduced along with the scheme \cite{fh-ope}), meaning that it does not leak the equality or relative distance between the plaintexts.
+		This definition has been criticized in \cite{florian-def-critique}, who claim that the definition is imprecise and propose an enhanced definition along with a small change to construction to satisfy this new definition.
 		Both schemes leak the insertion order, because it affects the tree structure.
 		We do not know of any attacks against this leakage, but it does not mean they cannot exist.
 		\textcite{leakage-abuse-grubs-2017} describe an attack against this scheme (binomial attack), but it applies to any perfectly secure (leaking only total order) frequency-hiding OPE\@.

@@ -12,14 +12,14 @@
 
 	Upon query, a client computes a cover --- a set of nodes whose sub-trees cover the requested range.
 	A client sends these keywords to the SSE server, which returns encrypted documents --- result values.
-	Of the several covering techniques suggested in the protocol~\cite{practical-range-search} we have chosen the Best Range Cover (BRC), because it results in fewest nodes and does not return false-positives.
+	Of the several covering techniques suggested in the protocol \cite{practical-range-search} we have chosen the Best Range Cover (BRC), because it results in fewest nodes and does not return false-positives.
 	\textcite{brc} have proven that the worst-case number of nodes for domain of size $N$ is $\bigO{\log N}$ and presented an efficient BRC algorithm.
 
 	\subsubsection{Security}
 		In a snapshot setting, this construction's security is that of the SSE\@.
-		We have used~\cite{cjjkrs-13} and~\cite{cjjjkrs-14} SSE schemes; their leakage in a snapshot setting is the database size and at most some initialization parameters.
+		We have used \cite{cjjkrs-13} and \cite{cjjjkrs-14} SSE schemes; their leakage in a snapshot setting is the database size and at most some initialization parameters.
 		Thus, the security of these schemes is high enough to call them \emph{fully hiding} in our setting.
-		Additional access pattern leakage comes up during queries; exact implications of this leakage remain an open research problem but it is known that it can be harmful~\cite{generic-attacks-kellaris}.
+		Additional access pattern leakage comes up during queries; exact implications of this leakage remain an open research problem but it is known that it can be harmful \cite{generic-attacks-kellaris}.
 
 	\subsubsection{Analysis and implementation challenges}
 
@@ -28,8 +28,8 @@
 		For each keyword in the query set, server will query the SSE scheme, which will return $r$ documents.
 		Therefore, server's {\IO} complexity is that of SSE\@.
 
-		\textcite{practical-range-search} have used~\cite{cjjkrs-13} SSE scheme in their implementation, but we have found it slow it terms of {\IO}.
-		Instead, we have implemented an improved scheme~\cite{cjjjkrs-14}, which directly addresses {\IO} optimization.
+		\textcite{practical-range-search} have used \cite{cjjkrs-13} SSE scheme in their implementation, but we have found it slow it terms of {\IO}.
+		Instead, we have implemented an improved scheme \cite{cjjjkrs-14}, which directly addresses {\IO} optimization.
 
 		Both SSE schemes' {\IO} complexity is linear with the result size $r$.
 		\cite{cjjjkrs-14} scheme makes at most one {\IO} per result document in the worst-case and there are extensions to significantly improve {\IO} complexity. % chktex 2

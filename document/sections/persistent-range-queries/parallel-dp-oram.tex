@@ -53,7 +53,7 @@
 		\end{corollary}
 
 		In our experiments, we set \oramsNumber{} as a constant depending on the infrastructure.
-		However, if \oramsNumber{} is set as $\bigO{\log n}$, the total communication overhead of the construction will still exceed the lower-bound presented in~\cite{multi-server-orams}.
+		However, if \oramsNumber{} is set as $\bigO{\log n}$, the total communication overhead of the construction will still exceed the lower-bound presented in \cite{multi-server-orams}.
 
 	\subsection{\texorpdfstring{$\gamma$-method}{Gamma-method}: shared \acrshort{dp} structure}\label{section:range-persistent:prallel-dp-oram:gamma}
 
@@ -92,7 +92,7 @@
 
 			We have noticed that although the entire set of \acrshort{oram} requests for each query is known in advance, the requests are still executed sequentially.
 			To address this inefficiency, we have designed a way to combine the requests in a batch and reduce the number of network requests to the bare minimum.
-			We have implemented this method over PathORAM, which we use for the $(\eta_1, \eta_2)$-\acrshort{oram} protocol, but the idea applies to most tree-based \acrshortpl{oram} (similar to~\cite{parallel-oram-improved}).
+			We have implemented this method over PathORAM, which we use for the $(\eta_1, \eta_2)$-\acrshort{oram} protocol, but the idea applies to most tree-based \acrshortpl{oram} (similar to \cite{parallel-oram-improved}).
 
 			Our optimization utilizes the fact that all PathORAM leaf IDs are known in advance and paths in a tree-based storage share the buckets close to the root.
 			The core idea is to read all paths first, processes the requests and and then write all paths back.

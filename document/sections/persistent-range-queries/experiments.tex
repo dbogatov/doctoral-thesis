@@ -1,13 +1,13 @@
 \section{Experimental Evaluation}\label{section:range-persistent:experiments}
 
 	We have implemented our solution as a modular client-server application in C++.
-	We open-sourced all components of the software set: PathORAM~\cite{github-path-oram} and B+ tree~\cite{github-b-plus-tree} implementations and the main query executor~\cite{github-epsolute}.
+	We open-sourced all components of the software set: PathORAM \cite{github-path-oram} and B+ tree \cite{github-b-plus-tree} implementations and the main query executor \cite{github-epsolute}.
 	We provide PathORAM and B+ tree components as C++ libraries to be used in other projects; the code is documented, benchmarked and tested (228 tests covering \SI{100}{\percent} of the code).
-	We have also published our datasets and query sets~\cite{our-datasets}.
+	We have also published our datasets and query sets \cite{our-datasets}.
 
 	For cryptographic primitives, we used OpenSSL library (version 1.1.1i).
-	For symmetric encryption in \acrshort{oram} we have used AES-CBC algorithm~\cite{nist-aes,nist-modes} with a 256-bits key (i.e., $\eta_2 = 2^{-256}$), for the hash algorithm \algo{H} used to partition records among \acrshortpl{oram} we have used SHA-256 algorithm~\cite{nist-hash}.
-	Aggregate tree fanout \fanout{} is 16, proven to be optimal in~\cite{hierarchical-methods-for-dp}.
+	For symmetric encryption in \acrshort{oram} we have used AES-CBC algorithm \cite{nist-aes,nist-modes} with a 256-bits key (i.e., $\eta_2 = 2^{-256}$), for the hash algorithm \algo{H} used to partition records among \acrshortpl{oram} we have used SHA-256 algorithm \cite{nist-hash}.
+	Aggregate tree fanout \fanout{} is 16, proven to be optimal in \cite{hierarchical-methods-for-dp}.
 
 	We designed our experiments to answer the following questions:
 	\newlength{\questionLength}
@@ -26,7 +26,7 @@
 		\item[Question-6\label{item:question-attributes}] What is the impact of supporting multiple attributes?
 	\end{description}
 
-	To address \ref{item:question-practicality} we have run the default setting using conventional \acrshort{rdbms} (MySQL and PostgreSQL), Linear Scan approach and Shrinkwrap~\cite{shrinkwrap}. % chktex 2
+	To address \ref{item:question-practicality} we have run the default setting using conventional \acrshort{rdbms} (MySQL and PostgreSQL), Linear Scan approach and Shrinkwrap \cite{shrinkwrap}. % chktex 2
 	To target \ref{item:question-storage}, we measured the exact storage used by the client and the server for different data, record and domain sizes. % chktex 2
 	To answer \ref{item:question-parameters}, we ran a default setting and then varied all parameters and inputs, one at a time. % chktex 2
 	For \ref{item:question-scalability} we gradually added \acrshortpl{cpu}, \acrshort{oram} servers and \acrshort{kvs} instances and observed the rate of improvement in performance. % chktex 2
@@ -35,7 +35,7 @@
 
 	\subsection{Data sets}\label{section:range-persistent:experiments:data-sets}
 
-		We used two real and one synthetic datasets --- California public pay pension database 2019~\cite{ca-employees-dataset} (referred to as ``CA employees''), Public Use Microdata Sample from US Census 2018~\cite{pums-dataset} (referred to as ``PUMS'') and synthetic uniform dataset.
+		We used two real and one synthetic datasets --- California public pay pension database 2019 \cite{ca-employees-dataset} (referred to as ``CA employees''), Public Use Microdata Sample from US Census 2018 \cite{pums-dataset} (referred to as ``PUMS'') and synthetic uniform dataset.
 		We have used salary / wages columns of the real datasets, and the numbers in the uniform set also represent salaries.
 		The \texttt{NULL} and empty values were dropped.
 
@@ -61,7 +61,7 @@
 		The ping time between the regions (i.e.\ between trusted and untrusted zones) is \SI{12}{\milli\second} and the effective bandwidth is \SI{150}{\mega\byte\per\second}.
 		Ping within a region is negligible.
 
-		Default \acrshort{dp} parameters are $\epsilon = \ln(2) \approx \num{0.693}$ and $\beta = 2^{-20}$, which are consistent with the other \acrshort{dp} applications proposed in the literature~\cite{choosing-epsilon}.
+		Default \acrshort{dp} parameters are $\epsilon = \ln(2) \approx \num{0.693}$ and $\beta = 2^{-20}$, which are consistent with the other \acrshort{dp} applications proposed in the literature \cite{choosing-epsilon}.
 		Buckets number is set as the largest power of $\fanout = 16$ that is no greater than the domain of the dataset \domainSize{}.
 
 		Default dataset is a uniform dataset of $10^6$ records with domain size $10^4$, and uniformly sampled queries with selectivity \SI{0.5}{\percent}.
@@ -88,16 +88,16 @@
 
 			Linear scan is a primitive mechanism that keeps all records encrypted on the server then downloads, decrypts and scans the entire database to answer every query.
 			This method is trivially correct, private and secure, albeit not very efficient.
-			There are \acrshort{rdbms} solutions, which, when configured for maximum privacy, exhibit linear scan behavior (e.g., MS-SQL Always Encrypted with Randomized Encryption~\cite{mssql-always-enc} and Oracle Column Transparent Data Encryption~\cite{oracle-tde}).
+			There are \acrshort{rdbms} solutions, which, when configured for maximum privacy, exhibit linear scan behavior (e.g., MS-SQL Always Encrypted with Randomized Encryption \cite{mssql-always-enc} and Oracle Column Transparent Data Encryption \cite{oracle-tde}).
 			For a fair comparison we make the linear scan even more efficient by allowing it to download data via parallel threads matching the number of threads and bytes per request to that of our solution.
 			Although linear scan is wasteful in the amount of data it downloads and processes, compared to our solution it has a benefit of not executing an \acrshort{oram} protocol with its logarithmic overhead and network communication in both directions.
 
 		\subsubsection*{Shrinkwrap}
 
-			Shrinkwrap~\cite{shrinkwrap} is a construction that answers federated \acrshort{sql} queries hiding both access pattern and communication volume.
-			Using the EMP toolkit~\cite{emp-toolkit} and the code Shrinkwrap authors shared with us, we implemented a prototype that only answers range queries.
+			Shrinkwrap \cite{shrinkwrap} is a construction that answers federated \acrshort{sql} queries hiding both access pattern and communication volume.
+			Using the EMP toolkit \cite{emp-toolkit} and the code Shrinkwrap authors shared with us, we implemented a prototype that only answers range queries.
 			This part of Shrinkwrap amounts to making a scan over the input marking the records satisfying the range, sorting the input, and then revealing the result set plus \acrshort{dp} noise to the client.
-			For the latter part we have adapted Shrinkwrap's Truncated Laplace Mechanism~\cite[Definition 4]{shrinkwrap} to hierarchical method~\cite{hierarchical-methods-for-dp} in order to be able to answer an unbounded number of all possible range queries.
+			For the latter part we have adapted Shrinkwrap's Truncated Laplace Mechanism \cite[Definition 4]{shrinkwrap} to hierarchical method \cite{hierarchical-methods-for-dp} in order to be able to answer an unbounded number of all possible range queries.
 			We have emulated the outsourced database setting by using two \texttt{n1-standard-32} servers in different regions (\SI{12}{\milli\second} ping and \SI{150}{\mega\byte\per\second} bandwidth) executing the algorithm in a circuit model (the faster option per Shrinkwrap experiments) and then revealing the result to the trusted client.
 			We note that although the complexity of a Shrinkwrap query is $\bigO{n \log n}$ due to the sorting step, its functionality is richer as it supports more relational operators, like \texttt{JOIN}, \texttt{GROUP BY} and aggregation.
 			We also note that since MySQL, PostgreSQL and Shrinkwrap are not parallelized within the query, experiments using more \acrshortpl{cpu} do not yield higher performance.
@@ -196,7 +196,7 @@
 				For smaller queries, and thus for lower overhead, the relation is positive, but not strictly proportional.
 				This phenomena, observed for the experiments with low resulting per-query time, is explained by the variance among parallel threads.
 				During each query the work is parallelized over \oramsNumber{} \acrshortpl{oram} and the query is completed when the \emph{last} thread finishes.
-				The problem, in distributed systems known as ``the curse of the last reducer''~\cite{curse-of-last-reducer}, is when one thread takes disproportionally long to finish.
+				The problem, in distributed systems known as ``the curse of the last reducer'' \cite{curse-of-last-reducer}, is when one thread takes disproportionally long to finish.
 				In our case, we run 64 threads in default setting, and the delay is usually caused by a variety of factors --- blocking \acrshort{io}, network delay or something else running on a shared virtual \acrshort{cpu}.
 				This effect is noticeable when a single thread does relatively little work and small disruptions actually matter; the effect is negligible for large queries.
 

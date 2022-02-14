@@ -7,10 +7,10 @@
 	Client interactively performs a binary search requesting an element, decrypting it and deciding which way to go.
 
 	\subsubsection{Security}
-		Authors prove that this construction is IND-CPA-DS secure (defined in the same paper~\cite{florian-protocol}).
+		Authors prove that this construction is IND-CPA-DS secure (defined in the same paper \cite{florian-protocol}).
 		The definition assumes an array data structure and therefore serves specifically this construction (as opposed to being generic).
 		It provably hides the frequency due to semantic encryption and hides the location of the first element due to random rotations.
-		Leakage-wise this construction is strictly better than {\BPlus} tree with ORE --- they both leak total order, but~\cite{florian-protocol} hides distance information and smallest / largest elements.
+		Leakage-wise this construction is strictly better than {\BPlus} tree with ORE --- they both leak total order, but \cite{florian-protocol} hides distance information and smallest / largest elements.
 		Specifically, for all pairs of consecutive elements $e_i$ and $e_{i+1}$ it is revealed that $e_{i+1} \ge e_i$ except for one pair of smallest and largest elements in the set.
 
 	\subsubsection{Analysis and implementation challenges}
@@ -29,7 +29,7 @@
 		Sizes of messages are also small as only a single ciphertext is usually transferred.
 
 		For practitioners we have a few points.
-		The construction in the original paper~\cite{florian-protocol} contains a typo as $m$ and $m^\prime$ must be swapped in the insertion algorithm.
+		The construction in the original paper \cite{florian-protocol} contains a typo as $m$ and $m^\prime$ must be swapped in the insertion algorithm.
 		Also, we have found some rare edge cases; when duplicate elements span over the modulo, the algorithm may not return the correct answer.
 		Both inconsistencies can be fixed however.
 		This protocol is not optimized for {\IO} operations for insertions, and thus would be better suited for batch uploads.

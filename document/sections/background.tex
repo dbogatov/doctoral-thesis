@@ -14,7 +14,7 @@
 		The guarantee states that for two neighboring databases (that differ in exactly one record), the probability that the adversary will understand by looking at the output, which of the two databases was used as an input, is bounded.
 		More formally, the \acrlong{dp} is defined in \cref{definition:dp}.
 
-		\begin{definition}[\acrlong{dp}, adapted from~\cite{our-data-ourselves, differential-privacy-original}]\label{definition:dp}
+		\begin{definition}[\acrlong{dp}, adapted from \cite{our-data-ourselves, differential-privacy-original}]\label{definition:dp}
 			A randomized algorithm \algo{A} is $(\epsilon, \delta)$-differentially private if for all $\database_1 \sim \database_2 \in \searchKeyDomain^\dataSize$, and for all subsets $\mathcal{O}$ of the output space of \algo{A},
 			\[
 				\probability{ \algo{A}{ \database_1 } \in \mathcal{O} } \leq \exp(\epsilon) \cdot \probability{ \algo{A}{ \database_2 } \in \mathcal{O} } + \delta \; .

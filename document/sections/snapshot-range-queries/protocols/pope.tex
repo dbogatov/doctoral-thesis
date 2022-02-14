@@ -1,7 +1,7 @@
 \subsection{POPE}
 
-	\textcite{pope} presented a protocol, direct improvement over mOPE~\cite{ope-ideal-security-protocol}, which is especially suitable for large number of insertions and small number of queries.
-	The construction is heavily based on buffer trees~\cite{buffer-tree} to support fast insertion and lazy sorting.
+	\textcite{pope} presented a protocol, direct improvement over mOPE \cite{ope-ideal-security-protocol}, which is especially suitable for large number of insertions and small number of queries.
+	The construction is heavily based on buffer trees \cite{buffer-tree} to support fast insertion and lazy sorting.
 
 	The idea is to maintain a POPE tree on the server and have the client manipulate that tree.
 	POPE tree is similar to B-tree, in that the nodes have multiple children and nodes are sorted on each level.
@@ -19,8 +19,8 @@
 	It must be noted that the first queries will require many more rounds, since large buffers must be sorted.
 
 	\subsubsection{Security}
-		This construction satisfies the security definition of frequency\hyp{}hiding partial order-preserving (FH-POP) protocol (introduced in the paper~\cite{pope}).
-		According to~\cite[Theorem~3]{pope}, after $n$ insertions and $m$ queries with local storage of size $L$, where $m L \in o(n)$, the POPE scheme is frequency-hiding partial order-preserving with $\bigOmega{ \frac{n^2}{mL \log_L n} - n }$ incomparable pairs of elements. % chktex 2
+		This construction satisfies the security definition of frequency\hyp{}hiding partial order-preserving (FH-POP) protocol (introduced in the paper \cite{pope}).
+		According to \cite[Theorem~3]{pope}, after $n$ insertions and $m$ queries with local storage of size $L$, where $m L \in o(n)$, the POPE scheme is frequency-hiding partial order-preserving with $\bigOmega{ \frac{n^2}{mL \log_L n} - n }$ incomparable pairs of elements. % chktex 2
 		Simply put, the construction leaks pairwise order of a \emph{bounded} number of elements.
 		Aside from this, the construction provably hides the frequency (i.e.\ equality) of the elements.
 

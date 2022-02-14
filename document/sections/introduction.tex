@@ -20,7 +20,7 @@
 
 		\subsection{Outsourced database model}
 
-			Similar to~\cite{epsolute}, a database is abstracted as a collection of \dataSize{} records \record{}, each with a unique identifier \recordID{}, associated with search keys \searchKey{}: \databaseDef{}.
+			Similar to \cite{epsolute}, a database is abstracted as a collection of \dataSize{} records \record{}, each with a unique identifier \recordID{}, associated with search keys \searchKey{}: \databaseDef{}.
 			All records are assumed to have an identical fixed bit-length, and the search keys are elements of some domain \searchKeyDomain{}.
 			A query is modeled as a predicate $\query \in \querySet: \searchKeyDomain \to \bin$.
 			Evaluating a query \query{} on a database \database{} results in $\query( \database ) = \{ \record_i : \query( \searchKey_i ) = 1 \}$, all records whose search keys satisfy \query{}.
@@ -47,7 +47,7 @@
 			Intuitively, one can think that encrypting records should protect the data.
 			Depending on how the records are encrypted (i.e., whether the symmetric or property-preserving encryption is used), this approach can mitigate the snapshot adversary.
 			Persistent adversary, however, can observe the communication size even if the traffic itself is encrypted, and can see the access pattern even if the records are protected.
-			It has been shown that the knowledge of access pattern~\cite{multidimensional-range-queries, inference-attack-inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} or communication volume~\cite{generic-attacks-kellaris, state-of-uniform, attacks-improved-reconstruction, pump-volume-attacks, volume-range-attacks} alone can enable a series of reconstruction attacks.
+			It has been shown that the knowledge of access pattern \cite{multidimensional-range-queries, inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} or communication volume \cite{generic-attacks-kellaris, state-of-uniform, attacks-improved-reconstruction, pump-volume-attacks, volume-range-attacks} alone can enable a series of reconstruction attacks.
 			Also note that both adversaries are \emph{honest-but-curios} --- they only observe and never interfere.
 			Denial-of-service attacks and integrity protection are out of scope of this work.
 
