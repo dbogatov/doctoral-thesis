@@ -13,7 +13,7 @@
 
 	\subsubsection{ORAM}\label{sec:oram}
 
-		Oblivious RAM (ORAM) is a construction that additionally to semantic security of a snapshot setting (see Section~\ref{sec:security}) provably hides the access pattern --- a sequence of reads and writes to particular memory locations.
+		Oblivious RAM (ORAM) is a construction that additionally to semantic security of a snapshot setting (see \cref{sec:security}) provably hides the access pattern --- a sequence of reads and writes to particular memory locations.
 		With ORAM an adversary would not be able to recognize a series of accesses to the same location and will not differentiate reads versus writes.
 		ORAM was introduced by~\textcite{oram-original} who also proved its lower bound (strengthened in \cite{oram-tighter-lower-bound}) --- logarithmic overhead per request.
 		A number of efficient ORAM constructions were designed (see \cite{oram-survey-feifei} for a good survey) and we use the state-of-the-art construction, PathORAM \cite{path-oram}.

@@ -34,7 +34,7 @@
 		Both SSE schemes' {\IO} complexity is linear with the result size $r$.
 		\cite{cjjjkrs-14} scheme makes at most one {\IO} per result document in the worst-case and there are extensions to significantly improve {\IO} complexity. % chktex 2
 		We have implemented the \texttt{pack} extension, which packs documents in blocks to fit the {\IO} pages.
-		We note that this extension can dramatically reduce the {\IO}s (see Section~\ref{sec:results-protocols} and Figure~\ref{fig:protocols-query-sizes}).
+		We note that this extension can dramatically reduce the {\IO}s (see \cref{sec:results-protocols} and \cref{fig:protocols-query-sizes}).
 
 		Logarithmic\hyp{}BRC is very scalable as its performance does not depend on total data size and only degrades with the result size.
 		Storage overhead, however, is significant.

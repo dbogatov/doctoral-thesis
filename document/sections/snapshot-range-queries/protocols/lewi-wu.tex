@@ -16,7 +16,7 @@
 	\subsubsection{Security}
 		This scheme satisfies the ORE security definition introduced by~\textcite{clww-ore} with the leakage $\leak(\cdot)$ of the location of the first differing \emph{block}.
 		This property allows a practitioner to set performance-security tradeoff by tuning the block size.
-		Left / right framework is particularly useful in a {\BPlus} tree since it is possible to store only one (semantically secure) side of a ciphertext in the structure (see Section~\ref{sec:ore-to-protocol}).
+		Left / right framework is particularly useful in a {\BPlus} tree since it is possible to store only one (semantically secure) side of a ciphertext in the structure (see \cref{sec:ore-to-protocol}).
 
 	\subsubsection{Analysis and implementation challenges}
 
@@ -26,7 +26,7 @@
 		Right encryption loops $\frac{n}{d} 2^d$ times making one PRP call, one hash call and two PRF calls each iteration.
 		Comparison makes $\frac{n}{d}$ calls to hash at worst and half of that number on average.
 		Please note that the complexity of right encryption is exponential in the block size.
-		In the Table~\ref{tbl:primitive-usage-theory} the PRP usage is linear due to our improvement.
+		In the \cref{tbl:primitive-usage-theory} the PRP usage is linear due to our improvement.
 		The ciphertext size is no longer negligible --- $\frac{n}{d} \left(\lambda + n + 2^{d + 1} \right) + \lambda$, for $\lambda$ being PRF output size.
 
 		The implementation details of this approach raise an interesting security question.
