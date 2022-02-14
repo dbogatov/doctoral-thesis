@@ -1,6 +1,6 @@
 \subsection{Logarithmic-BRC}
 
-	\textcite{practical-range-search} introduced a novel protocol called ``Logarithmic\hyp{}BRC'' whose {\IO} complexity depends only on the result size, regardless of the database size.
+	\textcite{practical-range-search} introduced a novel protocol called ``Logarithmic-BRC'' whose {\IO} complexity depends only on the result size, regardless of the database size.
 	The core primitive for their construction is a Searchable Symmetric Encryption (SSE) scheme.
 	An SSE scheme is a server-client protocol in which the server stores a specially encrypted keywords-to-documents map, and a client can query documents with keywords while the server
 	learns neither keywords nor the documents.
@@ -34,7 +34,7 @@
 		Both SSE schemes' {\IO} complexity is linear with the result size $r$.
 		\cite{cjjjkrs-14} scheme makes at most one {\IO} per result document in the worst-case and there are extensions to significantly improve {\IO} complexity. % chktex 2
 		We have implemented the \texttt{pack} extension, which packs documents in blocks to fit the {\IO} pages.
-		We note that this extension can dramatically reduce the {\IO}s (see \cref{sec:results-protocols} and \cref{fig:protocols-query-sizes}).
+		We note that this extension can dramatically reduce the {\IO}s (see \cref{section:range-snapshot:results-protocols} and \cref{figure:protocols-query-sizes}).
 
 		Logarithmic\hyp{}BRC is very scalable as its performance does not depend on total data size and only degrades with the result size.
 		Storage overhead, however, is significant.

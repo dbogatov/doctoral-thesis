@@ -1,7 +1,7 @@
 \subsection{CLOZ ORE}
 
 	\textcite{parameter-hiding-ore} introduced a new ORE scheme that provably leaks less than any previous scheme.
-	The idea is to use \textcite{clww-ore} construction (see \cref{sec:clww}), but permute the list of PRF outputs.
+	The idea is to use \textcite{clww-ore} construction (see \cref{section:range-snapshot:clww}), but permute the list of PRF outputs.
 	The original order of those outputs is not necessary, as one can simply find a pair that differs by one.
 	This is not enough to reduce leakage, however, since an adversary can count how many elements two ciphertexts have in common.
 
@@ -17,7 +17,7 @@
 		The strong side of the scheme is its security.
 		The scheme leaks $\leak(\cdot)$ an \emph{equality pattern} of the most-significant differing bits (satisfying \textcite{clww-ore} definition).
 		As defined in \cite{parameter-hiding-ore}, the intuition behind equality pattern is that for any triple of plaintexts $m_1$, $m_2$, $m_3$, it leaks whether $m_2$ differs from $m_1$ before $m_3$ does. % chktex 2
-		We do not know of any attacks against this construction (partially because no implementation exists yet, see next subsection), but it is inherently vulnerable to frequency attacks that apply to all frequency-revealing ORE schemes (see \cref{sec:security}).
+		We do not know of any attacks against this construction (partially because no implementation exists yet, see next subsection), but it is inherently vulnerable to frequency attacks that apply to all frequency-revealing ORE schemes (see \cref{section:range-snapshot:security}).
 
 	\subsubsection{Analysis and implementation challenges}
 
@@ -32,7 +32,7 @@
 		The hash of an argument is an element of a group, and the test algorithm is computing a pairing.
 		This operation is very expensive --- order of magnitude more expensive than any other primitive we have implemented for other schemes.
 
-		We have implemented this scheme in C++ using the PBC library \cite{pbc} to empirically assess schemes's performance, and on our machine (see \cref{sec:evaluation}), a single comparison takes 1.9 seconds on average.
+		We have implemented this scheme in C++ using the PBC library \cite{pbc} to empirically assess schemes's performance, and on our machine (see \cref{section:range-snapshot:evaluation}), a single comparison takes 1.9 seconds on average.
 		Although we have produced the first (correct and secure) real implementation of this scheme in C++, it is infeasible to use it in the benchmark (it will take years to complete a single run).
 		Therefore, for the purposes of our benchmark, we implemented a ``fake'' version of PPH --- correct, but insecure, which does not use pairings.
 		Consequently, in our analysis we did not benchmark the speed of the scheme, but measured all other data.
