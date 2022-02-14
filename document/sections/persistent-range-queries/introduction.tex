@@ -2,8 +2,8 @@
 
 	Secure outsourced database systems aim at helping organizations outsource their data to untrusted third parties, without compromising data confidentiality or query efficiency.
 	The main idea is to encrypt the data records before uploading them to an untrusted server along with an index data structure that governs which encrypted records to retrieve for each query.
-	While strong cryptographic tools can be used for this task, existing implementations such as CryptDB~\cite{crypt-db}, Cipherbase~\cite{cipherbase}, StealthDB~\cite{stealth-db} and TrustedDB~\cite{trusted-db} try to optimize performance but do not provide strong security guarantees when answering queries.
-	Indeed, a series of works~\cite{multidimensional-range-queries, inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} demonstrate that these systems are vulnerable to a variety of reconstruction attacks.
+	While strong cryptographic tools can be used for this task, existing implementations such as CryptDB~\cite{crypt-db}, Cipherbase~\cite{cipherbase-daas}, StealthDB~\cite{stealth-db} and TrustedDB~\cite{trusted-db} try to optimize performance but do not provide strong security guarantees when answering queries.
+	Indeed, a series of works~\cite{multidimensional-range-queries, inference-attack-inference-attack-islam-14, leakage-abuse-attacks-cash-15, inference-attacks-naveed-15, generic-attacks-kellaris, attacks-tao-of-inference, grubbs-attacks, access-pattern-disclosure, attacks-improved-reconstruction} demonstrate that these systems are vulnerable to a variety of reconstruction attacks.
 	That is, an adversary can fully reconstruct the distribution of the records over the domain of the indexed attribute.
 	This weakness is prominently due to the \emph{access pattern leakage}: the adversary can tell if the same encrypted record is returned on different queries.
 
@@ -86,7 +86,7 @@
 
 			Works in this category use trusted execution environment (usually, \acrshort{sgx} enclave).
 			These works are primarily concerned with the \acrshort{ap} protection for both trusted and untrusted memory, unlike \epsolute{} which also protects \acrshort{cv}.
-			Cipherbase~\cite{cipherbase,cipherbase-daas} was a pioneer introducing the idea of using \acrshort{tee} (\acrshort{fpga} at that time) to assist with \acrshort{rdbms} security.
+			Cipherbase~\cite{cipherbase-daas} was a pioneer introducing the idea of using \acrshort{tee} (\acrshort{fpga} at that time) to assist with \acrshort{rdbms} security.
 			HardIDX~\cite{hardidx} simply puts the B+ tree in the enclave, while StealthDB~\cite{stealth-db} symmetrically encrypts all records and brings them in the enclave one at a time for processing.
 			EnclaveDB~\cite{enclave-db} assumes somewhat unrealistic \SI{192}{\giga\byte} enclave and puts the entire database in it.
 			ObliDB~\cite{oblidb} and Opaque~\cite{opaque} assume fully oblivious enclave memory (not available as of today) and devise algorithms that use this fully trusted portion to obliviously execute common \acrshort{rdbms} operators, like filters and joins.
@@ -101,7 +101,7 @@
 			Works in this category protect against the snapshot adversary, which takes a snapshot of the data at a fixed point in time (e.g., stolen hard drive).
 			We stress that \epsolute{} provides semantic security against the snapshot adversary on top of \acrshort{ap} and \acrshort{cv} protection.
 			CryptDB~\cite{crypt-db} is a seminal work in this direction offering computations over encrypted data.
-			It has since been shown (e.g.~\cite{inference-attacks-naveed-15,inference-attack-islam-14,attacks-tao-of-inference}) that the underlying property-preserving schemes allow for reconstruction attacks.
+			It has since been shown (e.g.~\cite{inference-attacks-naveed-15,inference-attack-inference-attack-islam-14,attacks-tao-of-inference}) that the underlying property-preserving schemes allow for reconstruction attacks.
 			Arx~\cite{arx} provides strictly stronger security guarantees by using only semantically secure primitives.
 			Seabed~\cite{seabed} uses an additively symmetric homomorphic encryption scheme for aggregates and certain filter queries.
 			\textcite{ppqed} offer a method to verify and apply a predicate (a junction of conditions) using garbled circuits or homomorphic encryption without revealing the predicate itself.

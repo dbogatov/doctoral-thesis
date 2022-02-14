@@ -16,17 +16,19 @@
   doi       = {10.14778/1920841.1920970},
   journal   = {Proc. VLDB Endow.},
   month     = sep,
-  pages     = {1021--1032},
-  numpages  = {12}
+  pages     = {1021--1032}
 }
 
-@inproceedings{adam-ore-v2,
-  author    = {Cash, David and Liu, Feng-Hao and O'Neill, Adam and Zhandry, Mark and Zhang, Cong},
-  title     = {Parameter-Hiding Order Revealing Encryption},
-  booktitle = {Advances in Cryptology -- ASIACRYPT 2018},
-  year      = {2018},
-  publisher = {Springer International Publishing},
-  pages     = {181--210}
+@techreport{aes-ctr-rfc,
+  author       = {Housley, Russ},
+  title        = {Using Advanced Encryption Standard {(AES)} Counter Mode With {IPsec} Encapsulating Security Payload {(ESP)}},
+  howpublished = {Internet Requests for Comments},
+  type         = {RFC},
+  number       = {3686},
+  year         = {2004},
+  month        = {1},
+  publisher    = {RFC Editor},
+  url          = {https://tools.ietf.org/html/rfc3686}
 }
 
 @misc{aes-nist,
@@ -38,44 +40,14 @@
   language  = {en}
 }
 
-@misc{anonymized-b-plus-tree,
-  howpublished = {\url{https://anonymous.4open.science/r/9553f8ba-a691-4eb3-9902-216fe58e9458/}},
-  note         = {Accessed: 2020-09-13},
-  title        = {{Anonymized Repository for B+ tree}}
-}
-
-@misc{anonymized-datasets,
-  howpublished = {\url{http://128.197.11.70/dp-oram/}},
-  note         = {Accessed: 2021-01-24},
-  title        = {{Original and procesed datasets used in this paper}},
-  author       = {Anonymous Authors}
-}
-
-@misc{anonymized-epsolute,
-  howpublished = {\url{https://anonymous.4open.science/r/dba28285-17ae-42ce-b420-345a9c63a39c/}},
-  note         = {Accessed: 2020-09-13},
-  title        = {{Anonymized Repository for \epsolute{}}}
-}
-
-@misc{anonymized-experiments-scripts,
-  howpublished = {\url{https://anonymous.4open.science/r/84d7e1f0-3bec-48d6-8116-f538a0d3926a/}},
-  note         = {Accessed: 2020-09-13},
-  title        = {{Anonymized Repository for experiments scripts}}
-}
-
-@misc{anonymized-path-oram,
-  howpublished = {\url{https://anonymous.4open.science/r/3b5dec44-80b6-4ac1-a2e0-e916ce05eb5a/}},
-  note         = {Accessed: 2020-09-13},
-  title        = {{Anonymized Repository for PathORAM}}
-}
-
-@misc{anonymized-wiki,
-  author       = {Anonymous Authors},
-  title        = {\epsolute{} experiments results and logs},
-  year         = {2021},
-  publisher    = {GitLab},
-  journal      = {GitLab Wiki},
-  howpublished = {\url{https://gitlab.com/epsolute/experiments/-/wikis/Experiments}}
+@inproceedings{anti-tamper-dbs,
+  author  = {Ozsoyoglu, Gultekin and Singer, David and Chung, Sun},
+  year    = {2003},
+  month   = {01},
+  title   = {Anti-tamper databases: Querying encrypted databases},
+  volume  = {142},
+  journal = {International Federation for Information Processing Digital Library; Data and Applications Security XVII;},
+  doi     = {10.1007/1-4020-8070-0_10}
 }
 
 @article{arbitrary-functions-encrypted,
@@ -112,6 +84,16 @@
   doi          = {10.1109/SP.2018.00002}
 }
 
+ @inproceedings{attacks-ore-injection,
+  author    = {Wang, Xingchen and Zhao, Yunlei},
+  title     = {Order-Revealing Encryption: File-Injection Attack and Forward Security},
+  booktitle = {Computer Security},
+  year      = {2018},
+  publisher = {Springer International Publishing},
+  pages     = {101--121},
+  doi       = {10.1007/978-3-319-98989-1_6}
+}
+
 @article{attacks-tao-of-inference,
   author    = {Bindschaedler, Vincent and Grubbs, Paul and Cash, David and Ristenpart, Thomas and Shmatikov, Vitaly},
   title     = {The Tao of Inference in Privacy-Protected Databases},
@@ -124,14 +106,39 @@
   doi       = {10.14778/3236187.3236217}
 }
 
+@inproceedings{attacks-what-else-revealed,
+  author    = {Durak, F. Bet\"{u}l and DuBuisson, Thomas M. and Cash, David},
+  title     = {What Else is Revealed by Order-Revealing Encryption?},
+  year      = {2016},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2976749.2978379},
+  booktitle = {Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security},
+  pages     = {1155--1166},
+  series    = {CCS '16}
+}
+
+@article{b-plus-tree-deletion,
+  author    = {Jannink, Jan},
+  title     = {Implementing Deletion in B+-Trees},
+  year      = {1995},
+  publisher = {Association for Computing Machinery},
+  volume    = {24},
+  number    = {1},
+  doi       = {10.1145/202660.202666},
+  journal   = {SIGMOD Rec.},
+  month     = {3},
+  pages     = {33--38}
+}
+
 @inproceedings{b-tree,
   author    = {Bayer, R. and McCreight, E.},
   title     = {Organization and Maintenance of Large Ordered Indices},
-  booktitle = {Proceedings of the 1970 ACM SIGFIDET (Now SIGMOD) Workshop on Data Description, Access and Control},
-  series    = {SIGFIDET '70},
   year      = {1970},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/1734663.1734671},
+  booktitle = {Proceedings of the 1970 ACM SIGFIDET (Now SIGMOD) Workshop on Data Description, Access and Control},
   pages     = {107--141},
-  publisher = {ACM}
+  series    = {SIGFIDET '70}
 }
 
 @inproceedings{bclo-ope,
@@ -142,6 +149,16 @@
   publisher = {Springer Berlin Heidelberg},
   pages     = {224--241},
   doi       = {10.1007/978-3-642-01001-9_13}
+}
+
+@misc{benchmark-net,
+  author       = { {.NET Foundation} },
+  title        = {{Benchmark.NET}},
+  year         = {2018},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/dotnet/BenchmarkDotNet}},
+  commit       = {50fd57ddb367d3e9e804a6814e22f8d771da3681}
 }
 
 @inproceedings{binary-tree-oram,
@@ -176,11 +193,41 @@
   doi       = {10.1007/s10994-013-5404-1}
 }
 
+@inproceedings{brc,
+  author    = {Kiayias, Aggelos and Papadopoulos, Stavros and Triandopoulos, Nikos and Zacharias, Thomas},
+  title     = {Delegatable Pseudorandom Functions and Applications},
+  year      = {2013},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2508859.2516668},
+  booktitle = {Proceedings of the 2013 ACM SIGSAC Conference on Computer \& Communications Security},
+  pages     = {669--684},
+  series    = {CCS '13}
+}
+
+@article{buffer-tree,
+  author  = {Arge, Lars},
+  title   = {The Buffer Tree: A Technique for Designing Batched External Data Structures},
+  journal = {Algorithmica},
+  year    = {2003},
+  month   = {Sep},
+  volume  = {37},
+  number  = {1},
+  pages   = {1-24},
+  doi     = {10.1007/s00453-003-1021-x}
+}
+
+@misc{ca-dataset,
+  author = {{Transparent California}},
+  title  = {{California public pay and pension 2017 dataset}},
+  year   = {2017},
+  note   = {\url{https://transparentcalifornia.com/salaries/2017/state-of-california/}}
+}
+
 @misc{ca-employees-dataset,
   author = {{Transparent California}},
   title  = {California public pay and pension 2019 dataset},
   year   = {2019},
-  note   = {\url{https://transparentcalifornia.com}}
+  note   = {\url{https://transparentcalifornia.com/salaries/2019/state-of-california/}}
 }
 
 @inproceedings{choosing-epsilon,
@@ -193,14 +240,6 @@
   doi          = {10.1109/CSF.2014.35}
 }
 
-@inproceedings{cipherbase,
-  author    = {Arasu, Arvind and Blanas, Spyros and Eguro, Ken and Kaushik, Raghav and Kossmann, Donald and Ramamurthy, Ravi and Venkatesan, Ramarathnam},
-  title     = {Orthogonal Security With Cipherbase},
-  booktitle = {6th Biennial Conference on Innovative Data Systems Research (CIDR'13)},
-  year      = {2013},
-  month     = {1}
-}
-
 @inproceedings{cipherbase-daas,
   author    = {Arasu, Arvind and Blanas, Spyros and Eguro, Ken and Joglekar, Manas and Kaushik, Raghav and Kossmann, Donald and Ramamurthy, Ravi and Upadhyaya, Prasang and Venkatesan, Ramarathnam},
   title     = {Secure Database-as-a-Service with Cipherbase},
@@ -209,7 +248,6 @@
   doi       = {10.1145/2463676.2467797},
   booktitle = {Proceedings of the 2013 ACM SIGMOD International Conference on Management of Data},
   pages     = {1033--1036},
-  numpages  = {4},
   series    = {SIGMOD '13}
 }
 
@@ -224,21 +262,33 @@
   series    = {CCS '15}
 }
 
-@inproceedings{cloz-ore,
-  author    = {Cash, David and Liu, Feng-Hao and O'Neill, Adam and Zhandry, Mark and Zhang, Cong},
-  title     = {Parameter-Hiding Order Revealing Encryption},
-  booktitle = {Advances in Cryptology -- ASIACRYPT 2018},
-  year      = {2018},
-  pages     = {181--210}
+@inproceedings{cjjjkrs-14,
+  author    = {David Cash and Joseph Jaeger and Stanislaw Jarecki and Charanjit S. Jutla and Hugo Krawczyk and Marcel{-}Catalin Rosu and Michael Steiner},
+  title     = {Dynamic Searchable Encryption in Very-Large Databases: Data Structures and Implementation},
+  booktitle = {21st Annual Network and Distributed System Security Symposium, {NDSS} 2014, San Diego, California, USA, February 23-26, 2014},
+  year      = {2014},
+  doi       = {10.14722/ndss.2014.23264}
+}
+
+@inproceedings{cjjkrs-13,
+  author    = {Cash, David and Jarecki, Stanislaw and Jutla, Charanjit and Krawczyk, Hugo and Ro{\c{s}}u, Marcel-C{\u{a}}t{\u{a}}lin and Steiner, Michael},
+  title     = {Highly-Scalable Searchable Symmetric Encryption with Support for Boolean Queries},
+  booktitle = {Advances in Cryptology -- CRYPTO 2013},
+  year      = {2013},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {353--373},
+  doi       = {10.1007/978-3-642-40041-4_20}
 }
 
 @inproceedings{clww-ore,
   author    = {Chenette, Nathan and Lewi, Kevin and Weis, Stephen A. and Wu, David J.},
   title     = {Practical Order-Revealing Encryption with Limited Leakage},
-  booktitle = {Fast Software Encryption},
   year      = {2016},
-  publisher = {Springer Berlin Heidelberg},
-  pages     = {474--493}
+  publisher = {Springer-Verlag},
+  doi       = {10.1007/978-3-662-52993-5_24},
+  booktitle = {Revised Selected Papers of the 23rd International Conference on Fast Software Encryption - Volume 9783},
+  pages     = {474--493},
+  series    = {FSE 2016}
 }
 
 @inproceedings{computational-dp,
@@ -252,11 +302,14 @@
 }
 
 @inproceedings{crypt-db,
-  title     = {CryptDB: Protecting confidentiality with encrypted query processing},
-  author    = {Popa, Raluca Ada and Redfield, Catherine MS and Zeldovich, Nickolai and Balakrishnan, Hari},
+  author    = {Popa, Raluca Ada and Redfield, Catherine M. S. and Zeldovich, Nickolai and Balakrishnan, Hari},
+  title     = {CryptDB: Protecting Confidentiality with Encrypted Query Processing},
+  year      = {2011},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2043556.2043566},
   booktitle = {Proceedings of the Twenty-Third ACM Symposium on Operating Systems Principles},
   pages     = {85--100},
-  year      = {2011}
+  series    = {SOSP '11}
 }
 
 @inproceedings{crypte,
@@ -290,8 +343,7 @@
   doi        = {10.1145/582415.582418},
   journal    = {ACM Trans. Inf. Syst.},
   month      = {10},
-  pages      = {422--446},
-  numpages   = {25}
+  pages      = {422--446}
 }
 
 @misc{dcpe,
@@ -307,11 +359,8 @@
   title     = {Foundations of Differentially Oblivious Algorithms},
   year      = {2019},
   publisher = {Society for Industrial and Applied Mathematics},
-  address   = {USA},
   booktitle = {Proceedings of the Thirtieth Annual ACM-SIAM Symposium on Discrete Algorithms},
   pages     = {2448--2467},
-  numpages  = {20},
-  location  = {San Diego, California},
   series    = {SODA '19}
 }
 
@@ -369,14 +418,15 @@
 }
 
 @article{emd,
-  title     = {The earth mover's distance as a metric for image retrieval},
-  author    = {Rubner, Yossi and Tomasi, Carlo and Guibas, Leonidas J},
-  journal   = {International journal of computer vision},
-  volume    = {40},
-  number    = {2},
-  pages     = {99--121},
-  year      = {2000},
-  publisher = {Springer}
+  author  = {Rubner, Yossi and Tomasi, Carlo and Guibas, Leonidas J.},
+  title   = {The Earth Mover's Distance as a Metric for Image Retrieval},
+  journal = {International Journal of Computer Vision},
+  year    = {2000},
+  month   = {11},
+  volume  = {40},
+  number  = {2},
+  pages   = {99-121},
+  doi     = {10.1023/A:1026543900054}
 }
 
 @misc{emp-toolkit,
@@ -425,19 +475,35 @@
 }
 
 @article{faiss,
-  title   = {Billion-scale similarity search with GPUs},
-  author  = {Johnson, Jeff and Douze, Matthijs and J{\'e}gou, Herv{\'e}},
-  journal = {arXiv preprint arXiv:1702.08734},
-  year    = {2017}
+  author  = {Johnson, Jeff and Douze, Matthijs and Jégou, Hervé},
+  journal = {IEEE Transactions on Big Data},
+  title   = {Billion-Scale Similarity Search with GPUs},
+  year    = {2021},
+  volume  = {7},
+  number  = {3},
+  pages   = {535-547},
+  doi     = {10.1109/TBDATA.2019.2921572}
+}
+
+@inproceedings{feistel-security,
+  author    = {Hoang, Viet Tung and Rogaway, Phillip},
+  title     = {On Generalized Feistel Networks},
+  year      = {2010},
+  publisher = {Springer-Verlag},
+  booktitle = {Proceedings of the 30th Annual Conference on Advances in Cryptology},
+  pages     = {613--630},
+  series    = {CRYPTO'10}
 }
 
 @inproceedings{fh-ope,
   author    = {Kerschbaum, Florian},
   title     = {Frequency-Hiding Order-Preserving Encryption},
-  booktitle = {Proceedings of the 22Nd ACM SIGSAC Conference on Computer and Communications Security},
   year      = {2015},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2810103.2813629},
+  booktitle = {Proceedings of the 22nd ACM SIGSAC Conference on Computer and Communications Security},
   pages     = {656--667},
-  publisher = {ACM}
+  series    = {CCS '15}
 }
 
 @inproceedings{fhe,
@@ -451,13 +517,31 @@
   series    = {STOC '09}
 }
 
+@inproceedings{florian-def-critique,
+  author    = {Maffei, Matteo and Reinert, Manuel and Schr{\"o}der, Dominique},
+  title     = {On the Security of Frequency-Hiding Order-Preserving Encryption},
+  booktitle = {Cryptology and Network Security},
+  year      = {2018},
+  publisher = {Springer International Publishing},
+  pages     = {51--70},
+  doi       = {10.1007/978-3-030-02641-7_3}
+}
+
 @inproceedings{florian-protocol,
   author    = {Kerschbaum, Florian and Tueno, Anselme},
   title     = {An Efficiently Searchable Encrypted Data Structure for Range Queries},
   booktitle = {Computer Security -- ESORICS 2019},
   year      = {2019},
   publisher = {Springer International Publishing},
-  pages     = {344--364}
+  pages     = {344--364},
+  doi       = {10.1007/978-3-030-29962-0_17}
+}
+
+@misc{forest-dataset,
+  author = {Blackard, Jock A. and {Colorado State University}},
+  title  = {Covertype Data Set},
+  year   = {1998},
+  note   = {\url{https://archive.ics.uci.edu/ml/datasets/covertype}}
 }
 
 @inproceedings{fully-homomorphic-encryption,
@@ -476,7 +560,8 @@
   booktitle = {Theory of Cryptography},
   year      = {2011},
   publisher = {Springer Berlin Heidelberg},
-  pages     = {253--273}
+  pages     = {253--273},
+  doi       = {10.1007/978-3-642-19571-6_16}
 }
 
 @inproceedings{generic-attacks-kellaris,
@@ -538,10 +623,36 @@
   doi          = {10.1007/978-3-319-61176-1_22}
 }
 
-@article{hermetic,
+@mathesis{hermetic,
   title  = {Hermetic: Privacy-preserving distributed analytics without (most) side channels},
-  author = {Xu, Min and Papadimitriou, Antonis and Haeberlen, Andreas and Feldman, Ariel},
-  year   = {2019}
+  author = {Xu, Min},
+  year   = {2107}
+}
+
+@article{hg-sampler,
+  author    = {Kachitvichyanukul, Voratas and Schmeiser, Bruce W.},
+  title     = {Algorithm 668: H2PEC: Sampling from the Hypergeometric Distribution},
+  year      = {1988},
+  publisher = {Association for Computing Machinery},
+  volume    = {14},
+  number    = {4},
+  doi       = {10.1145/50063.214387},
+  journal   = {ACM Trans. Math. Softw.},
+  month     = {12},
+  pages     = {397--398}
+}
+
+@article{hg-sampler-small,
+  author    = {Walker, Alastair J.},
+  title     = {An Efficient Method for Generating Discrete Random Variables with General Distributions},
+  year      = {1977},
+  publisher = {Association for Computing Machinery},
+  volume    = {3},
+  number    = {3},
+  doi       = {10.1145/355744.355749},
+  journal   = {ACM Trans. Math. Softw.},
+  month     = {9},
+  pages     = {253--256}
 }
 
 @article{hierarchical-methods-for-dp,
@@ -593,15 +704,26 @@
   doi       = {10.1145/2810103.2813651}
 }
 
+@book{intro-to-modern-crypto,
+  author    = {Katz, Jonathan and Lindell, Yehuda},
+  title     = {Introduction to Modern Cryptography},
+  year      = {2014},
+  isbn      = {9781466570269},
+  edition   = {Second},
+  publisher = {Chapman \& Hall/CRC}
+}
+
 @article{k-anonymity,
-  title     = {k-anonymity: A model for protecting privacy},
   author    = {Sweeney, Latanya},
-  journal   = {International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems},
-  volume    = {10},
-  number    = {05},
-  pages     = {557--570},
+  title     = {$k$-Anonymity: A Model for Protecting Privacy},
   year      = {2002},
-  publisher = {World Scientific}
+  publisher = {World Scientific Publishing Co., Inc.},
+  volume    = {10},
+  number    = {5},
+  doi       = {10.1142/S0218488502001648},
+  journal   = {Int. J. Uncertain. Fuzziness Knowl.-Based Syst.},
+  month     = {10},
+  pages     = {557--570}
 }
 
 @misc{kamara-encrypted-search-presentation,
@@ -630,15 +752,33 @@
   doi       = {10.1109/SP.2019.00015}
 }
 
+@book{knuth-shuffle,
+  title     = {Seminumerical algorithms},
+  author    = {Knuth, Donald Ervin},
+  year      = {2016},
+  publisher = {Addison-Wesley},
+  edition   = {3},
+  volume    = {2},
+  pages     = {145--146}
+}
+
+@inproceedings{knuth-shuffle-security,
+  author    = {Morris, Ben and Rogaway, Phillip and Stegers, Till},
+  title     = {How to Encipher Messages on a Small Domain},
+  booktitle = {Advances in Cryptology - CRYPTO 2009},
+  year      = {2009},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {286--302},
+  doi       = {10.1007/978-3-642-03356-8_17}
+}
+
 @article{l-diversity,
-  title     = {l-diversity: Privacy beyond k-anonymity},
-  author    = {Machanavajjhala, Ashwin and Kifer, Daniel and Gehrke, Johannes and Venkitasubramaniam, Muthuramakrishnan},
-  journal   = {ACM Transactions on Knowledge Discovery from Data (TKDD)},
-  volume    = {1},
-  number    = {1},
-  pages     = {3--es},
-  year      = {2007},
-  publisher = {ACM New York, NY, USA}
+  author    = {Machanavajjhala, A. and Gehrke, J. and Kifer, D. and Venkitasubramaniam, M.},
+  booktitle = {22nd International Conference on Data Engineering (ICDE'06)},
+  title     = {L-diversity: privacy beyond k-anonymity},
+  year      = {2006},
+  pages     = {24-24},
+  doi       = {10.1109/ICDE.2006.1}
 }
 
 @inproceedings{leakage-abuse-attacks-cash-15,
@@ -655,8 +795,6 @@
   booktitle = {2017 IEEE Symposium on Security and Privacy (SP)},
   title     = {Leakage-Abuse Attacks against Order-Revealing Encryption},
   year      = {2017},
-  volume    = {},
-  number    = {},
   pages     = {655-672},
   doi       = {10.1109/SP.2017.44}
 }
@@ -675,8 +813,6 @@
   booktitle = {2018 IEEE 31st Computer Security Foundations Symposium (CSF)},
   title     = {Privacy Risk in Machine Learning: Analyzing the Connection to Overfitting},
   year      = {2018},
-  volume    = {},
-  number    = {},
   pages     = {268-282},
   doi       = {10.1109/CSF.2018.00027}
 }
@@ -686,8 +822,7 @@
   title     = {Recommendation for Block Cipher Modes of Operation: Methods and Techniques},
   year      = {2001},
   publisher = {Federal Inf. Process. Stds. (NIST FIPS), National Institute of Standards and Technology, Gaithersburg, MD},
-  doi       = {10.6028/NIST.SP.800-38A},
-  language  = {en}
+  doi       = {10.6028/NIST.SP.800-38A}
 }
 
 @inbook{mrr,
@@ -821,20 +956,157 @@
 }
 
 @inproceedings{opaque,
-  title     = {Opaque: An oblivious and encrypted distributed analytics platform},
-  author    = {Zheng, Wenting and Dave, Ankur and Beekman, Jethro G and Popa, Raluca Ada and Gonzalez, Joseph E and Stoica, Ion},
-  booktitle = {14th USENIX Symposium on Networked Systems Design and Implementation (NSDI '17)},
+  author    = {Zheng, Wenting and Dave, Ankur and Beekman, Jethro G. and Popa, Raluca Ada and Gonzalez, Joseph E. and Stoica, Ion},
+  title     = {Opaque: An Oblivious and Encrypted Distributed Analytics Platform},
+  year      = {2017},
+  publisher = {USENIX Association},
+  booktitle = {Proceedings of the 14th USENIX Conference on Networked Systems Design and Implementation},
   pages     = {283--298},
-  year      = {2017}
+  series    = {NSDI'17}
+}
+
+@inproceedings{ope-beyond-ideal-object,
+  author    = {Wozniak, Sander and Rossberg, Michael and Grau, Sascha and Alshawish, Ali and Schaefer, Guenter},
+  title     = {Beyond the Ideal Object: Towards Disclosure-Resilient Order-Preserving Encryption Schemes},
+  year      = {2013},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2517488.2517496},
+  booktitle = {Proceedings of the 2013 ACM Workshop on Cloud Computing Security Workshop},
+  pages     = {89--100},
+  series    = {CCSW '13}
+}
+
+@inproceedings{ope-beyond-one-wayness,
+  author    = {Teranishi, Isamu and Yung, Moti and Malkin, Tal},
+  title     = {Order-Preserving Encryption Secure Beyond One-Wayness},
+  booktitle = {Advances in Cryptology -- ASIACRYPT 2014},
+  year      = {2014},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {42--61},
+  doi       = {10.1007/978-3-662-45608-8_3}
+}
+
+@article{ope-chaotic,
+  title   = {Chaotic Order Preserving Encryption for Efficient and Secure Queries on Databases},
+  author  = {Seungmin LEE and Tae-Jun PARK and Donghyeok LEE and Taekyong NAM and Sehun KIM},
+  journal = {IEICE Transactions on Information and Systems},
+  volume  = {E92.D},
+  number  = {11},
+  pages   = {2207-2217},
+  year    = {2009},
+  doi     = {10.1587/transinf.E92.D.2207}
+}
+
+@inproceedings{ope-early-fh-ope,
+  author    = {Kerschbaum, Florian and Schroepfer, Axel},
+  title     = {Optimal Average-Complexity Ideal-Security Order-Preserving Encryption},
+  year      = {2014},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2660267.2660277},
+  booktitle = {Proceedings of the 2014 ACM SIGSAC Conference on Computer and Communications Security},
+  pages     = {275--286},
+  series    = {CCS '14}
+}
+
+@inproceedings{ope-for-encrypted-dbs,
+  author    = {Liu, Dongxi and Wang, Shenlu},
+  booktitle = {2012 IEEE Fifth International Conference on Cloud Computing},
+  title     = {Programmable Order-Preserving Secure Index for Encrypted Database Query},
+  year      = {2012},
+  pages     = {502-509},
+  doi       = {10.1109/CLOUD.2012.65}
+}
+
+@inproceedings{ope-for-non-uniform,
+  author    = {Yum, Dae Hyun and Kim, Duk Soo and Kim, Jin Seok and Lee, Pil Joong and Hong, Sung Je},
+  title     = {Order-Preserving Encryption for Non-uniformly Distributed Plaintexts},
+  booktitle = {Information Security Applications},
+  year      = {2012},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {84--97},
+  doi       = {10.1007/978-3-642-27890-7_7}
+}
+
+@inproceedings{ope-ideal-security-protocol,
+  author    = {Popa, Raluca Ada and Li, Frank H. and Zeldovich, Nickolai},
+  booktitle = {2013 IEEE Symposium on Security and Privacy},
+  title     = {An Ideal-Security Protocol for Order-Preserving Encoding},
+  year      = {2013},
+  pages     = {463-477},
+  doi       = {10.1109/SP.2013.38}
+}
+
+@inproceedings{ope-leakage,
+  author    = {Boldyreva, Alexandra and Chenette, Nathan and O'Neill, Adam},
+  title     = {Order-Preserving Encryption Revisited: Improved Security Analysis and Alternative Solutions},
+  booktitle = {Advances in Cryptology -- CRYPTO 2011},
+  year      = {2011},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {578--595},
+  doi       = {10.1007/978-3-642-22792-9_33}
+}
+
+@misc{ope-multi-user,
+  author       = {Liangliang Xiao and  I-Ling Yen and Dung T. Huynh},
+  title        = {Extending Order Preserving Encryption for Multi-User Systems},
+  howpublished = {Cryptology ePrint Archive, Report 2012/192},
+  year         = {2012},
+  note         = {\url{https://ia.cr/2012/192}}
+}
+
+@article{ope-mv-opes,
+  title   = {MV-OPES: Multivalued\hyp{}Order Preserving Encryption Scheme: A Novel Scheme for Encrypting Integer Value to Many Different Values},
+  author  = {Kadhem, Hasan and Amagasa, Toshiyuki and Kitagawa, Hiroyuki},
+  journal = {IEICE Transactions on Information and Systems},
+  volume  = {E93.D},
+  number  = {9},
+  pages   = {2520-2533},
+  year    = {2010},
+  doi     = {10.1587/transinf.E93.D.2520}
+}
+
+@inproceedings{ope-mv-popes,
+  author    = {Kadhem, Hasan and Amagasa, Toshiyuki and Kitagawa, Hiroyuki},
+  title     = {Optimization Techniques for Range Queries in the Multivalued-partial Order Preserving Encryption Scheme},
+  booktitle = {Knowledge Discovery, Knowledge Engineering and Knowledge Management},
+  year      = {2013},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {338--353},
+  doi       = {10.1007/978-3-642-29764-9_23}
+}
+
+@article{ope-non-linear,
+  author  = {Liu, Dongxi and Wang, Shenlu},
+  title   = {Nonlinear order preserving index for encrypted database query in service cloud environments},
+  journal = {Concurrency and Computation: Practice and Experience},
+  pages   = {1967-1984},
+  doi     = {10.1002/cpe.2992}
+}
+
+@misc{ope-note,
+  author = {Liangliang Xiao and I-ling Yen},
+  title  = {A Note for the Ideal Order-Preserving Encryption Object and Generalized Order-Preserving Encryption}
 }
 
 @inproceedings{ope-original,
-  title     = {Order preserving encryption for numeric data},
   author    = {Agrawal, Rakesh and Kiernan, Jerry and Srikant, Ramakrishnan and Xu, Yirong},
-  booktitle = {Proceedings of the 2004 ACM SIGMOD international conference on Management of data},
-  pages     = {563--574},
+  title     = {Order Preserving Encryption for Numeric Data},
   year      = {2004},
-  doi       = {10.1145/1007568.1007632}
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/1007568.1007632},
+  booktitle = {Proceedings of the 2004 ACM SIGMOD International Conference on Management of Data},
+  pages     = {563--574},
+  series    = {SIGMOD '04}
+}
+
+@inproceedings{ope-structure,
+  author    = {Elovici, Yuval and Waisenberg, Ronen and Shmueli, Erez and Gudes, Ehud},
+  title     = {A Structure Preserving Database Encryption Scheme},
+  booktitle = {Secure Data Management},
+  year      = {2004},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {28--40},
+  doi       = {10.1007/978-3-540-30073-1_3}
 }
 
 @misc{oracle-tde,
@@ -877,6 +1149,16 @@
   doi       = {10.1145/28395.28416}
 }
 
+@inproceedings{oram-tighter-lower-bound,
+  author    = {Larsen, Kasper Green and Nielsen, Jesper Buus},
+  title     = {Yes, There is an Oblivious RAM Lower Bound!},
+  booktitle = {Advances in Cryptology -- CRYPTO 2018},
+  year      = {2018},
+  publisher = {Springer International Publishing},
+  pages     = {523--542},
+  doi       = {10.1007/978-3-319-96881-0_18}
+}
+
 @article{ore-benchmark-17,
   title     = {A comparative evaluation of order-revealing encryption schemes and secure range-query protocols},
   author    = {Bogatov, Dmytro and Kollios, George and Reyzin, Leonid},
@@ -890,6 +1172,26 @@
   doi       = {10.14778/3324301.3324309}
 }
 
+@inproceedings{ore-learning,
+  author    = {Bun, Mark and Zhandry, Mark},
+  title     = {Order-Revealing Encryption and the Hardness of Private Learning},
+  booktitle = {Theory of Cryptography},
+  year      = {2016},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {176--206},
+  doi       = {10.1007/978-3-662-49096-9_8}
+}
+
+@article{ore-multi-client,
+  author  = {Eom, Jieun and Lee, Dong Hoon and Lee, Kwangsu},
+  journal = {IEEE Access},
+  title   = {Multi-Client Order-Revealing Encryption},
+  year    = {2018},
+  volume  = {6},
+  pages   = {45458-45472},
+  doi     = {10.1109/ACCESS.2018.2864991}
+}
+
 @inproceedings{ore-original,
   title        = {Semantically secure order-revealing encryption: Multi-input functional encryption without obfuscation},
   author       = {Boneh, Dan and Lewi, Kevin and Raykova, Mariana and Sahai, Amit and Zhandry, Mark and Zimmerman, Joe},
@@ -898,6 +1200,32 @@
   year         = {2015},
   organization = {Springer},
   doi          = {10.1007/978-3-662-46803-6_19}
+}
+
+@inproceedings{ore-partial,
+  author    = {Haagh, Helene and Ji, Yue and Li, Chenxing and Orlandi, Claudio and Song, Yifan},
+  title     = {Revealing Encryption for Partial Ordering},
+  booktitle = {Cryptography and Coding},
+  year      = {2017},
+  publisher = {Springer International Publishing},
+  pages     = {3--22},
+  doi       = {10.1007/978-3-319-71045-7_1}
+}
+
+@misc{ore-project,
+  author       = { Dmytro Bogatov },
+  title        = {{ORE Benchmark}},
+  year         = {2018},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/dbogatov/ore-benchmark}}
+}
+
+@misc{ore-website,
+  author = {Bogatov, Dmytro},
+  title  = {Interactive Secure Range Queries Simulations},
+  year   = {2019},
+  note   = {\url{https://ore.dbogatov.org/}}
 }
 
 @inproceedings{our-data-ourselves,
@@ -914,7 +1242,7 @@
   howpublished = {\url{http://csr.bu.edu/dp-oram/}},
   note         = {Accessed: 2021-01-24},
   year         = {2021},
-  title        = {{Original and procesed datasets used in this paper}},
+  title        = {Original and procesed datasets used in \epsolute{}},
   author       = {Dmytro Bogatov}
 }
 
@@ -952,10 +1280,25 @@
 @inproceedings{path-oram,
   author    = {Stefanov, Emil and van Dijk, Marten and Shi, Elaine and Fletcher, Christopher and Ren, Ling and Yu, Xiangyao and Devadas, Srinivas},
   title     = {Path ORAM: An Extremely Simple Oblivious RAM Protocol},
-  booktitle = {Proceedings of the 2013 ACM SIGSAC Conference on Computer Communications Security},
   year      = {2013},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2508859.2516660},
+  booktitle = {Proceedings of the 2013 ACM SIGSAC Conference on Computer \& Communications Security},
   pages     = {299--310},
-  publisher = {ACM}
+  series    = {CCS '13}
+}
+
+@online{pbc,
+  author  = {Lynn, Ben},
+  title   = {Pairings-based Crypto {(PBC)}},
+  year    = 2018,
+  url     = {https://crypto.stanford.edu/pbc/},
+  urldate = {2018-08-15}
+}
+
+@misc{perspecsys,
+  title = {Perspecsys: A blue coat company.},
+  note  = {\url{http://perspecsys.com/}}
 }
 
 @inproceedings{pined-rq,
@@ -969,19 +1312,23 @@
 
 @inproceedings{pope,
   author    = {Roche, Daniel S. and Apon, Daniel and Choi, Seung Geol and Yerukhimovich, Arkady},
-  title     = {{POPE}: Partial Order Preserving Encoding},
-  booktitle = {Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security},
+  title     = {POPE: Partial Order Preserving Encoding},
   year      = {2016},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2976749.2978345},
+  booktitle = {Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security},
   pages     = {1131--1142},
-  publisher = {ACM}
+  series    = {CCS '16}
 }
 
 @inproceedings{pp-index-range-queries,
-  title     = {A privacy-preserving index for range queries},
-  author    = {Hore, Bijit and Mehrotra, Sharad and Tsudik, Gene},
-  booktitle = {Proceedings of the Thirtieth international conference on Very large data bases-Volume 30},
-  pages     = {720--731},
-  year      = {2004}
+  title     = { - A Privacy-Preserving Index for Range Queries},
+  booktitle = {Proceedings 2004 VLDB Conference},
+  publisher = {Morgan Kaufmann},
+  pages     = {720-731},
+  year      = {2004},
+  doi       = {10.1016/B978-012088469-8.50064-4},
+  author    = {Bijit Hore and Sharad Mehrotra and Gene Tsudik}
 }
 
 @inproceedings{ppqed,
@@ -994,13 +1341,15 @@
   doi          = {10.1007/978-3-319-11203-9_23}
 }
 
-@inproceedings{practical-ore,
-  author    = {Chenette, Nathan and Lewi, Kevin and Weis, Stephen A. and Wu, David J.},
-  title     = {Practical Order-Revealing Encryption with Limited Leakage},
-  booktitle = {Fast Software Encryption},
-  year      = {2016},
-  publisher = {Springer Berlin Heidelberg},
-  pages     = {474--493}
+@inproceedings{pq-trees,
+  author    = {Dautrich, Jonathan L. and Ravishankar, Chinya V.},
+  title     = {Compromising Privacy in Precise Query Protocols},
+  year      = {2013},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2452376.2452397},
+  booktitle = {Proceedings of the 16th International Conference on Extending Database Technology},
+  pages     = {155--166},
+  series    = {EDBT '13}
 }
 
 @inproceedings{practical-range-search,
@@ -1051,6 +1400,16 @@
   publisher = {PMLR}
 }
 
+@article{protocols-survey,
+  author  = {Zhe Liu and Kim-Kwang Raymond Choo and Minghao Zhao},
+  title   = {Practical-oriented protocols for privacy-preserving outsourced big data analysis: Challenges and future research directions},
+  journal = {Computers \& Security},
+  volume  = {69},
+  pages   = {97-113},
+  year    = {2017},
+  doi     = {10.1016/j.cose.2016.12.006}
+}
+
 @inproceedings{pump-volume-attacks,
   title     = {Pump up the volume: Practical database reconstruction from volume leakage on range queries},
   author    = {Grubbs, Paul and Lacharit{\'e}, Marie-Sarah and Minaud, Brice and Paterson, Kenneth G},
@@ -1090,8 +1449,16 @@
   year      = {2020},
   isbn      = {978-1-939133-17-5},
   pages     = {2433--2450},
-  url       = {https://www.usenix.org/conference/usenixsecurity20/presentation/demertzis},
   publisher = {{USENIX} Association}
+}
+
+@article{secure-queries-overview,
+  author = {Boelter, Tobias and Poddar, Rishabh and Popa, Raluca Ada},
+  title  = {A Secure One-Roundtrip Index for Range Queries},
+  school = {EECS Department, University of California, Berkeley},
+  year   = {2017},
+  month  = {4},
+  number = {UCB/EECS-2017-7}
 }
 
 @inproceedings{sgx-1,
@@ -1105,49 +1472,50 @@
 }
 
 @article{sgx-2,
-  title   = {Using innovative instructions to create trustworthy software solutions.},
-  author  = {Hoekstra, Matthew and Lal, Reshma and Pappachan, Pradeep and Phegade, Vinay and Del Cuvillo, Juan},
-  journal = {HASP@ ISCA},
-  volume  = {11},
-  number  = {10.1145},
-  pages   = {2487726--2488370},
-  year    = {2013}
+  author    = {Hoekstra, Matthew and Lal, Reshma and Pappachan, Pradeep and Phegade, Vinay and Del Cuvillo, Juan},
+  title     = {Using Innovative Instructions to Create Trustworthy Software Solutions},
+  year      = {2013},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2487726.2488370},
+  booktitle = {Proceedings of the 2nd International Workshop on Hardware and Architectural Support for Security and Privacy},
+  articleno = {11},
+  series    = {HASP '13}
 }
 
 @article{sgx-3,
-  title   = {Innovative instructions and software model for isolated execution.},
-  author  = {McKeen, Frank and Alexandrovich, Ilya and Berenzon, Alex and Rozas, Carlos V and Shafi, Hisham and Shanbhogue, Vedvyas and Savagaonkar, Uday R},
-  journal = {Hasp@ isca},
-  volume  = {10},
-  number  = {1},
-  year    = {2013}
+  author    = {McKeen, Frank and Alexandrovich, Ilya and Berenzon, Alex and Rozas, Carlos V. and Shafi, Hisham and Shanbhogue, Vedvyas and Savagaonkar, Uday R.},
+  title     = {Innovative Instructions and Software Model for Isolated Execution},
+  year      = {2013},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/2487726.2488368},
+  booktitle = {Proceedings of the 2nd International Workshop on Hardware and Architectural Support for Security and Privacy},
+  articleno = {10},
+  series    = {HASP '13}
 }
 
-@article{sgx-explained,
-  title   = {Intel sgx explained.},
-  author  = {Costan, Victor and Devadas, Srinivas},
-  journal = {IACR Cryptol. ePrint Arch.},
-  volume  = {2016},
-  number  = {86},
-  pages   = {1--118},
-  year    = {2016}
+@misc{sgx-explained,
+  author       = {Victor Costan and Srinivas Devadas},
+  title        = {Intel SGX Explained},
+  howpublished = {Cryptology ePrint Archive, Report 2016/086},
+  year         = {2016},
+  note         = {\url{https://ia.cr/2016/086}}
 }
 
 @misc{sgx-manual,
   author = {Intel Corporation},
-  title  = {Intel® 64 and IA-32 Architectures Software Developer's Manual},
+  title  = {Intel 64 and IA-32 Architectures Software Developer's Manual},
   month  = {Sep},
   year   = {2015},
   note   = {Volume 3D: System Programming Guide, Part 4}
 }
 
 @inproceedings{shortest-path-oram,
-  title        = {Practical private shortest path computation based on oblivious storage},
-  author       = {Xie, Dong and Li, Guanru and Yao, Bin and Wei, Xuan and Xiao, Xiaokui and Gao, Yunjun and Guo, Minyi},
-  booktitle    = {2016 IEEE 32nd International Conference on Data Engineering (ICDE)},
-  pages        = {361--372},
-  year         = {2016},
-  organization = {IEEE}
+  author    = {Xie, Dong and Li, Guanru and Yao, Bin and Wei, Xuan and Xiao, Xiaokui and Gao, Yunjun and Guo, Minyi},
+  booktitle = {2016 IEEE 32nd International Conference on Data Engineering (ICDE)},
+  title     = {Practical private shortest path computation based on Oblivious Storage},
+  year      = {2016},
+  pages     = {361-372},
+  doi       = {10.1109/ICDE.2016.7498254}
 }
 
 @article{shrinkwrap,
@@ -1190,9 +1558,8 @@
   volume     = {10},
   number     = {6},
   journal    = {Proc. VLDB Endow.},
-  month      = feb,
+  month      = {2},
   pages      = {673--684},
-  numpages   = {12},
   doi        = {10.14778/3055330.3055334}
 }
 
@@ -1240,21 +1607,21 @@
 }
 
 @inproceedings{t-closeness,
-  title        = {t-closeness: Privacy beyond k-anonymity and l-diversity},
-  author       = {Li, Ninghui and Li, Tiancheng and Venkatasubramanian, Suresh},
-  booktitle    = {2007 IEEE 23rd International Conference on Data Engineering},
-  pages        = {106--115},
-  year         = {2007},
-  organization = {IEEE}
+  author    = {Li, Ninghui and Li, Tiancheng and Venkatasubramanian, Suresh},
+  booktitle = {2007 IEEE 23rd International Conference on Data Engineering},
+  title     = {$t$-Closeness: Privacy Beyond k-Anonymity and l-Diversity},
+  year      = {2007},
+  pages     = {106-115},
+  doi       = {10.1109/ICDE.2007.367856}
 }
 
 @inproceedings{taostore,
-  title        = {Taostore: Overcoming asynchronicity in oblivious data storage},
-  author       = {Sahin, Cetin and Zakhary, Victor and El Abbadi, Amr and Lin, Huijia and Tessaro, Stefano},
-  booktitle    = {2016 IEEE Symposium on Security and Privacy (SP)},
-  pages        = {198--217},
-  year         = {2016},
-  organization = {IEEE}
+  author    = {Sahin, Cetin and Zakhary, Victor and Abbadi, Amr El and Lin, Huijia and Tessaro, Stefano},
+  booktitle = {2016 IEEE Symposium on Security and Privacy (SP)},
+  title     = {TaoStore: Overcoming Asynchronicity in Oblivious Data Storage},
+  year      = {2016},
+  pages     = {198-217},
+  doi       = {10.1109/SP.2016.20}
 }
 
 @inproceedings{tp-oram,
@@ -1276,6 +1643,16 @@
   doi       = {10.1109/TKDE.2013.38}
 }
 
+@inproceedings{unbalanced-feistel,
+  author    = {Schneier, Bruce and Kelsey, John},
+  title     = {Unbalanced {Feistel} networks and block cipher design},
+  booktitle = {Fast Software Encryption},
+  year      = {1996},
+  publisher = {Springer Berlin Heidelberg},
+  pages     = {121--144},
+  doi       = {10.1007/3-540-60865-6_49}
+}
+
 @inproceedings{volume-range-attacks,
   title     = {Encrypted databases: New volume attacks against range queries},
   author    = {Gui, Zichen and Johnson, Oliver and Warinschi, Bogdan},
@@ -1290,8 +1667,6 @@
   booktitle = {27th Annual Symposium on Foundations of Computer Science (sfcs 1986)},
   title     = {How to generate and exchange secrets},
   year      = {1986},
-  volume    = {},
-  number    = {},
   pages     = {162-167},
   doi       = {10.1109/SFCS.1986.25}
 }
@@ -1300,7 +1675,6 @@
   author = {Sasy, Sajin and Gorbunov, Sergey and Fletcher, Christopher},
   year   = {2018},
   month  = {01},
-  pages  = {},
   title  = {ZeroTrace : Oblivious Memory Primitives from Intel SGX},
   doi    = {10.14722/ndss.2018.23243}
 }

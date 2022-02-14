@@ -1,0 +1,37 @@
+\begin{table*}[t!]
+	\centering
+	\caption{Simulation results for protocols' performance values}\label{tbl:protocols-result}
+	\begin{tabular}{ l c c c c c c }
+
+		\toprule
+
+		\multirow{3}{*}{Protocol}				& \multicolumn{2}{c}{\multirow{2}{*}{{\IO} requests (result included)}}	& \multicolumn{4}{c}{Communication per operation (result excluded)}					\\
+		\rule{0pt}{10pt}						& 									&									& \multicolumn{2}{c}{Volume (messages)}	& \multicolumn{2}{c}{Size (bytes)}			\\ \cline{2-3} \cline{4-7}
+		\rule{0pt}{10pt}						& Construction						& Query								& Construction			& Query			& Construction			& Query				\\
+
+		\toprule
+
+		{\BPlus} tree w. ORE					& 3									& 44								& 2						& 2				& 177 					& 342				\\
+
+		\midrule
+
+		Kerschbaum~\cite{florian-protocol}		& $\bm{494}$						& 7									& 40					& 86			& 671					& 1453				\\
+
+		\midrule
+
+		POPE~\cite{pope} warm					& \multirow{2}{*}{1}				& 300								& \multirow{2}{*}{2}	& 914			& \multirow{2}{*}{32}	& 43331				\\
+
+		POPE~\cite{pope} cold					& 									& $\bm{2175}$						& 						& $\bm{497722}$	& 						& $\bm{9056644}$	\\
+
+		\midrule
+
+		Logarithmic-BRC~\cite{practical-range-search}	& $\textbf{---}$					& $\bm{40}$							& 1						& 2				& $\textbf{---}$		& 391				\\
+
+		\midrule
+
+		ORAM									& $\bm{31}$							& $\bm{185}$						& $\bm{143}$			& $\bm{490}$	& $\bm{18254}$			& $\bm{62662}$		\\
+
+		\bottomrule
+
+	\end{tabular}
+\end{table*}

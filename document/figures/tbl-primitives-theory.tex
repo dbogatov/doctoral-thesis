@@ -10,7 +10,7 @@
 		Ordered by security rank --- most secure below.
 		$n$ is the input length in bits, $d$ is a block size for Lewi-Wu~\cite{lewi-wu-ore} scheme, $\lambda$ is a \acrshort{prf} output size, $N$ is a total data size, \textbf{\acrshort{hg}} is a hyper-geometric distribution sampler, \textbf{\acrshort{pph}} is a property-preserving hash with $h$-bit outputs built with bilinear maps and \textbf{bolded} are weak points of the schemes.
 		Values in parentheses are simulation-derived. $N = 10^3$, $n = 32$, $d = 2$, $\lambda = 128$ and $h = 128$ in this simulation.
-	}\label{table:ore}
+	}\label{tbl:primitive-usage-theory}
 	\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} l c c c c c } % chktex 26
 
 		\toprule
@@ -35,7 +35,7 @@
 
 		\midrule
 
-		\multirow{3}{*}{\cite{cloz-ore}}			& $n$ (32) \acrshort{prf}													& \multirow{3}{*}{$\bm{n^2}$ \textbf{(1046) \acrshort{pph}}}	& \multirow{3}{*}{$n \cdot h$ (4096)}													& \multirow{3}{*}{\makecell{Equality pattern \\ of the most-significant \\ differing bit}}	\\
+		\multirow{3}{*}{\cite{parameter-hiding-ore}}			& $n$ (32) \acrshort{prf}													& \multirow{3}{*}{$\bm{n^2}$ \textbf{(1046) \acrshort{pph}}}	& \multirow{3}{*}{$n \cdot h$ (4096)}													& \multirow{3}{*}{\makecell{Equality pattern \\ of the most-significant \\ differing bit}}	\\
 													& $n$ (32) \acrshort{pph}													&																&																						& 																							\\
 													& 1 \acrshort{prp}															&																&																						& 																							\\
 

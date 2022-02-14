@@ -1,0 +1,37 @@
+\begin{table}[t]
+	\centering
+	\caption{Simulation results for ORE primitive usage}\label{tbl:primitive-usage-result}
+	\begin{tabular}{ l c c c }
+
+		\toprule
+
+		Scheme										& Encryption				& Comparison								& Size (bits)			\\
+
+		\toprule
+
+		BCLO~\cite{bclo-ope}					& $\bm{41}$ \textbf{HG}		& none										& $64$					\\
+
+		\midrule
+
+		CLWW~\cite{clww-ore}					& 32 PRF 					& none										& $64$					\\
+
+		\midrule
+
+		\multirow{3}{*}{Lewi-Wu~\cite{lewi-wu-ore}}	& $\bm{32}$ \textbf{PRP}	& \multirow{3}{*}{9 Hash}					& \multirow{3}{*}{2816}	\\
+													& 160 PRF					&											&						\\
+													& 64 Hash					&											&						\\
+
+		\midrule
+
+		\multirow{3}{*}{CLOZ~\cite{parameter-hiding-ore}}	& 32 PRF					& \multirow{3}{*}{$\bm{1046}$ \textbf{PPH}}	& \multirow{3}{*}{4096}	\\
+													& 32 PPH					&											&						\\
+													& 1 PRP						&											&						\\
+
+		\midrule
+
+		FH-OPE~\cite{fh-ope}						& 1 Traversal 				& 1 Traversal								& $\bm{86842}$			 \\
+
+		\bottomrule
+
+	\end{tabular}
+\end{table}

@@ -1,0 +1,64 @@
+\section{Introduction}
+
+	Order-Preserving Encryption (OPE) was proposed by~\textcite{ope-original} in their seminal paper.
+	The main idea is to ``encrypt'' numerical values into ciphertexts that have the same order as the original plaintexts.
+	This is a very useful primitive since it allows a database system to make comparisons between chiphertexts and get the same results as if it had operated on plaintexts.
+	A scheme was proposed in~\cite{ope-original} but no security analysis was given.
+
+	\textcite{bclo-ope} were the first to treat OPE schemes from a cryptographic point of view, providing security models and rigorous analysis.
+	The ideal functionality of such a scheme is to leak only the order of the plaintexts and nothing more.
+	However, it was shown by \textcite{bclo-ope} that the ideal functionality is not achievable if the scheme is \emph{stateless} and \emph{immutable}.
+	In order to achieve the ideal functionality, \textcite{ope-ideal-security-protocol} proposed a mutable scheme that constructs a binary tree on plaintexts and uses paths as ciphertexts.
+	This tree is the encrypted full state of the dataset, and once an insertion or a deletion rebalances the tree, multiple ciphertexts get mutated.
+	\textcite{fh-ope} proposed an improvement on this scheme that also hides the frequency of each plaintext (how many times a given value appears).
+
+	Furthermore, in order to improve the security of these schemes, \textcite{ore-original} proposed to generalize OPE to Order\hyp{}Revealing Encryption (ORE).
+	In ORE, ciphertexts have no particular order and look more like typical semantically secure encryptions.
+	The database system has a special comparison function that can be used to compare two ciphertexts.
+	These schemes are more secure than OPE schemes, although they still leak some information, and in general are more expensive to compute.
+	Since these schemes leak some information, a number of recent works considered attacks on systems that may use these schemes~\cite{access-pattern-disclosure, inference-attack-islam-14, inference-attacks-naveed-15, grubbs-attacks, generic-attacks-kellaris, leakage-abuse-attacks-cash-15, attacks-what-else-revealed, attacks-improved-reconstruction, attacks-tao-of-inference, attacks-ore-injection}.
+	Most of these attacks assume the attacker possesses \emph{auxiliary information} and no other protections are available.
+
+	OPE / ORE schemes can be used with almost no changes to the underlying database engine.
+	To provide greater security, a number of more complex protocols for protecting data in outsourced databases have been proposed.
+	These constructions are often interactive, rely on custom data structures and are optimized for certain tasks, such as range queries.
+	Naturally, the more secure the protocol is, the larger performance overhead it incurs.
+	The most secure of these --- Oblivious RAM (ORAM) based protocol --- provides strong, well-understood, cryptographic privacy guarantees with no information leakage.
+
+	Applications that can benefit from such schemes and protocols include cloud access security brokers (CASBs) and financial and banking applications.
+	Indeed, a number of commercial CASBs including Skyhigh Networks\footnote{\url{https://www.skyhighnetworks.com/}} and CipherCloud\footnote{\url{https://www.ciphercloud.com/}} have been using some form of OPE or ORE schemes in their systems.
+	In addition, financial institutions may be able to encrypt their data using the aforementioned schemes in order to provide another layer of security, assuming that the performance overhead is acceptable.
+	For many of these applications the auxiliary information that is needed for the attacks mentioned above is either unavailable or difficult to get.
+
+	Currently, it is a very challenging task for users to choose an appropriate data privacy approach for their application, because the security and performance tradeoff is not well understood.
+	Both security and performance of every approach need to be thoroughly evaluated.
+	Characterizing security benefits of different approaches remains an open problem, unlikely to be solved in the immediate future.
+	However, it is possible to evaluate the performance of each approach, so as to enable better-informed decisions about whether the improved performance of some schemes is worth the uncertainty about the security they achieve.
+
+	We emphasize that it is not trivial to evaluate the performance of these schemes.
+	Many of the papers presenting the above approaches provide only a theoretical treatment and concentrate more on the security definitions and analysis and less on the performance.
+	Some of these constructions have not been even implemented properly.
+	Furthermore, even though the main target of these schemes and protocols are database applications, most of them have not been evaluated in database settings.
+
+	To address this problem, in this paper we design a new framework that allows for systematic and extensive comparison of OPE and ORE schemes and secure range query protocols in the context of database applications.
+	We employ these schemes in database indexing techniques (i.e. {\BPlus} trees) and query protocols and we report various costs including {\IO} complexity.
+
+	The main contribution of this work is to present an experimental evaluation using both real and synthetic datasets using our new framework that tracks not only time but also primitive usage, {\IO} complexity, and communication cost.
+	In the process, we present improvements for some of the schemes that make them more efficient and/or more secure.
+	To make understanding of these schemes easier for the reader, we present the main ideas behind these constructions, discuss their security definitions and leakage profiles, and provide an analysis of implementation challenges for each one.
+
+	\subsection{Related work}
+
+		% list rom FH-OPE paper and "An Ideal-Security Protocol for Order-Preserving Encoding"
+		A number of OPE schemes have been proposed recently including \cite{ope-original, anti-tamper-dbs, bclo-ope, ope-leakage, ope-beyond-one-wayness, ope-early-fh-ope, ope-beyond-ideal-object, ope-mv-opes, fh-ope, ope-mv-popes, ope-multi-user, ope-note, ope-for-encrypted-dbs, ope-structure, ope-non-linear}. % chktex 2
+		\textcite{ope-ideal-security-protocol} present a nice analysis of these schemes and they are the first to show that using a stateful scheme you can achieve the ideal security guarantees for OPE\@.
+		We pick two of these schemes (BCLO~\cite{bclo-ope} and FH-OPE~\cite{fh-ope}) that are the most representative and outperform other schemes.
+
+		In addition, there are a number of ORE schemes \cite{ore-original, clww-ore, lewi-wu-ore, parameter-hiding-ore, parameter-hiding-ore, ore-learning, ore-partial, ore-multi-client} that have been proposed. % chktex 2
+		We choose the most practical and most secure of them \cite{clww-ore, lewi-wu-ore, parameter-hiding-ore}, to include in the comparison. % chktex 2
+		Also, there are some approaches that assume an outsourced setting where the client may have to communicate with the server during query processing~\cite{pope, florian-protocol, secure-queries-overview, practical-range-search}.
+		We choose two of these protocols~\cite{pope, florian-protocol} because they are based on order-preserving approaches and therefore have similar security models with ORE schemes.
+		We would like to point out that there are some other methods that can be used to run range queries on encrypted data that use different types of schemes and techniques.
+		See \cite{secure-queries-overview} and \cite{protocols-survey} for an overview of other methods. % chktex 2
+		In this paper we consider two of the protocols proposed in~\cite{practical-range-search} that use Searchable Symmetric Encryption (SSE).
+		We stress that the schemes and protocols discussed here should be used with care, and it is up to the practitioner how to use them given their security and performance profiles.
