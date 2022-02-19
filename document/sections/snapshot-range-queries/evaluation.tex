@@ -37,6 +37,8 @@
 			For \acrshort{prp}, we implemented unbalanced Feistel networks \cite{unbalanced-feistel} for large inputs and Knuth shuffle \cite{knuth-shuffle} for small inputs.
 			Please see the README of project's repository \cite{ore-project} for low-level details.
 
+			\input{figures/fig-benchmarks}
+
 		\subsubsection{Schemes and protocols}
 
 			We implemented schemes and protocols precisely as in the original papers.
@@ -46,11 +48,7 @@
 			It is important to note that all schemes and protocols use exclusively our implementations of primitives.
 			Thus we rule out the possible bias of one primitive implementation being faster than the other.
 
-			\input{figures/fig-benchmarks}
-
 		\subsubsection{Simulations}
-
-			\input{figures/fig-protocols}
 
 			We have four types of simulations.
 
@@ -64,6 +62,8 @@
 			We use Benchmark.NET \cite{benchmark-net} to ensure that the reported time is accurate.
 			This tool handles issues like cold / warm start, elevating process' priority, and performing enough runs to draw statistically sound conclusions.
 			This benchmark reports elapsed time up to nanoseconds for all four schemes (excluding CLOZ \cite{parameter-hiding-ore}) and their variants.
+
+			\input{figures/fig-protocols}
 
 			Finally, primitive benchmark uses the same tool, but compares the primitives.
 			We use it to compare different implementations of primitives (e.g.\ Feistel \acrshort{prp} vs pre-generated permutation) and to approximate time consumption of the schemes and protocols based on primitive usage.
@@ -118,42 +118,44 @@
 			The values we are measuring are the number of \acrshort{io} operations, communication volume, and size for both construction and query stages.
 
 			See \cref{table:protocols} for the snapshot for particular distribution (CA employees).
-			\cref{figure:protocols} shows all values we tracked for all protocols and distributions.
+			\cref{figure:protocols-ios,figure:protocols-size,figure:protocols-vol} shows all values we tracked for all protocols and distributions.
 			Values for \acrshort{ore} based protocols are averaged.
 			Being ``cold'' in our simulations means executing the first query and being ``warm'' means the first query has been previously executed.
 			This difference makes sense only for POPE as its first query incurs disproportionately large overhead by design.
 
 			Note that all \acrshort{ore} based protocols behave the same except when ciphertext size matters.
-			Thus, since BCLO, CLWW and FH-OPE have the same ciphertext size, they create {\BPlus} trees with the same page capacity and have the same number of \acrshort{io}s for different operations.
-			Lewi-Wu and CLOZ schemes have relatively large ciphertexts and thus induce larger traffic (see \cref{figure:protocols:csize}) and smaller {\BPlus} tree branching factor resulting in greater number of \acrshort{io} requests (see \cref{figure:protocols:qios}).
+			Thus, since BCLO, CLWW and FH-OPE have the same ciphertext size, they create {\BPlus} trees with the same page capacity and have the same number of \acrshortpl{io} for different operations.
+			Lewi-Wu and CLOZ schemes have relatively large ciphertexts and thus induce larger traffic (see \cref{figure:protocols-size:c}) and smaller {\BPlus} tree branching factor resulting in greater number of \acrshort{io} requests (see \cref{figure:protocols-ios:q}).
 			Kerschbaum protocol requires high number of \acrshort{io} requests during construction since it needs to insert an element into the arbitrary place in an array and rotate the data structure on a disk.
 
-			POPE suffers huge penalty on the first query (see \cref{figure:protocols:qios,figure:protocols:qvol,figure:protocols:qsize}) since it reads and sends all blocks to the client for sorting.
+			POPE suffers huge penalty on the first query (see \cref{figure:protocols-ios:q,figure:protocols-vol:q,figure:protocols-size:q}) since it reads and sends all blocks to the client for sorting.
 			POPE performance improves as more queries are executed.
+
+			\input{figures/fig-protocols-other}
 
 			Logarithmic-BRC does not support interactive insertions and thus its construction stage is not benchmarked.
 			Otherwise it is the most performant of all non-\acrshort{ore} protocols.
 			Note, however, that its performance depends on the result size, not data size.
 
 			As expected, \acrshort{oram} performs worse than the \acrshort{ore}-based protocols, but its performance is in-line with the non-\acrshort{ore} protocols.
-			It may seem that \acrshort{oram} does especially bad in construction communication (\cref{figure:protocols:qvol,figure:protocols:qsize}), but it is only because POPE has a shortcut in construction.
-			This ``debt'' is being payed off during queries (\cref{figure:protocols:qsize}).
+			It may seem that \acrshort{oram} does especially bad in construction communication (\cref{figure:protocols-vol:q,figure:protocols-size:q}), but it is only because POPE has a shortcut in construction.
+			This ``debt'' is being payed off during queries (\cref{figure:protocols-size:q}).
 
 			Note that the values do not vary a lot among different data distributions except for \acrshort{io} requests.
 			\acrshort{io} performance depends on the result size for queries, and is therefore more sensitive to data distribution.
 
 			Also note that using an \acrshort{ore} scheme with relatively small ciphertext in {\BPlus} tree does not add any substantial \acrshort{io} overhead (see ``No encryption'').
 
+
 			On \cref{figure:protocols-query-sizes} it is clear that query performance does not depend substantially on the query size, except for Logarithmic-BRC, for which the relation is linear.
 			Note that Logarithmic-BRC with optimally configured \texttt{pack} extension shows almost no growth.
 			This is because for large ranges \acrshort{brc} will return the higher nodes (keywords matching many documents), which are optimally packed in \acrshort{io} pages.
 			As query range doubles, higher nodes are involved increasing the chance that requested keywords have their documents packed.
 
-			\input{figures/fig-protocols-other}
 
-			\cref{figure:protocols-data-percent} shows \cref{table:protocols} asymptotic values.
+			\cref{figure:protocols-data-percent-vol,figure:protocols-data-percent-ios} show \cref{table:protocols} asymptotic values.
 			The simulation was run for uniform dataset of \num{247000} records (hundred percent), \num{1000} queries, \SI{0.5}{\percent} query range and \num{128} blocks cache size.
-			Kerschbaum construction \acrshort{io}s and cold POPE query values grow linearly with inputs, while the other protocols grow logarithmically, square-logarithmically, or do not grow.
+			Kerschbaum construction \acrshortpl{io} and cold POPE query values grow linearly with inputs, while the other protocols grow logarithmically, square-logarithmically, or do not grow.
 
 			\cref{figure:cold-vs-warm} shows how the performance of protocols fluctuates as queries are processed.
 			Note that POPE and Logarithmic-BRC fluctuate the most (which is, in general, undesirable), and POPE is the only protocol where cold versus warm makes a difference.

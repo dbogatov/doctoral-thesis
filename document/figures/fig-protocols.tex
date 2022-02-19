@@ -1,62 +1,59 @@
-\newlength{\hardcodedheight}
-\newlength{\askip}
-\newlength{\bskip}
-\newlength{\blskip}
-
-\setlength{\hardcodedheight}{135pt}
-\setlength{\askip}{-10pt}
-\setlength{\bskip}{0pt}
-\setlength{\blskip}{-5pt}
+\begin{figure*}[ht!]
+	\captionsetup[subfigure]{justification=centering}
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{protocol-charts-cios}
+		\caption{Construction stage number of \acrshort{io} requests}%
+		\label{figure:protocols-ios:c}
+	\end{subfigure}%
+	~ % chktex 39
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{protocol-charts-qios}
+		\caption{Queries stage number of \acrshort{io} requests}%
+		\label{figure:protocols-ios:q}
+	\end{subfigure}%
+	\caption{Number of \acrshort{io} requests for different protocols and data distributions}%
+	\label{figure:protocols-ios}
+\end{figure*}
 
 \begin{figure*}[ht!]
 	\captionsetup[subfigure]{justification=centering}
 	\centering
-	\begin{subfigure}[t]{0.333\textwidth}
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-		\includegraphics[height=\hardcodedheight,width=\linewidth]{protocol-charts-cios.pdf}
-		\setlength{\abovecaptionskip}{\askip}
-		\setlength{\belowcaptionskip}{\bskip}
-		\caption{Construction stage number of \acrshort{io} requests}\label{figure:protocols:cios}
+		\includegraphics[width=\linewidth]{protocol-charts-csize}
+		\caption{Construction stage communication size (bytes transferred)}%
+		\label{figure:protocols-size:c}
 	\end{subfigure}%
 	~ % chktex 39
-	\begin{subfigure}[t]{0.333\textwidth}
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-		\includegraphics[height=\hardcodedheight,width=\linewidth]{protocol-charts-cvol.pdf}
-		\setlength{\abovecaptionskip}{\askip}
-		\setlength{\belowcaptionskip}{\bskip}
-		\caption{Construction stage communication volume (number of messages)}\label{figure:protocols:cvol}
+		\includegraphics[width=\linewidth]{protocol-charts-qsize}
+		\caption{Queries stage communication size (bytes transferred, log scale)}%
+		\label{figure:protocols-size:q}
 	\end{subfigure}%
-	~ % chktex 39
-	\begin{subfigure}[t]{0.333\textwidth}
-		\centering
-		\includegraphics[height=\hardcodedheight,width=\linewidth]{protocol-charts-csize.pdf}
-		\setlength{\abovecaptionskip}{\askip}
-		\setlength{\belowcaptionskip}{\bskip}
-		\caption{Construction stage communication size (bytes transferred)}\label{figure:protocols:csize}
-	\end{subfigure}%
+	\caption{Communication size for different protocols and data distributions}%
+	\label{figure:protocols-size}
+\end{figure*}
 
-	\begin{subfigure}[t]{0.333\textwidth}
+\begin{figure*}[ht!]
+	\captionsetup[subfigure]{justification=centering}
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-		\includegraphics[height=\hardcodedheight,width=\linewidth]{protocol-charts-qios.pdf}
-		\setlength{\abovecaptionskip}{\askip}
-		\setlength{\belowcaptionskip}{\blskip}
-		\caption{Queries stage number of \acrshort{io} requests}\label{figure:protocols:qios}
+		\includegraphics[width=\linewidth]{protocol-charts-cvol}
+		\caption{Construction stage communication volume (number of messages)}%
+		\label{figure:protocols-vol:c}
 	\end{subfigure}%
 	~ % chktex 39
-	\begin{subfigure}[t]{0.333\textwidth}
+	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
-		\includegraphics[height=\hardcodedheight,width=\linewidth]{protocol-charts-qvol.pdf}
-		\setlength{\abovecaptionskip}{\askip}
-		\setlength{\belowcaptionskip}{\blskip}
-		\caption{Queries stage communication volume (number of messages)}\label{figure:protocols:qvol}
+		\includegraphics[width=\linewidth]{protocol-charts-qvol}
+		\caption{Queries stage communication volume (number of messages)}%
+		\label{figure:protocols-vol:q}
 	\end{subfigure}%
-	~ % chktex 39
-	\begin{subfigure}[t]{0.333\textwidth}
-		\centering
-		\includegraphics[height=\hardcodedheight,width=\linewidth]{protocol-charts-qsize.pdf}
-		\setlength{\abovecaptionskip}{\askip}
-		\setlength{\belowcaptionskip}{\blskip}
-		\caption{Queries stage communication size (bytes transferred, log scale)}\label{figure:protocols:qsize}
-	\end{subfigure}%
-	\caption{Performance values for different data distributions}\label{figure:protocols}
+	\caption{Communication volume for different protocols and data distributions}%
+	\label{figure:protocols-vol}
 \end{figure*}

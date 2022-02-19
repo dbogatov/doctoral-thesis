@@ -34,7 +34,7 @@
 		Both \acrshort{sse} schemes' \acrshort{io} complexity is linear with the result size $r$.
 		\cite{cjjjkrs-14} scheme makes at most one \acrshort{io} per result document in the worst-case and there are extensions to significantly improve \acrshort{io} complexity. % chktex 2
 		We have implemented the \texttt{pack} extension, which packs documents in blocks to fit the \acrshort{io} pages.
-		We note that this extension can dramatically reduce the \acrshort{io}s (see \cref{section:range-snapshot:results-protocols} and \cref{figure:protocols-query-sizes}).
+		We note that this extension can dramatically reduce the \acrshortpl{io} (see \cref{section:range-snapshot:results-protocols} and \cref{figure:protocols-query-sizes}).
 
 		Logarithmic-BRC is very scalable as its performance does not depend on total data size and only degrades with the result size.
 		Storage overhead, however, is significant.
