@@ -6,7 +6,7 @@
 	We have also published our datasets and query sets \cite{our-datasets}.
 
 	For cryptographic primitives, we used OpenSSL library (version 1.1.1i).
-	For symmetric encryption in \acrshort{oram} we have used AES-CBC algorithm \cite{nist-aes,nist-modes} with a 256-bits key (i.e., $\eta_2 = 2^{-256}$), for the hash algorithm \algo{H} used to partition records among \acrshortpl{oram} we have used SHA-256 algorithm \cite{nist-hash}.
+	For symmetric encryption in \acrshort{oram} we have used \acrshort{aes} in CBC mode \cite{nist-aes,nist-modes} with a 256-bits key (i.e., $\eta_2 = 2^{-256}$), for the hash algorithm \algo{H} used to partition records among \acrshortpl{oram} we have used \acrshort{sha}-256 algorithm \cite{nist-hash}.
 	Aggregate tree fanout \fanout{} is 16, proven to be optimal in \cite{hierarchical-methods-for-dp}.
 
 	We designed our experiments to answer the following questions:

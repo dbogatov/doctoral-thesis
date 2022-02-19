@@ -20,7 +20,7 @@
 
 	\subsubsection{Analysis and implementation challenges}
 
-		Let $n$ be the size of input in bits (e.g.\ 32) and $d$ be the number of bits per block (e.g.\ 2).
+		Let $n$ be the size of input in bits (for example, 32) and $d$ be the number of bits per block (for example, 2).
 
 		Left encryption loops $\frac{n}{d}$ times making one \acrshort{prp} call and two \acrshort{prf} calls each iteration.
 		Right encryption loops $\frac{n}{d} 2^d$ times making one \acrshort{prp} call, one hash call and two \acrshort{prf} calls each iteration.
