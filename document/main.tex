@@ -10,7 +10,14 @@
 
 	\input{meta}
 
-	\maketitle
+	\ifthenelse{1=1}{
+		\maketitle
+	}{
+		Not particularly proud, but it seems necessary.
+		I use pandoc to convert Tex to text and then run some plain text analysis.
+		For some reason pandoc fails for the \\maketitle statement.
+		However, it is not smart enough to deduce that this condition is always true, while Tex is.
+	}
 	\cleardoublepage%
 
 	\copyrightpage%
