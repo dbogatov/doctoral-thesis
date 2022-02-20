@@ -19,6 +19,7 @@
 	It must be noted that the first queries will require many more rounds, since large buffers must be sorted.
 
 	\subsubsection{Security}
+
 		This construction satisfies the security definition of frequency\hyp{}hiding partial order-preserving (FH-POP) protocol (introduced in the paper \cite{pope}).
 		According to \cite[Theorem~3]{pope}, after $n$ insertions and $m$ queries with local storage of size $L$, where $m L \in o(n)$, the POPE scheme is frequency-hiding partial order-preserving with $\bigOmega{ \frac{n^2}{mL \log_L n} - n }$ incomparable pairs of elements. % chktex 2
 		Simply put, the construction leaks pairwise order of a \emph{bounded} number of elements.

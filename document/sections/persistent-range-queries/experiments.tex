@@ -1,9 +1,9 @@
 \section{Experimental Evaluation}\label{section:range-persistent:experiments}
 
 	We have implemented our solution as a modular client-server application in C++.
-	We open-sourced all components of the software set: PathORAM \cite{github-path-oram} and B+ tree \cite{github-b-plus-tree} implementations and the main query executor \cite{github-epsolute}.
+	We open-sourced all components of the software set: PathORAM\footnote{\url{https://github.com/epsolute/path-oram}} and B+ tree\footnote{\url{https://github.com/epsolute/b-plus-tree}} implementations and the main query executor\footnote{\url{https://github.com/epsolute/epsolute}}.
 	We provide PathORAM and B+ tree components as C++ libraries to be used in other projects; the code is documented, benchmarked and tested (228 tests covering \SI{100}{\percent} of the code).
-	We have also published our datasets and query sets \cite{our-datasets}.
+	We have also published our datasets and query sets\footnote{\url{http://csr.bu.edu/dp-oram/}}.
 
 	For cryptographic primitives, we used OpenSSL library (version 1.1.1i).
 	For symmetric encryption in \acrshort{oram} we have used \acrshort{aes} in CBC mode \cite{nist-aes,nist-modes} with a 256-bits key (i.e., $\eta_2 = 2^{-256}$), for the hash algorithm \algo{H} used to partition records among \acrshortpl{oram} we have used \acrshort{sha}-256 algorithm \cite{nist-hash}.
@@ -72,7 +72,7 @@
 		Each experiment includes running 100 queries such that the overhead is measured from loading query endpoints into memory to receiving the exact and whole query response from all \acrshort{oram} machines.
 		The output of an experiment is, among other things, the overhead (in milliseconds), the number of real and noisy records fetched and communication volume averaged per query.
 
-	\subsection{\acrshort{rdbms}, Linear Scan and Shrinkwrap}
+	\subsection{\texorpdfstring{\acrshort{rdbms}}{RDBMS}, Linear Scan and Shrinkwrap}
 
 		On top of varying the parameters, we have run similar workloads using alternative mechanisms --- extremes representing highest performance or highest privacy.
 		Unless stated otherwise, the client and the server are in the trusted and untrusted regions respectively, with the network configuration as in \cref{section:range-persistent:experiments:default-setting}.
@@ -88,7 +88,7 @@
 
 			Linear scan is a primitive mechanism that keeps all records encrypted on the server then downloads, decrypts and scans the entire database to answer every query.
 			This method is trivially correct, private and secure, albeit not very efficient.
-			There are \acrshort{rdbms} solutions, which, when configured for maximum privacy, exhibit linear scan behavior (e.g., MS-SQL Always Encrypted with Randomized Encryption \cite{mssql-always-enc} and Oracle Column Transparent Data Encryption \cite{oracle-tde}).
+			There are \acrshort{rdbms} solutions, which, when configured for maximum privacy, exhibit linear scan behavior (e.g., MS-SQL Always Encrypted with Randomized Encryption\footnote{\url{https://docs.microsoft.com/sql/relational-databases/security/encryption/always-encrypted-database-engine}} and Oracle Column Transparent Data Encryption\footnote{\url{https://docs.oracle.com/database/121/ASOAG/introduction-to-transparent-data-encryption.htm}}).
 			For a fair comparison we make the linear scan even more efficient by allowing it to download data via parallel threads matching the number of threads and bytes per request to that of our solution.
 			Although linear scan is wasteful in the amount of data it downloads and processes, compared to our solution it has a benefit of not executing an \acrshort{oram} protocol with its logarithmic overhead and network communication in both directions.
 

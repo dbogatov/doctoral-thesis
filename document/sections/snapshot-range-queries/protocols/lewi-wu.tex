@@ -1,4 +1,4 @@
-\subsection{Lewi-Wu \acrshort{ore}}
+\subsection{Lewi-Wu \texorpdfstring{\acrshort{ore}}{ORE}}
 
 	\textcite{lewi-wu-ore} presented an improved version of the CLWW scheme \cite{clww-ore} which leaks strictly less.
 
@@ -14,6 +14,7 @@
 	This way the location of the differing bit inside the block is hidden, but the location of the first differing block is revealed.
 
 	\subsubsection{Security}
+
 		This scheme satisfies the \acrshort{ore} security definition introduced by~\textcite{clww-ore} with the leakage $\leak(\cdot)$ of the location of the first differing \emph{block}.
 		This property allows a practitioner to set performance-security tradeoff by tuning the block size.
 		Left / right framework is particularly useful in a {\BPlus} tree since it is possible to store only one (semantically secure) side of a ciphertext in the structure (see \cref{section:range-snapshot:ore-to-protocol}).

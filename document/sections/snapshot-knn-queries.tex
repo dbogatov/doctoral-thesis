@@ -1,4 +1,4 @@
-\chapter{\acrshort{knn} queries in the snapshot model}
+\chapter{\texorpdfstring{\acrshort{knn}}{kNN} queries in the snapshot model}
 \thispagestyle{myheadings}
 
 	Nearest neighbor search is a type of optimization problem that, given a set of objects and a distance metric, requires finding the object closest to a given object according to the distance metric.
@@ -17,7 +17,7 @@
 	The exact distances will be hidden (subject to the \acrshort{dcpe} scheme's leakage), but the relative position is a substantial leakage that may lead to reconstruction attacks.
 	To mitigate the leakage we may use a form of \emph{an approximate} \acrshort{dcpe}, which ideally would add controlled noise or inaccuracy to the relative distances.
 
-	\section{\acrlong{dcpe}}
+	\section{\texorpdfstring{\acrlong{dcpe}}{Distance Comparison Preserving Encryption}}
 
 		A candidate approximate \acrshort{dcpe} scheme has been proposed by \textcite{dcpe}.
 		The scheme provides the following guarantee on its ciphertexts
@@ -36,7 +36,7 @@
 		As the construction operates on real numbers, an open question remains on how to avoid negative side-effects of floating point numbers bit representation.
 		I refer to the original paper \cite{dcpe} for the detailed $\beta$-\acrshort{dcpe} construction.
 
-	\section{\acrshort{knn} search accuracy}
+	\section{\texorpdfstring{\acrshort{knn}}{kNN} search accuracy}
 
 		With the $\beta$-\acrshort{dcpe} as a component, we can model the protocols similar to \acrshort{ore} ones.
 		In the setup protocol \protocolSetup{}, \user{} simply encrypts the entire input, one vector at a time, and sends the encrypted data over to \server{}.

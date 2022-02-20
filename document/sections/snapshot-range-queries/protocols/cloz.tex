@@ -1,4 +1,4 @@
-\subsection{CLOZ \acrshort{ore}}
+\subsection{CLOZ \texorpdfstring{\acrshort{ore}}{ORE}}
 
 	\textcite{parameter-hiding-ore} introduced a new \acrshort{ore} scheme that provably leaks less than any previous scheme.
 	The idea is to use \textcite{clww-ore} construction (see \cref{section:range-snapshot:clww}), but permute the list of \acrshort{prf} outputs.
@@ -14,6 +14,7 @@
 	Due to security of \acrshort{pph}, the adversary would not be able to count how many elements two ciphertexts have in common, thus, would not be able to tell the location of differing bit.
 
 	\subsubsection{Security}
+
 		The strong side of the scheme is its security.
 		The scheme leaks $\leak(\cdot)$ an \emph{equality pattern} of the most-significant differing bits (satisfying \textcite{clww-ore} definition).
 		As defined in \cite{parameter-hiding-ore}, the intuition behind equality pattern is that for any triple of plaintexts $m_1$, $m_2$, $m_3$, it leaks whether $m_2$ differs from $m_1$ before $m_3$ does. % chktex 2

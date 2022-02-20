@@ -28,7 +28,7 @@
 		For correctness, we require that for any database \databaseDef{} and query $\query \in \querySet$, it holds that running \protocolSetup{} and then \protocolQuery{} on the corresponding inputs yields for $\user{}$ the correct output $\{ \record_i : \query( \searchKey_i ) = 1 \}$ with overwhelming probability over the coins of the above runs.
 		We call the protocol $\eta$-wrong if this probability is at least $1 - \eta$.
 
-	\subsection{Differential Privacy and Sanitization}\label{section:range-persistent:building-blocks:dp}
+	\subsection{\texorpdfstring{\acrlong{dp}}{Differential Privacy} and Sanitization}\label{section:range-persistent:building-blocks:dp}
 
 		Differential privacy is a definition of privacy in analysis that protects information that is specific to individual records.
 		More formally, we call databases $\database_1 \in \searchKeyDomain^\dataSize$ and $\database_2 \in \searchKeyDomain^\dataSize$ over domain \searchKeyDomain{} \emph{neighboring} (denoted $\database_1 \sim \database_2$) if they differ in exactly one record.
@@ -103,7 +103,7 @@
 				Then, mechanism $\algo{A}$ is $\left( \sum_{i=1}^r \epsilon_i \right)$-differentially private (resp., $\left( \max_{i=1}^r \epsilon_i \right)$-differentially private).
 			\end{theorem}
 
-	\subsection{\acrlong{oram}}\label{section:range-persistent:building-blocks:oram}
+	\subsection{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}\label{section:range-persistent:building-blocks:oram}
 
 		Informally, \acrfull{oram} is a mechanism that lets a user hide their access pattern to remote storage.
 		An adversarial server can monitor the actual accessed locations, but she cannot tell a read from a write, the content of the block or even whether the same logical location is being referenced.

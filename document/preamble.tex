@@ -44,6 +44,7 @@
 \usepackage{rotating}
 \definecolor{BrightRed}{RGB}{204, 0, 0}
 \definecolor{DarkRed}{RGB}{102, 0, 0}
+\definecolor{DarkerRed}{RGB}{78, 0, 0}
 \definecolor{MidRed}{RGB}{143, 0, 0}
 \usepackage[
 	colorlinks = true,
@@ -172,7 +173,9 @@
 \makeglossaries%
 \glsaddall%
 
-\newcommand{\crypte}{Crypt$\epsilon$}
+\renewcommand*{\glstextformat}[1]{\textcolor{DarkerRed}{#1}}
+
+\newcommand{\crypte}{Crypt\ensuremath{\epsilon}}
 \newcommand{\epsolute}{\ensuremath{\mathcal{E}}p\-so\-lu\-te}
 
 \newcommand{\record}{\ensuremath{r}}
@@ -254,8 +257,6 @@
 \newcommand{\semitransp}[2][35]{\color{fg!#1}#2}
 
 \newcommand{\BPlus}{B\raisebox{.35\height}{\scalebox{.8}{+}}}
-\newcommand{\IO}{I/O}
-\newcommand{\knn}{\ensuremath{k}NN}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{claim}[theorem]{Claim}

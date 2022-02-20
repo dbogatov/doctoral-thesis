@@ -3,11 +3,11 @@
 
 	\section{Symmetric encryption}
 
-	\section{\acrlong{oram}}
+	\section{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}
 
 		\subsection{PathORAM}
 
-	\section{\acrlong{dp}}
+	\section{\texorpdfstring{\acrlong{dp}}{Differential Privacy}}
 
 		The most effective approach is sampling noise using \acrfull{dp}.
 		\acrshort{dp} is a guarantee on a query algorithm that takes a database and returns some result.
@@ -41,7 +41,7 @@
 		For example, if a change in one record of the dataset causes a change in the output value of at most one (e.g., a count query), then the sensitivity is 1.
 		\cite{differential-privacy-original} proves that if one adds $\algo{Laplace}{0, \frac{\mathsf{sensitivity}}{\epsilon}}$ to the real result of a query, the resulting mechanism is $\epsilon$-\acrshort{dp}.
 
-		\subsection{\acrshort{dp} sanitizers}
+		\subsection{\texorpdfstring{\acrshort{dp}}{DP} sanitizers}
 
 			Lastly, instead of generating and adding noise each query, it is possible to generate noisy values once, embed them into the data and release the sanitized data without compromising privacy guarantees.
 			The intuition is that once the noise is embedded in the dataset, the adversary can run a regular query over it and the entire query will still be \acrshort{dp}.

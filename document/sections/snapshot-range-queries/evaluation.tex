@@ -7,7 +7,7 @@
 	\subsubsection*{Interactive website}\label{section:range-snapshot:website}
 
 		Additionally to making our source code, compiled binaries and Docker images available, we want to let researchers interactively run small-sized simulations.
-		We host a website \cite{ore-website} where one can select a protocol (including baselines, CLOZ \cite{parameter-hiding-ore} and both \acrshort{sse} schemes), cache size and policy and \acrshort{io} page parameter; supply one's own data and query sets, and run the simulations.
+		We host a website\footnote{\url{https://ore.dbogatov.org/}} where one can select a protocol (including baselines, CLOZ \cite{parameter-hiding-ore} and both \acrshort{sse} schemes), cache size and policy and \acrshort{io} page parameter; supply one's own data and query sets, and run the simulations.
 		Simulations are run one at a time and usually complete within seconds.
 		The user is then able to view the result --- tables, plots, values and raw logs, which we used to build plots for this paper.
 		Input size on the website is limited for practical purposes and users are encouraged to run arbitrary-size simulations using our binaries or Docker images.
@@ -20,7 +20,7 @@
 		We also emphasize that the {\BPlus} tree implementation we are using, although our own with instrumentation in it, is not custom in any way, but rather standard as defined in the original paper \cite{b-tree} with deletion algorithm by \cite{b-plus-tree-deletion}.
 
 		This software project (22K lines of code, third of which are tests) is documented and tested (over 97\% coverage).
-		All code including primitives, data structures, schemes, protocols, simulation logic, benchmarks, build scripts and tests is published on GitHub \cite{ore-project} under CC BY-NC 4.0 license.
+		All code including primitives, data structures, schemes, protocols, simulation logic, benchmarks, build scripts and tests is published on GitHub\footnote{\url{https://github.com/dbogatov/ore-benchmark}} under CC BY-NC 4.0 license.
 		Additionally, we have published parts of the project as stand-alone {.NET Core} (nuGet) packages, and we host a web-server where users can run simulations for small inputs (see previous subsection).
 
 		\subsubsection{Primitives}
@@ -35,7 +35,7 @@
 			For symmetric encryption we use \acrshort{aes} with a random initialization vector in CBC mode \cite[Section 3.6.2]{intro-to-modern-crypto}.
 			For hash we use default {.NET Core} \acrshort{sha}-2 implementation.
 			For \acrshort{prp}, we implemented unbalanced Feistel networks \cite{unbalanced-feistel} for large inputs and Knuth shuffle \cite{knuth-shuffle} for small inputs.
-			Please see the README of project's repository \cite{ore-project} for low-level details.
+			Please see the README of project's repository\footnote{\url{https://github.com/dbogatov/ore-benchmark}} for low-level details.
 
 			\input{figures/fig-benchmarks}
 

@@ -88,7 +88,7 @@
 
 		Here we describe the optimizations aimed at bringing the construction's performance to the real-world demands.
 
-		\subsubsection{\acrshort{oram} request batching}\label{section:range-persistent:dp-improvements:oram-batching}
+		\subsubsection{\texorpdfstring{\acrshort{oram}}{ORAM} request batching}\label{section:range-persistent:dp-improvements:oram-batching}
 
 			We have noticed that although the entire set of \acrshort{oram} requests for each query is known in advance, the requests are still executed sequentially.
 			To address this inefficiency, we have designed a way to combine the requests in a batch and reduce the number of network requests to the bare minimum.
@@ -105,7 +105,7 @@
 			The security guarantees of PathORAM are maintained with this optimization, since the security proof in \cite[Section 3.6]{path-oram} still holds. % chktex 2
 			Randomized encryption, statistically independent remapping of leaves, and stash processing do not change.
 
-		\subsubsection{Lightweight \acrshort{oram} servers}\label{section:range-persistent:dp-improvements:three-tier}
+		\subsubsection{Lightweight \texorpdfstring{\acrshort{oram}}{ORAM} servers}\label{section:range-persistent:dp-improvements:three-tier}
 
 			We have found in our experiments that na\"{\i}ve increase of the number of \acrshort{cpu} cores and gigabytes of memory does not translate into linear performance improvement after some threshold.
 			Investigating the observation we have found that the \epsolute{} protocol, executing parallel \acrshort{oram} protocols, is highly intensive with respect to main memory access, cryptographic operations and network usage.
