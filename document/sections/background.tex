@@ -1,7 +1,9 @@
 \chapter{Background}\label{section:background}
 \thispagestyle{myheadings}
 
-	In this section I will go over
+	In this section, I will go over the building blocks required to construct the outsourced database systems and their components that I will discuss in the next chapters.
+	These prerequisites include the symmetric encryption, \acrshortpl{oram} and PathORAM \cite{path-oram} in particular, \acrlong{dp} and \acrshort{dp} sanitizers, and finally, \acrlongpl{tee}.
+	Some of the following sections were paraphrased or taken verbatim from my published work, \cite{ore-benchmark-17,epsolute}.
 
 	\section{Symmetric encryption}
 
@@ -48,3 +50,5 @@
 			Lastly, instead of generating and adding noise each query, it is possible to generate noisy values once, embed them into the data and release the sanitized data without compromising privacy guarantees.
 			The intuition is that once the noise is embedded in the dataset, the adversary can run a regular query over it and the entire query will still be \acrshort{dp}.
 			Such methods are collectively called \emph{sanitization}, and there are known bounds for point and range queries, for pure ($\delta = 0$) and approximate ($\delta > 0$) \acrshort{dp} \cite{bounds-on-sample-complexity,private-learning-and-sanitization,non-interactive-database-privacy,dp-under-observation,dp-release,privately-learning-thresholds}.
+
+		\section{\texorpdfstring{\acrlongpl{tee}}{Trusted Execution Environments}}
