@@ -7,6 +7,35 @@
 
 	\section{Symmetric encryption}
 
+		Symmetric encryption scheme is a tuple of algorithms $\algo{E} = \{ \kgen, \enc, \enc \}$ with the following properties.
+		$\algo{E}.\kgen \left( \secparam \right) \to \key$ is a \emph{randomized} algorithm that on a security parameter $\secparam$ returns a key that will be used for both encryption and decryption.
+		$\algo{E}.\enc \left( m \right) \to c$ is a \emph{randomized} algorithm that on a plaintext message $m \in \bin^*$ produces its ciphertext $c \in \bin^*$.
+		$\algo{E}.\dec \left( c \right) \to m$ is a \emph{deterministic} algorithm that on a ciphertext $c \in \bin^*$ produces its original plaintext message $m \in \bin^*$.
+
+		Note that for the practical purposes I define the encryption algorithm as randomized, that is, producing different ciphertext for the same plaintext on every invocation.
+		While this is how the symmetric encryption scheme is used in applications, formally, producing the deterministic ciphertext and randomizing it are different operations.
+
+		Internally, the encryption consists of a keyed \acrfull{prp} (also known as a \emph{block cipher}), a \acrfull{prg} that is used to generate a (pseudo)random \acrfull{iv} and a block cipher \emph{mode of operation}.\footnote{% chktex 36
+			Here I describe the \emph{block ciphers} family of symmetric encryption algorithms.
+			Streaming ciphers are not used this thesis.
+		}
+		First, the input $m \in \bin^*$ is split into blocks (depending on the underlying block cipher, for example, 128 bits) and the last block is padded if necessary.
+		Second, the pseudorandom \acrlong{iv} of size of the block is generated with a \acrshort{prg}.
+		Intuitively, this is the part that contributes the  ``randomness'' to the process.\footnote{
+			There some modes of operation that do not require the \acrlong{iv}, such as \acrfull{ecb} mode, but these are insecure.
+		}
+		Finally, the \acrshort{iv} is prepended to the plaintext blocks and the algorithm applies the permutation to one block at a time with the input masked according to a mode of operation.
+		The resulting object is a ciphertext that is one block longer than a plaintext due to \acrshort{iv}.
+		In practical systems, the ciphertext is then broken up into components, like the ciphertext material itself, the \acrshort{iv}, the version of the key, etc.
+		Also note that the encryption scheme key typically has a maximum number of times it can be used for encryption (it's \emph{operational lifetime}).
+
+		\subsection{\texorpdfstring{\acrlong{aes}}{Advanced Encryption Standard}}
+
+			\acrfull{aes} is a \acrshort{nist}-standardized block cipher, which along with the standardized mode of operation and \acrshort{prg} used to generate the \acrshort{iv} forms the standardized symmetric encryption system.
+			In this section I will briefly describe the \acrshort{aes} algorithm, the \acrshort{cbc} and \acrshort{ctr} modes of operation, and the standardized \acrshort{prg} used to generate the \acrshort{iv}.
+
+		% TODO NIST for padding, AES, modes, PRGs.
+
 	\section{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}
 
 		\subsection{PathORAM}
