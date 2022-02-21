@@ -76,3 +76,30 @@
 				The relevant \acrshort{sql} query can be
 
 				\texttt{SELECT * FROM t1 ORDER BY location <-> '(29.9691,-95.6972)' LIMIT 5}. % chktex 36
+
+	\section{Thesis structure}
+
+		In \cref{section:background}, I will cover the building blocks that are used in the outsourced database systems.
+		These blocks include the encryption, \acrshort{oram} and \acrlong{dp}.
+		\cref{section:related-work} includes the overview of approaches that provide the privacy and/or security in the outsourced setting.
+		The chapter also includes the overview of the attacks against the mechanisms.
+		\cref{section:range-snapshot} analyses in detail the range query mechanisms in the snapshot adversary model.
+		The chapter includes the sections from my published work, the comparative evaluation of the secure range query protocols \cite{ore-benchmark-17}.
+		\cref{section:range-persistent} proposes a novel solution for the range queries in the persistent adversary model, \epsolute{} \cite{ore-benchmark-17}.
+		In \cref{section:knn-snapshot}, I propose a mechanism to answer \acrlong{knn} queries in a snapshot adversary setting using a type of property-preserving encryption similar to \acrshort{ope}.
+		In the chapter I describe the encryption method, the set of experiments to empirically measure the search accuracy and the level of protection against the attacks.
+
+		\subsection{Works published during the Ph.D. program}
+
+			\newlength{\citationLength}
+			\settowidth{\citationLength}{\cite{bogatov-idemix-2020}}
+			\begin{description}[
+				leftmargin=\dimexpr\citationLength+1.0em\relax,
+				labelindent=0pt,
+				labelwidth=\citationLength%
+			]
+				\item[\cite{ore-benchmark-17}] \fullcite{ore-benchmark-17}
+				\item[\cite{epsolute}] \fullcite{epsolute}
+				\item[\cite{bogatov-idemix-2020}] \fullcite{bogatov-idemix-2020}
+				\item[\cite{dispot}] \fullcite{dispot}
+			\end{description}

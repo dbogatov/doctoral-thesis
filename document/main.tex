@@ -61,6 +61,8 @@
 		{}
 
 	\setcounter{tocdepth}{4}
+	\phantomsection%
+	\addcontentsline{toc}{chapter}{Contents}
 	\tableofcontents
 	\cleardoublepage%
 
@@ -110,6 +112,9 @@
 
 	\newpage
 	\singlespace%
+
+	\phantomsection%
+	\addcontentsline{toc}{chapter}{Bibliography}
 
 	\printbibliography%
 
