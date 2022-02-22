@@ -12,29 +12,59 @@
 		$\algo{E}.\enc \left( m \right) \to c$ is a \emph{randomized} algorithm that on a plaintext message $m \in \bin^*$ produces its ciphertext $c \in \bin^*$.
 		$\algo{E}.\dec \left( c \right) \to m$ is a \emph{deterministic} algorithm that on a ciphertext $c \in \bin^*$ produces its original plaintext message $m \in \bin^*$.
 
-		Note that for the practical purposes I define the encryption algorithm as randomized, that is, producing different ciphertext for the same plaintext on every invocation.
-		While this is how the symmetric encryption scheme is used in applications, formally, producing the deterministic ciphertext and randomizing it are different operations.
+		\subsection{Security}
 
-		Internally, the encryption consists of a keyed \acrfull{prp} (also known as a \emph{block cipher}), a \acrfull{prg} that is used to generate a (pseudo)random \acrfull{iv} and a block cipher \emph{mode of operation}.\footnote{% chktex 36
-			Here I describe the \emph{block ciphers} family of symmetric encryption algorithms.
-			Streaming ciphers are not used this thesis.
-		}
-		First, the input $m \in \bin^*$ is split into blocks (depending on the underlying block cipher, for example, 128 bits) and the last block is padded if necessary.
-		Second, the pseudorandom \acrlong{iv} of size of the block is generated with a \acrshort{prg}.
-		Intuitively, this is the part that contributes the  ``randomness'' to the process.\footnote{
-			There some modes of operation that do not require the \acrlong{iv}, such as \acrfull{ecb} mode, but these are insecure.
-		}
-		Finally, the \acrshort{iv} is prepended to the plaintext blocks and the algorithm applies the permutation to one block at a time with the input masked according to a mode of operation.
-		The resulting object is a ciphertext that is one block longer than a plaintext due to \acrshort{iv}.
-		In practical systems, the ciphertext is then broken up into components, like the ciphertext material itself, the \acrshort{iv}, the version of the key, etc.
-		Also note that the encryption scheme key typically has a maximum number of times it can be used for encryption (it's \emph{operational lifetime}).
+			The security of the symmetric encryption is typically defined as the indistinguishability under a certain attack.
+			The definition is structured around the game between the challenger and the adversary \adversary{}.
+			The challenger fixes one of the two ``worlds'', left or right, and the adversary wins the game if she can reliably tell which world it is.
 
-		\subsection{\texorpdfstring{\acrlong{aes}}{Advanced Encryption Standard}}
+			The weaker security definition, \acrfull{ind-cpa}, intuitively requires that the ciphertext leaks nothing about the plaintext.
+			To formalize the requirement, the adversary can give the challenger a set of plaintext pairs to encrypt, and the challenger responds with a set of ciphertext where the left or the right part was encrypted.
+			The adversary can then use any (polynomial) algorithm over the ciphertexts and makes a guess of whether the left or the right part was encrypted.
+			The claim is, if there is anything that the ciphertext leaks about the plaintext, there exists an adversary which will win.
+			The security claim is therefore contrapositive --- the scheme is \acrshort{ind-cpa} secure iff there is no such adversary that wins the game.
+			The \acrshort{ind-cpa} definition can be upgraded to allow the adversary to choose the plaintext adaptively (\acrshort{cpa}2), or require the ciphertext be indistinguishable from the random bit-string (\acrshort{cpa}\$).
 
-			\acrfull{aes} is a \acrshort{nist}-standardized block cipher, which along with the standardized mode of operation and \acrshort{prg} used to generate the \acrshort{iv} forms the standardized symmetric encryption system.
-			In this section I will briefly describe the \acrshort{aes} algorithm, the \acrshort{cbc} and \acrshort{ctr} modes of operation, and the standardized \acrshort{prg} used to generate the \acrshort{iv}.
+			\acrshort{ind-cpa} security is not by itslef sufficient since it does not account for a decryption part of the scheme.
+			There are known attacks that decrypt the plaintext (i.e., defeat the encryption) if the adversary can trigger the decryption and observe the process or the result, see padding attack \cite{padding-attack} and \acrshort{xml} encryption attack \cite{xml-break-encryption}.
 
-		% TODO NIST for padding, AES, modes, PRGs.
+			The stronger definition, \acrfull{ind-cca}, captures the decryption component.
+			It extends the \acrshort{ind-cpa} game in that the adversary can now request the challenger to decrypt \emph{any} ciphertext of her choice \emph{excpet} the ones that the chalenger himself encypted for the adversary.
+			The adversary still outputs a guess of the two worlds and wins if reliably guesses correctly.
+			Note that in this game if the decryption can fail for any reason, or even if \adversary{} can observe any difference in execution for different inputs, the scheme in insecure.
+			Therefore, \acrshort{ind-cca} immediately ruls out the aformentioned attacks \cite{padding-attack,xml-break-encryption}.
+			Similarly to \acrshort{ind-cpa}, \acrshort{ind-cca} also has the adaptive and indistinguishable\hyp{}from\hyp{}pseudorandom variants \acrshort{cca}2 and \acrshort{cca}\$.
+
+		\subsection{Components}
+
+			Note that for the practical purposes I define the encryption algorithm as randomized --- producing different ciphertext for the same plaintext on every invocation.
+			While this is how the symmetric encryption scheme is used in applications, formally, producing the deterministic ciphertext and randomizing it are different operations.
+
+			Internally, the encryption scheme consists of a keyed \acrfull{prp} (also known as a \emph{block cipher}), a \acrfull{prg} that is used to generate a (pseudo)random \acrfull{iv} and a block cipher \emph{mode of operation}.\footnote{% chktex 36
+				Here I describe the \emph{block ciphers} family of symmetric encryption algorithms.
+				Streaming ciphers are not used this thesis.
+			}
+			First, the input $m \in \bin^*$ is split into blocks (depending on the underlying block cipher, for example, 128 bits) and the last block is padded if necessary.
+			Second, the pseudorandom \acrlong{iv} of size of the block is generated with a \acrshort{prg}.
+			Intuitively, this is the part that contributes the  ``randomness'' to the process.\footnote{
+				There some modes of operation that do not require the \acrlong{iv}, such as \acrfull{ecb} mode, but these are insecure.
+			}
+			Finally, the \acrshort{iv} is prepended to the plaintext blocks and the algorithm applies the permutation to one block at a time with the input masked according to a mode of operation.
+			The resulting object is a ciphertext that is one block longer than a plaintext due to \acrshort{iv}.
+			In practical systems, the ciphertext is then broken up into components, like the ciphertext material itself, the \acrshort{iv}, the version of the key, etc.
+			Also note that the encryption scheme key typically has a maximum number of times it can be used for encryption (its \emph{operational lifetime}).
+
+		\subsection{Standardized primitives}
+
+			\acrfull{aes} is a \acrshort{nist}-standardized block cipher, which along with the standardized mode of operation and \acrshort{prg} used to generate the \acrshort{iv} forms the symmetric encryption system.
+
+			\subsubsection{Block cipher: \texorpdfstring{\acrfull{aes}}{Advanced Encryption Standard}}
+
+				Current standard of a block cipher is \acrfull{aes} \cite{aes-nist}.
+				It supersedes the \acrfull{des} \cite{des-nist}, which due to its small key is vulnerable to brute force attacks \cite{breaking-des}.
+
+
+			% In this section I will briefly describe the \acrshort{aes} algorithm, the \acrshort{cbc} and \acrshort{ctr} modes of operation, and the standardized \acrshort{prg} used to generate the \acrshort{iv}.
 
 	\section{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}
 
