@@ -102,27 +102,3 @@
 				Let $\algo{A}$ be another mechanism that executes $\algo{A}_1(\database_1), \ldots, \algo{A}_r(\database_r)$ using independent randomness for each $\algo{A}_i$, and returns their outputs.
 				Then, mechanism $\algo{A}$ is $\left( \sum_{i=1}^r \epsilon_i \right)$-differentially private (resp., $\left( \max_{i=1}^r \epsilon_i \right)$-differentially private).
 			\end{theorem}
-
-	\subsection{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}\label{section:range-persistent:building-blocks:oram}
-
-		Informally, \acrfull{oram} is a mechanism that lets a user hide their access pattern to remote storage.
-		An adversarial server can monitor the actual accessed locations, but she cannot tell a read from a write, the content of the block or even whether the same logical location is being referenced.
-		The notion was first defined by \textcite{oram-theory} and \textcite{oram-original}.
-
-		More formally, a $(\eta_1, \eta_2)$-\acrshort{oram} protocol is a two-party protocol between a user \user{} and a server \server{} who stores a memory array.
-		In each round, the user \user{} has input $(o, a, d)$, where $o$ is an access type (\oramRead{} or \oramWrite{}), $a$ is a memory address and $d$ is a new data value, or $\bot$ for read operation.
-		The input of \server{} is the current array.
-		Via the protocol, the server updates the memory or returns to \user{} the data stored at the requested memory location, respectively.
-		We speak of a sequence of such operations as a program \oramProgram{} being \emph{executed under the \acrshort{oram}}.
-
-		An \acrshort{oram} protocol must satisfy correctness and security.
-		Correctness requires that \user{} obtains the correct output of the computation except with at most probability $\eta_1$.
-		For security, we require that for every user \user{} there exists a simulator $\simulator_\oram$ which provides a simulation of the server's view in the above experiment given only the number of operations.
-		That is, the output distribution of $\simulator_\oram (c)$ is indistinguishable from $\algo{View}_\server$ with probability at most $\eta_2$ after $c$ protocol rounds.
-
-		\acrshort{oram} protocols are generally stateful, after each execution the client and server states are updated.
-		\emph{For brevity, throughout the paper we will assume the \acrshort{oram} state updates are implicit, including the encryption key \queryKey{} generated and maintained by the client.}
-
-		Some existing efficient \acrshort{oram} protocols are Square Root \acrshort{oram} \cite{oram-theory}, Hierarchical \acrshort{oram} \cite{oram-original}, Binary-Tree \acrshort{oram} \cite{binary-tree-oram}, Interleave Buffer Shuffle Square Root \acrshort{oram} \cite{shortest-path-oram}, TP-ORAM \cite{tp-oram}, PathORAM \cite{path-oram} and TaORAM \cite{taostore}. % chktex 2
-		For detailed descriptions of each protocol, we recommend the work of \textcite{oram-survey-feifei}.
-		The latter three \acrshortpl{oram} achieve the lowest communication and storage overheads, $\bigO{\log \dataSize}$ and \bigO{\dataSize}, respectively.

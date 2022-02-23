@@ -5,7 +5,7 @@
 	These prerequisites include the symmetric encryption, \acrshortpl{oram} and PathORAM \cite{path-oram} in particular, \acrlong{dp} and \acrshort{dp} sanitizers, and finally, \acrlongpl{tee}.
 	Some of the following sections were paraphrased or taken verbatim from my published work, \cite{ore-benchmark-17,epsolute}.
 
-	\section{Symmetric encryption}
+	\section{Symmetric encryption}\label{section:background:encryption}
 
 		Symmetric encryption scheme is a tuple of algorithms $\algo{E} = \{ \kgen, \enc, \enc \}$ with the following properties.
 		$\algo{E}.\kgen \left( \secparam \right) \to \key$ is a \emph{randomized} algorithm that on a security parameter $\secparam$ returns a key that will be used for both encryption and decryption.
@@ -54,21 +54,62 @@
 			In practical systems, the ciphertext is then broken up into components, like the ciphertext material itself, the \acrshort{iv}, the version of the key, etc.
 			Also note that the encryption scheme key typically has a maximum number of times it can be used for encryption (its \emph{operational lifetime}).
 
-		\subsection{Standardized primitives}
+			\acrfull{aes} \cite{aes-nist} is a \acrshort{nist}-standardized block cipher, which, along with the standardized mode of operation \cite{nist-modes} and \acrshort{prg} \cite{nist-prg} used to generate the \acrshort{iv}, forms the symmetric encryption system.
 
-			\acrfull{aes} is a \acrshort{nist}-standardized block cipher, which along with the standardized mode of operation and \acrshort{prg} used to generate the \acrshort{iv} forms the symmetric encryption system.
+	\section{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}\label{section:background:oram}
 
-			\subsubsection{Block cipher: \texorpdfstring{\acrfull{aes}}{Advanced Encryption Standard}}
+		Informally, \acrfull{oram} is a mechanism that lets a user hide their access pattern to remote storage.
+		An adversarial server can monitor the actual accessed locations, but she cannot tell a read from a write, the content of the block or even whether the same logical location is being referenced.
+		The notion was first defined by \textcite{oram-theory} and \textcite{oram-original}.
 
-				Current standard of a block cipher is \acrfull{aes} \cite{aes-nist}.
-				It supersedes the \acrfull{des} \cite{des-nist}, which due to its small key is vulnerable to brute force attacks \cite{breaking-des}.
+		More formally, a $(\eta_1, \eta_2)$-\acrshort{oram} protocol is a two-party protocol between a client \client{} and a server \server{} who stores a memory array.
+		In each round, the client \client{} has input $(o, a, d)$, where $o$ is an access type (\oramRead{} or \oramWrite{}), $a$ is a memory address and $d$ is a new data value, or $\bot$ for read operation.
+		The input of \server{} is the current array.
+		Via the protocol, the server updates the memory or returns to \user{} the data stored at the requested memory location, respectively.
+		We speak of a sequence of such operations as a program \oramProgram{} being \emph{executed under the \acrshort{oram}}.
 
+		An \acrshort{oram} protocol must satisfy correctness and security.
+		Correctness requires that \client{} obtains the correct output of the computation except with at most probability $\eta_1$.
+		For security, we require that for every client \client{} there exists a simulator $\simulator_\oram$ which provides a simulation of the server's view in the above experiment given only the number of operations.
+		That is, the output distribution of $\simulator_\oram (c)$ is indistinguishable from $\algo{View}_\server$ with probability at most $\eta_2$ after $c$ protocol rounds.
+		Note that the \acrshort{oram} protocols typically differ in the way the storage is organized and manipulated, but are similar in that the records or blocks are symmetrically encrypted (see \cref{section:background:encryption}).
 
-			% In this section I will briefly describe the \acrshort{aes} algorithm, the \acrshort{cbc} and \acrshort{ctr} modes of operation, and the standardized \acrshort{prg} used to generate the \acrshort{iv}.
+		\acrshort{oram} protocols are generally stateful, after each execution the client and server states are updated.
+		\emph{For brevity, throughout the thesis I will assume the \acrshort{oram} state updates are implicit, including the encryption key \key{} generated and maintained by the client.}
 
-	\section{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}
+		Some existing efficient \acrshort{oram} protocols are Square Root \acrshort{oram} \cite{oram-theory}, Hierarchical \acrshort{oram} \cite{oram-original}, Binary-Tree \acrshort{oram} \cite{binary-tree-oram}, Interleave Buffer Shuffle Square Root \acrshort{oram} \cite{shortest-path-oram}, TP-ORAM \cite{tp-oram}, PathORAM \cite{path-oram} and TaORAM \cite{taostore}.
+		For detailed descriptions of each protocol, we recommend the work of \textcite{oram-survey-feifei}.
+		The latter three \acrshortpl{oram} achieve the lowest communication and storage overheads, $\bigO{\log \dataSize}$ and \bigO{\dataSize}, respectively.
 
 		\subsection{PathORAM}
+
+			PathORAM \cite{path-oram} is one of the most commonly used \acrshort{oram} protocols due to its efficiency and simplicity.
+			In this section I briefly describe this construction as it used as an \acrshort{oram} instantiation in the rest of the thesis.
+
+			In the PathORAM, both the client \client{} and the server \server{} are stateful.
+			The server stores the encrypted records (blocks) grouped in buckets, and the buckets form a binary tree.
+			The client's storage, although asymptotically linear in the data size, is relatively small in practice.
+			The client stores the \emph{position map} that maps the record ID to a leaf in the server tree storage and a small amount of stash, which can store some plaintext blocks on the client side.
+
+			The main invariant of the protocol is that at all times the ciphertext of the record $a$ is stored somewhere on the path from the root to the leaf that is mapped to $a$ (hence the name of the construction).
+
+			The \acrshort{oram} is initialized with a binary tree of buckets of correct size with all buckets containing valid encryptions of dummy records.
+			The position maps is sampled at random (filled with permuted distinct numbers).
+
+			Main routine of the \acrshort{oram} is an access sub-protocol, which is similar for read \oramRead{} and write \oramWrite{} type of access (remember, \acrshort{oram} hides the type of access from the curious server).
+			In PathORAM, the access $(o, a, d)$ consists of four steps.
+			First, remap the current leaf $x$ for $a$ to a new random leaf $x^\prime$.
+			Second, read the entire path to leaf $x$ (all bucket from root to leaf) into the client stash.
+			Third, the client updates the block value to $d$ if the access is the write \oramWrite{}.
+			Finally, write back the path to leaf $x$ filling the buckets with all blocks from stash in way that maintains the invariant.
+
+			The newly updated block $a$ with the new value $d$ may be included in the new path, or it may stay in the stash.
+			It is important that stash size be provably bounded.
+			\cite[Theorem 1]{path-oram} does exactly that --- at least for the bucket size of 5, the probability of stash overflow and its size are related as in \cref{equation:path-oram-stash}.
+			\begin{equation}\label{equation:path-oram-stash}
+				\probability{ \mathsf{stash\ size} > x } \leq 14 \cdot (0.6002) ^ x
+			\end{equation}
+			If the probability of a protocol failure is thought of as the adversary's advantage, the probability to break the security, then the stash size equivalent to 128-bit security is about 100 blocks for the bucket of size 5 \cite[Figure 5]{path-oram}.
 
 	\section{\texorpdfstring{\acrlong{dp}}{Differential Privacy}}
 
