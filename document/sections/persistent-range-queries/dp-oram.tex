@@ -98,7 +98,7 @@
 		\begin{proof}
 			By using \acrshort{oram}, we store only the original data once and hence, we get optimal storage efficiency.
 
-			The communication efficiency depends on the upper bound of the error for each sanitizer when $\delta > 0$, as described in \cref{section:range-persistent:building-blocks:dp} and \cref{remark:dp-sanitizer-guarantees}.
+			The communication efficiency depends on the upper bound of the error for each sanitizer when $\delta > 0$, as described in \cref{section:background:dp-sanitizers} and \cref{remark:dp-sanitizer-guarantees}.
 			The most efficient \acrshort{oram} protocol to date has $\bigO{\log \dataSize}$ communication overhead (see \cref{section:background:oram}).
 		\end{proof}
 
@@ -113,7 +113,7 @@
 		\end{corollary}
 
 		\begin{proof}
-			Similarly, we derive the proof by considering the use of \acrshort{oram} and the upper bound of the error for each sanitizer when $\delta = 0$ in \cref{section:range-persistent:building-blocks:dp}.
+			Similarly, we derive the proof by considering the use of \acrshort{oram} and the upper bound of the error for each sanitizer when $\delta = 0$ in \cref{section:background:dp-sanitizers}.
 		\end{proof}
 
 	\subsection{Extending to multiple attributes}\label{section:range-persistent:dp-oram:multiple-attributes}

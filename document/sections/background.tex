@@ -114,7 +114,7 @@
 	\section{\texorpdfstring{\acrlong{dp}}{Differential Privacy}}
 
 		The most effective approach is sampling noise using \acrfull{dp}.
-		\acrshort{dp} is a guarantee on a query algorithm that takes a database and returns some result.
+		\acrshort{dp} is a guarantee on a mechanism that takes a datasets and returns some result.
 		The guarantee states that for two neighboring databases (that differ in exactly one record), the probability that the adversary will understand by looking at the output, which of the two databases was used as an input, is bounded.
 		More formally, the \acrlong{dp} is defined in \cref{definition:dp}.
 
@@ -145,10 +145,61 @@
 		For example, if a change in one record of the dataset causes a change in the output value of at most one (e.g., a count query), then the sensitivity is 1.
 		\cite{differential-privacy-original} proves that if one adds $\algo{Laplace}{0, \frac{\mathsf{sensitivity}}{\epsilon}}$ to the real result of a query, the resulting mechanism is $\epsilon$-\acrshort{dp}.
 
-		\subsection{\texorpdfstring{\acrshort{dp}}{DP} sanitizers}
+		\subsection{\texorpdfstring{\acrshort{dp}}{DP} sanitizers}\label{section:background:dp-sanitizers}
 
-			Lastly, instead of generating and adding noise each query, it is possible to generate noisy values once, embed them into the data and release the sanitized data without compromising privacy guarantees.
-			The intuition is that once the noise is embedded in the dataset, the adversary can run a regular query over it and the entire query will still be \acrshort{dp}.
-			Such methods are collectively called \emph{sanitization}, and there are known bounds for point and range queries, for pure ($\delta = 0$) and approximate ($\delta > 0$) \acrshort{dp} \cite{bounds-on-sample-complexity,private-learning-and-sanitization,non-interactive-database-privacy,dp-under-observation,dp-release,privately-learning-thresholds}.
+			While the \acrlong{lpa} is an effective and simple way of answering a single count query, we will need to answer a sequence of count queries, ideally, without imposing a bound on the length of this sequence.
+			We will hence make use of \emph{sanitization} algorithms.
 
-		\section{\texorpdfstring{\acrlongpl{tee}}{Trusted Execution Environments}}
+			\begin{definition}\label{definition:dp-danitizer}
+				Let \querySet{} be a collection of queries.
+				An $(\epsilon, \delta, \alpha, \beta)$-differentially private sanitizer for \querySet{} is a pair of algorithms $(\algo{A}, \algo{B})$ such that:
+				\begin{itemize}
+					\item $A$ is $(\epsilon, \delta)$-differentially private, and
+					\item on input a dataset $\database = \fromNtoM{d}{1}{\dataSize} \in \searchKeyDomain^\dataSize$, \algo{A} outputs a data structure \serverDS{} such that with probability $1 - \beta$ for all $\query \in \querySet$, $\abs{ \algo{B}{ \serverDS, \query } - \sum_i \query(d_i) } \leq \alpha$.
+				\end{itemize}
+			\end{definition}
+
+			\begin{remark}\label{remark:dp-sanitizer-guarantees}
+				Given an $(\epsilon, \delta, \alpha, \beta)$-differentially private sanitizer as in \cref{definition:dp-danitizer} one can replace the answer $\algo{B}{ \serverDS, \query }$ with $\textsc{B}^\prime ( \serverDS, \allowbreak \query ) = \algo{B}{ \serverDS, \query } + \alpha$.
+				Hence, with probability $1 - \beta$, for all $\query \in \querySet$, $0 \leq \algo{\ensuremath{\textsc{B}^\prime}}{ \serverDS, \query } - \sum_i \query(d_i) \leq 2 \alpha$.
+				We will hence assume from now on that sanitizers have this latter guarantee on their error.
+			\end{remark}
+
+			The main idea of \emph{sanitization} (a.k.a.\ private data release) is to release specific noisy statistics on a private dataset once, which can then be combined in order to answer an arbitrary number of queries without violating privacy.
+			Depending on the query type and the notion of differential privacy (i.e., pure or approximate), different upper bounds on the error have been proven.
+			Omitting the dependency on $\epsilon,\delta$, in case of point queries over domain size \domainSize{}, pure differential privacy results in $\alpha = \bigTheta{\log \domainSize}$ \cite{bounds-on-sample-complexity}, while for approximate differential privacy $\alpha = \bigO{1}$ \cite{private-learning-and-sanitization}.
+			For range queries over domain size \domainSize{}, these bounds are $\alpha = \bigTheta{\log \domainSize}$ for pure differential privacy \cite{non-interactive-database-privacy,dp-under-observation}, and $\alpha = \bigO{(\log^{*} \domainSize)^{1.5}}$ for approximate differential privacy (with an almost matching lower bound of $\alpha = \bigOmega{\log^{*} \domainSize}$) \cite{private-learning-and-sanitization, dp-release, privately-learning-thresholds}.
+			More generally, \textcite{non-interactive-database-privacy} showed that any finite query set \querySet{} can be sanitized, albeit non-efficiently.
+
+			\subsubsection{Answering point and range queries with differential privacy}
+
+				Utilizing the \acrshort{lpa} for answering point queries results in error $\alpha = \bigO{\log \domainSize}$.
+				A practical solution for answering range queries with error bounds very close to the optimal ones is the hierarchical method \cite{dp-under-observation, accuracy-dp-histograms, dp-wavelet}.
+				The main idea is to build an aggregate tree on the domain, and add noise to each node proportional to the tree height (i.e., noise scale logarithmic in the domain size \domainSize{}).
+				Then, every range query is answered using the minimum number of tree nodes.
+				\textcite{hierarchical-methods-for-dp} showed that the hierarchical algorithm of \textcite{accuracy-dp-histograms}, when combined with their proposed optimizations, offers the lowest error.
+
+			\subsubsection{Composition}
+
+				Finally, in this thesis we will make use of a \emph{composition} theorem (adapted from \cite{privacy-integrated-queries}) based on \cite{differential-privacy-original,our-data-ourselves}. % chktex 2
+				It concerns executions of multiple differentially private mechanisms on non-disjoint and disjoint inputs.
+
+				\begin{theorem}\label{theorem:composition}
+					Let \fromNtoM{\algo{A}}{1}{r} be mechanisms, such that each $\algo{A}_i$ provides $\epsilon_i$-differential privacy.
+					Let \fromNtoM{\database}{1}{r} be pairwise non-disjoint (resp., disjoint) datasets.
+					Let $\algo{A}$ be another mechanism that executes $\algo{A}_1(\database_1), \ldots, \algo{A}_r(\database_r)$ using independent randomness for each $\algo{A}_i$, and returns their outputs.
+					Then, mechanism $\algo{A}$ is $\left( \sum_{i=1}^r \epsilon_i \right)$-differentially private (resp., $\left( \max_{i=1}^r \epsilon_i \right)$-differentially private).
+				\end{theorem}
+
+	\section{\texorpdfstring{\acrlongpl{tee}}{Trusted Execution Environments}}
+
+		\acrlongpl{tee} is generalized term for a ``secure'' part of processing engine.
+		Security in this setting means a combination of confidentiality, integrity, secrecy, isolation and protection against side-channel attacks.
+		While \acrshort{tee} is a concept defining an execution environment, specific solutions include a hardware security module (a plug-in device with a protected memory and a crypto-optimized processing unit), an \acrshort{fpga}, or a set of extensions to an existing processor architecture, such as an \acrshort{sgx} for Intel x86 or Secure Encrypted Virtualization \cite{amd-memory-encryption} for AMD\@.
+		Of all these, Intel \acrshort{sgx} is the most widely used technology.
+
+		\subsection{\texorpdfstring{\acrlong{sgx}}{Software Guard Extensions}}
+
+			\acrfull{sgx} is a set of instructions for the Intel x86 architecture that allow a user or an operating system to define a region of protected memory, called \emph{enclave}, and interact with it.
+			The enclave can only be accessed using the \acrshort{sgx} instruction (i.e, regular \texttt{mov} instruction would not work), and all pages in the enclave are symmetrically encrypted.
+			Withing the enclave it is guaranteed 
