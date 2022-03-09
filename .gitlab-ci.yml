@@ -99,4 +99,4 @@ include:
 
 check-links:
   variables:
-    BLC_EXCLUDE: -s *10.1007* -s *10.1109* -s epsolute.org --accept-codes 403
+    BLC_EXCLUDE: -s *10.1007* -s *10.1109* -s epsolute.org --accept-codes 403,503
