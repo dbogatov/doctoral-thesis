@@ -193,13 +193,43 @@
 
 	\section{\texorpdfstring{\acrlongpl{tee}}{Trusted Execution Environments}}
 
-		\acrlongpl{tee} is generalized term for a ``secure'' part of processing engine.
+		\acrlongpl{tee} is generalized term for a ``secure'' part of a processing engine.
 		Security in this setting means a combination of confidentiality, integrity, secrecy, isolation and protection against side-channel attacks.
-		While \acrshort{tee} is a concept defining an execution environment, specific solutions include a hardware security module (a plug-in device with a protected memory and a crypto-optimized processing unit), an \acrshort{fpga}, or a set of extensions to an existing processor architecture, such as an \acrshort{sgx} for Intel x86 or Secure Encrypted Virtualization \cite{amd-memory-encryption} for AMD\@.
+		\acrshort{tee} cannot be entered through system calls, jumps or register manipulations.
+		Environment memory's content and integrity are protected, and neither \acrshort{os}, nor a hypervisor can access it.
+		Main purpose of the \acrshort{tee} is to vastly reduce the attack surface, see \cref{figure:enclave}.
+
+		\input{figures/fig-enclave}
+
+		While \acrshort{tee} is a concept defining an execution environment, specific solutions include a hardware security module (a plug-in device with a protected memory and a crypto-optimized processing unit), an \acrshort{fpga}, and a set of extensions to an existing processor architecture, such as an \acrshort{sgx} for Intel x86 or Secure Encrypted Virtualization \cite{amd-memory-encryption} for AMD\@.
 		Of all these, Intel \acrshort{sgx} is the most widely used technology.
 
 		\subsection{\texorpdfstring{\acrlong{sgx}}{Software Guard Extensions}}
 
-			\acrfull{sgx} is a set of instructions for the Intel x86 architecture that allow a user or an operating system to define a region of protected memory, called \emph{enclave}, and interact with it.
-			The enclave can only be accessed using the \acrshort{sgx} instruction (i.e, regular \texttt{mov} instruction would not work), and all pages in the enclave are symmetrically encrypted.
-			Withing the enclave it is guaranteed 
+			\acrfull{sgx} is a set of instructions for the Intel x86 architecture that allow a user or an \acrlong{os} to define a region of protected memory, called \emph{enclave}, and interact with it.
+			The enclave can only be accessed using the \acrshort{sgx} instructions (i.e, regular \texttt{mov} instruction would not work), and all pages of the enclave are symmetrically encrypted and physically protected.
+			\acrshort{sgx} guarantees the integrity and security of the memory pages within the enclave.
+			Although the amount of enclave memory is very limited, \acrshort{sgx} can use regular \acrshort{ram} by transparently swapping the pages between the trusted and untrusted memory.
+			The pages are then encrypted with integrity protection when placed in the \acrshort{ram} (\emph{sealing} in \acrshort{sgx} terms).
+
+			An \acrshort{sgx}-enabled application declares its trusted and untrusted components at the beginning.
+			Trusted part will live entirely in the enclave, while the untrusted part is a normal process that runs within the \acrshort{os}.
+			The application has to be digitally signed for the enclave to accept it, and the enclave itself can authenticate to the user via an \emph{attestation} process.
+			Conceptually, an \acrshort{sgx} application in an outsourced database system can be seen as a trusted component that operates over sensitive material (e.g., keys, tokens, plaintext user data), a remote trusted client application that communicates with the enclave, and a layer of code that passes requests through (untrusted part of an \acrshort{sgx} application).
+			Cipherbase \cite{cipherbase-daas} and StealthDB \cite{stealth-db} are good examples of such approach.
+
+		\subsection{Issues with \acrshort{sgx}}
+
+			\acrshort{sgx}, as the closest instantiation of \acrshort{tee} available, has been extensively targeted.
+			The attacks include Foreshadow \cite{foreshadow}, Prime+Probe cache attack \cite{prime-probe-sgx-attack}, an attack from within the enclave \cite{enclave-sgx-attack}, Spectre line of attacks that can bypass \acrshort{sgx} \cite{spectre-sgx-attack}, replay attack \cite{replay-sgx-attack}, Plundervolt attack \cite{plundervolt-sgx-attack}, Load Value Injection attack \cite{lvi-sgx-attack} and SGAxe attack \cite{sgaxe-sgx-attack}.
+			Due to its many security issues, \acrshort{sgx} has been officially discontinued.\footnote{As of $11^\text{th}$ Generation Intel Core processor.}
+
+			Besides the attacks against the \acrshort{sgx}, the design itself has a number of restrictions.
+			First of all, the enclave memory is capped at \SI{128}{\mega\byte}, part of which is occupied by the \acrshort{sgx} control structures, leaving the application about \SI{96}{\mega\byte}.
+			\acrshort{sgx} allows the use of external memory pages through the sealing mechanism, but it imposes high overhead of re-encryption and crossing the enclave physical boundary.
+			Second, the code execution inside the enclave is significantly slower.
+			Third, by design, only the untrusted application component can interact with the \acrshort{os}, for example, make network or storage \acrshort{io} requests.
+			Finally, from the security standpoint the enclave is vulnerable against the side-channel attacks, most of all, access pattern leakage.
+			Such leakage implies that the normal database application cannot be placed directly in the enclave and be deemed secure, because access pattern has been effectively exploited up to a reconstruction attack \cite{generic-attacks-kellaris}.
+			OIne then has to designed the application specifically to conceal the access pattern.
+			For example, ZeroTrace \cite{zerotrace} is a variant of PathORAM \cite{path-oram} that is internally oblivious and thus can work in \acrshort{sgx}.
