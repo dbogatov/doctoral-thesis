@@ -1,21 +1,53 @@
 \chapter{\texorpdfstring{\acrshort{knn}}{kNN} queries in the snapshot model}\label{section:knn-snapshot}
 \thispagestyle{myheadings}
 
-	Nearest neighbor search is a type of optimization problem that, given a set of objects and a distance metric, requires finding the object closest to a given object according to the distance metric.
-	A \acrfull{knn} search is a subtype of a general nearest neighbor problem where $k$ closest objects are requested.
-	Applications that use \acrshort{knn} search only need to define the objects and the metric.
-	For example, a street map application would define the 2D coordinates of the buildings as objects and Euclidean distance as a metric, then the query could be ``give 5 restaurants closest to the current user position''.
-	A document search application would define the keyword vector for a document as an object and an inner product distance as a metric, then the query could be ``give 3 documents most similar to the given text'' (similar applications may search images, videos and sounds).
+	In this section I analyze secure \acrshort{knn} queries in the snapshot adversary model.
+	I study the effect of protecting the records with a type of property-preserving encryption on quality of search and efficiency of certain attacks.
+	Specifically, I examine theoretically and practically how accuracy of both \acrshort{knn} search and \acrshort{ml}-based inversion attack degrade with added security.
 
-	To run a \acrshort{knn} query securely in an outsourced database model, I propose to use an approach similar to \acrshort{ore} for range queries.
-	While to run a range query one needs to be able to \emph{compare} the ciphertexts (exactly what \acrshort{ore} does), to run a \acrshort{knn} query one needs to know \emph{a distance comparison} between pairs of ciphertexts.
-	That is, one needs to maintain (or reveal) an order of distances of all pairs of encrypted objects.
-	For example, if $x$ was further from $y$ than $z$ was, then the encryption of $x$ needs to be further from the encryption of $y$ than the encryption of $z$ is.
+	\section{Introduction}
 
-	Although such a \acrfull{dcpe} scheme would allow running the query with absolute accuracy, the construction would suffer from the same security issues that the \acrshort{ore} methods did.
-	Most of all, while \acrshort{ore}-encrypted dataset reveals the total order, the \acrshort{dcpe}-encrypted values will reveal \emph{the total relative position} of all elements.
-	The exact distances will be hidden (subject to the \acrshort{dcpe} scheme's leakage), but the relative position is a substantial leakage that may lead to reconstruction attacks.
-	To mitigate the leakage we may use a form of \emph{an approximate} \acrshort{dcpe}, which ideally would add controlled noise or inaccuracy to the relative distances.
+		Nearest-neighbor search is a type of optimization problem that, given a set of objects and a distance metric, requires finding the object closest to a given object according to the distance metric.
+		A \acrfull{knn} search is a subtype of a general nearest-neighbor problem where $k$ closest objects are requested.
+		Applications that use \acrshort{knn} search only need to define the objects and the metric.
+		For example, a street map application would define the 2D coordinates of the buildings as objects and Euclidean distance as a metric, then the query could be ``give 5 restaurants closest to the current user position''.
+		A document search application would define the keyword vector for a document as an object and an inner product distance as a metric, then the query could be ``give 3 documents most similar to the given text'' (similar applications may search images, videos and sounds).
+
+		To run a \acrshort{knn} query securely in an outsourced database model, I propose to use an approach similar to \acrshort{ore} for range queries.
+		While to run a range query one needs to be able to \emph{compare} the ciphertexts (exactly what \acrshort{ore} does), to run a \acrshort{knn} query one needs to know \emph{a distance comparison} between pairs of ciphertexts.
+		That is, one needs to maintain (or reveal) an order of distances of all pairs of encrypted objects.
+		For example, if $x$ was further from $y$ than $z$ was, then the encryption of $x$ needs to be further from the encryption of $y$ than the encryption of $z$ is.
+
+		Although such a \acrfull{dcpe} scheme would allow running the query with absolute accuracy, the construction would suffer from the same security issues that the \acrshort{ore} methods did.
+		Most of all, while \acrshort{ore}-encrypted dataset reveals the total order, the \acrshort{dcpe}-encrypted values will reveal \emph{the total relative position} of all elements.
+		The exact distances will be hidden (subject to the \acrshort{dcpe} scheme's leakage), but the relative position is a substantial leakage that may lead to reconstruction attacks.
+		To mitigate the leakage we may use a form of \emph{an approximate} \acrshort{dcpe}, which ideally would add controlled noise or inaccuracy to the relative distances.
+
+	\section{Related Work}
+
+		Work in this area is naturally split into two groups --- mechanisms and constructions that offer certain security guarantees for nearest-neighbor queries, and attacks against those constructions.
+
+		A work immediately related to ours is that of \textcite{quick-n}.
+		QuickN offers an adaptation of nearest-neighbor search algorithm in conventional tree data structures (i.e., R-trees) to well-established \acrfull{ope} schemes.
+		Unlike our solution that involves a novel property-preserving encryption scheme specifically designed for high-dimensional vectors, QuickN encrypts each vector dimension separately with \acrshort{ope}.
+		\cite{quick-n} includes the experiments with attacks against their solution (attack of \textcite{leakage-abuse-grubs-2017}) and report high degree of protection against them.
+
+		QuickN approach of applying \acrshort{ope} to an R-tree, however, has some disadvantages.
+		First, an ideal stateless \acrshort{ope} has been shown inferior (\cite{ope-leakage}) to its counterpart, an \acrfull{ore} in which the comparison over ciphertexts is defined explicitly.\footnote{
+			\cite{quick-n} uses mOPE \cite{ideal-ope} which is an interactive protocol and not a traditional lightweight stateless \acrshort{ope} like \cite{bclo-ope}.
+			Since mOPE is an ideal (though stateful) \acrshort{ope}, \cite{quick-n} do not include \acrshort{ope} leakage in their security definition.
+		}
+		An \acrshort{ore}, in turn, can have a varying level of security, with the higher security level translating into lower comparison performance.
+		In QuickN, an R-tree-based nearest-neighbor algorithm involves a very high number of comparisons, linear in data dimensionality.
+		With the cost of comparison no longer negligible, the overhead of query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
+		Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positive results even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
+
+		\textcite{knn-aspe} offer a novel scheme, ASPE, that preserves a special type of scalar product.
+		ASPE is then naturally integrated in existing \acrshort{knn} algorithms that rely on a scalar product.
+		\cite{knn-aspe} is similar to ours in that we also apply a property-preserving encryption scheme to existing \acrshort{knn} algorithms.
+		ASPE is different in that it preserves a scalar product while we preserve an L2 distance comparison, and ASPE has been broken in \cite{secure-nn-revisited-break-aspe} (although an attack is a chosen plaintext attack, i.e., one cannot decrypt a random ciphertext).
+
+		Other works either target different aspects of query security, like integrity and soundness of results \cite{knn-integrity-soundness,svknn}, or involve mechanisms other than property-preserving encryption \cite{seceqp,practical-approx-knn,knn-sharing-keys,knn-mult-data-owners,knn-over-encrypted,knn-paillier,knn-blind,knn-homomorphism,knn-strong-location-privacy,knn-no-anonymizers,knn-efficient,knn-new-casper}.
 
 	\section{\texorpdfstring{\acrlong{dcpe}}{Distance Comparison Preserving Encryption}}
 
