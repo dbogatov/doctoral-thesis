@@ -21,15 +21,13 @@
 		%
 		\label{algorithm:dp-oram-parallel:gamma:setup:line-4}	\left\langle \overline{\record}, \overline{\recordID} \right\rangle\ \text{s.t.}\ \algo{H}{\recordID} = j	\>																\>							\\
 		%
-		\label{algorithm:dp-oram-parallel:gamma:setup:line-5}	\oramProgram = \left\langle (\oramWrite, \overline{\recordID}, \overline{\record}) \right\rangle			\>																\>							\\
-		%
-		\label{algorithm:dp-oram-parallel:gamma:setup:line-6}																												\> \sendmessageboth*[\setupLength]{\algo{ORAM}_j(\oramProgram)}	\>							\pclb
+		\label{algorithm:dp-oram-parallel:gamma:setup:line-5}	\oramProgram = \left\langle (\oramWrite, \overline{\recordID}, \overline{\record}) \right\rangle			\> \sendmessageboth*[\setupLength]{\algo{ORAM}_j(\oramProgram)}	\>							\pclb
 		%
 		\pcintertext[dotted]{$\pcendfor$}
 		%
-		\label{algorithm:dp-oram-parallel:gamma:setup:line-7}	\serverDS \gets \algo{A}{\fromNtoM{\searchKey}{1}{\domainSize}}												\> \sendmessageright*[\setupLength]{\serverDS}					\>							\\
+		\label{algorithm:dp-oram-parallel:gamma:setup:line-6}	\serverDS \gets \algo{A}{\fromNtoM{\searchKey}{1}{\domainSize}}												\> \sendmessageright*[\setupLength]{\serverDS}					\>							\\
 		%
-		\label{algorithm:dp-oram-parallel:gamma:setup:line-8}	\pcouput{\indexI}																							\>																\> \pcouput{ \serverDS }
+		\label{algorithm:dp-oram-parallel:gamma:setup:line-7}	\pcouput{\indexI}																							\>																\> \pcouput{ \serverDS }
 	}
 }
 
@@ -47,13 +45,11 @@
 		%
 		\label{algorithm:dp-oram-parallel:gamma:query:line-5}	\oramProgram_\mathsf{true} = \left. (\oramRead, \recordID_i, \bot) \right|_{i \in T_j}				\>																												\>															\\
 		%
-		\label{algorithm:dp-oram-parallel:gamma:query:line-6}	\oramProgram_\mathsf{noise} = \left. (\oramRead, S \setminus T_j, \bot) \right|_{1}^{c - \abs{T_j}}	\>																												\>															\\
-		%
-		\label{algorithm:dp-oram-parallel:gamma:query:line-7}	R_j																									\> \sendmessageboth*[\queryLength]{\algo{ORAM}_j(\oramProgram_\mathsf{true} \| \oramProgram_\mathsf{noise})}	\>															\pclb
+		\label{algorithm:dp-oram-parallel:gamma:query:line-6}	\oramProgram_\mathsf{noise} = \left. (\oramRead, S \setminus T_j, \bot) \right|_{1}^{c - \abs{T_j}}	\> \sendmessageboth*[\queryLength]{\algo{ORAM}_j(\oramProgram_\mathsf{true} \| \oramProgram_\mathsf{noise})}	\> R_j														\pclb
 		%
 		\pcintertext[dotted]{$\pcendfor$}
 		%
-		\label{algorithm:dp-oram-parallel:gamma:query:line-8}	\pcouput{ \left. R_j \right|_{j = 1}^\oramsNumber }													\>																												\>	\pcouput{\emptyset}
+		\label{algorithm:dp-oram-parallel:gamma:query:line-7}	\pcouput{ \left. R_j \right|_{j = 1}^\oramsNumber }													\>																												\>	\pcouput{\emptyset}
 	}
 }
 
@@ -75,10 +71,8 @@
 
 	\caption[Parallel \epsolute{} for \protocolGamma{}]{
 		Parallel \epsolute{} for \protocolGamma{}, extends \cref{algorithm:dp-oram}.
-		\oramsNumber{} is the number of parallel \acrshortpl{oram}.
 		\algo{H} is a random hash function $\algo{H} : \bin^* \to \set{1, \ldots, \oramsNumber}$.
 		$\gamma$ and $\tilde{k}_0$ are computed as in \cref{section:range-persistent:prallel-dp-oram:gamma}.
-		\user{} and \server{} maintain \oramsNumber{} \acrshort{oram} states implicitly.
 	}%
 	\label{algorithm:dp-oram-parallel}
 \end{algorithm*}

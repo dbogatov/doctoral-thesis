@@ -59,7 +59,7 @@
 				\view{1} \to \view{2} \to \view{3} \to \view{4} \; .
 			\]
 			\view{1} is \view{\protocol}{\database, \fromNtoM{\query}{1}{m}}.
-			\view{2} is produced only from $\serverDS \gets \algo{A}{\fromNtoM{\searchKey}{1}{\domainSize}}$.
+			\view{2} is produced only from $\serverDS \gets \algo{A}(\fromNtoM{\searchKey}{1}{\domainSize})$. % here I explicitly use parentheses to allow line break
 			Namely, compute $c_i \gets \algo{A}{\serverDS, \query_i}$ for all $i$ and run \acrshort{oram} simulator on $\sum_i c_i$.
 			By \acrshort{oram} security,
 			\[

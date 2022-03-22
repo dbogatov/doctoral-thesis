@@ -26,11 +26,11 @@
 		\item[Question-6\label{item:question-attributes}] What is the impact of supporting multiple attributes?
 	\end{description}
 
-	To address \ref{item:question-practicality} we have run the default setting using conventional \acrshort{rdbms} (MySQL and PostgreSQL), Linear Scan approach and Shrinkwrap \cite{shrinkwrap}. % chktex 2
+	For \ref{item:question-practicality} we have run the default setting using conventional \acrshort{rdbms} (MySQL and PostgreSQL), Linear Scan approach and Shrinkwrap \cite{shrinkwrap}. % chktex 2
 	To target \ref{item:question-storage}, we measured the exact storage used by the client and the server for different data, record and domain sizes. % chktex 2
 	To answer \ref{item:question-parameters}, we ran a default setting and then varied all parameters and inputs, one at a time. % chktex 2
 	For \ref{item:question-scalability} we gradually added \acrshortpl{cpu}, \acrshort{oram} servers and \acrshort{kvs} instances and observed the rate of improvement in performance. % chktex 2
-	For \ref{item:question-optimizations} we have run the default setting with our optimizations toggled. % chktex 2
+	To target \ref{item:question-optimizations} we have run the default setting with our optimizations toggled. % chktex 2
 	Lastly, for \ref{item:question-attributes} we have used two datasets to construct two indices and then queried each of the attributes. % chktex 2
 
 	\subsection{Data sets}\label{section:range-persistent:experiments:data-sets}

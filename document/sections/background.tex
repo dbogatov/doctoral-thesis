@@ -159,7 +159,7 @@
 			\end{definition}
 
 			\begin{remark}\label{remark:dp-sanitizer-guarantees}
-				Given an $(\epsilon, \delta, \alpha, \beta)$-differentially private sanitizer as in \cref{definition:dp-danitizer} one can replace the answer $\algo{B}{ \serverDS, \query }$ with $\textsc{B}^\prime ( \serverDS, \allowbreak \query ) = \algo{B}{ \serverDS, \query } + \alpha$.
+				Given an $(\epsilon, \delta, \alpha, \beta)$-\acrshort{dp} sanitizer as in \cref{definition:dp-danitizer} one can replace the answer $\algo{B}{ \serverDS, \query }$ with $\textsc{B}^\prime ( \serverDS, \allowbreak \query ) = \algo{B}{ \serverDS, \query } + \alpha$.
 				Hence, with probability $1 - \beta$, for all $\query \in \querySet$, $0 \leq \algo{\ensuremath{\textsc{B}^\prime}}{ \serverDS, \query } - \sum_i \query(d_i) \leq 2 \alpha$.
 				We will hence assume from now on that sanitizers have this latter guarantee on their error.
 			\end{remark}

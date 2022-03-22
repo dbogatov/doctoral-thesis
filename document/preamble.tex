@@ -72,6 +72,7 @@
 \usepackage{textcomp}
 \usepackage{array}
 \usepackage{calc}
+\usepackage[final]{pdfpages}
 
 \hyphenation{
 	Shrink-wrap
@@ -80,6 +81,16 @@
 	SIG-MOD
 	Da-ta-ba-ses
 	RAN-DOM
+	RDB-MS
+	Sprin-ger
+	Na-ve-ed
+	Tho-mas
+	VL-DBJ
+	Arch-ive
+	En-cryp-ted
+	Sche-me
+	Mi-ro-nov
+	Addi-son
 }
 
 \sisetup{
@@ -254,7 +265,7 @@
 
 \providecommand{\bigTheta}[1]{\ensuremath{\Theta \left( #1 \right)}}
 
-\newcommand{\fromNtoM}[3]{\ensuremath{#1_#2, \ldots, #1_#3}}
+\newcommand{\fromNtoM}[3]{\ensuremath{#1_#2, \allowbreak \ldots, \allowbreak #1_#3}}
 \newcommand{\probability}[1]{\ensuremath{\textnormal{Pr}\left[ #1 \right]}} % chktex 35
 \newcommand{\efficiency}[2]{\ensuremath{\left( \bigO{ #1 }, \ifthenelse{\equal{#2}{0}}{#2}{\bigO{ #2 }} \right)}}
 \newcommand{\semitransp}[2][35]{\color{fg!#1}#2}

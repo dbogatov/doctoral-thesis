@@ -12,7 +12,7 @@
 		The cell content is structured as follows: top value is the analytical result in $\mathcal{O}$ notation, bottom value is the number of requests for \acrshort{io} requests or number of messages and their total size for communication.
 		In these experiments, $N = 247K$, $B = \SI{4}{\kilo\byte}$, $r \approx 247K \cdot \SI{0.5}{\percent} = 1235$, and $L = 60$.
 	}\label{table:protocols}
-	\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} l c c c c c } % chktex 26
+	\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} c c c c c c } % chktex 26
 
 		\toprule
 
@@ -21,7 +21,7 @@
 
 		\toprule
 
-		{\BPlus} tree with \acrshort{ore}	& \makecell{$\log_B \frac{N}{B}$ \\ 3 requests}						& \makecell{$\log_B \frac{N}{B} + \frac{r}{B}$ \\ 44 requests}														& \textbf{Same as \acrshort{ore}}				& \makecell{$1$ \\ 2 / \SI{177}{\byte}}																& \makecell{$1$ \\ 2 / \SI{342}{\byte}}																\\
+		\makecell{{\BPlus} tree \\ with \acrshort{ore}}	& \makecell{$\log_B \frac{N}{B}$ \\ 3 requests}						& \makecell{$\log_B \frac{N}{B} + \frac{r}{B}$ \\ 44 requests}														& \textbf{Same as \acrshort{ore}}				& \makecell{$1$ \\ 2 / \SI{177}{\byte}}																& \makecell{$1$ \\ 2 / \SI{342}{\byte}}																\\
 
 		\midrule
 
@@ -29,9 +29,9 @@
 
 		\midrule
 
-		\cite{pope} warm					& \multirow{2}{*}{\makecell{$1$ \\ 1 request}}						& \makecell{$\log_L \frac{N}{B} + \frac{r}{B}$ \\ 300 requests}														& \textbf{Partial order}						& \multirow{2}{*}{\makecell{$1$ \\ 2 / \SI{32}{\byte}}}												& \makecell{$\log_L N$ \\ 914 / \SI{347}{\kilo\byte}}												\\ \cline{1-1} \cline{3-3} \cline{6-6}
+		\makecell{\cite{pope} \\ warm}					& \multirow{2}{*}{\makecell{$1$ \\ 1 request}}						& \makecell{$\log_L \frac{N}{B} + \frac{r}{B}$ \\ 300 requests}														& \textbf{Partial order}						& \multirow{2}{*}{\makecell{$1$ \\ 2 / \SI{32}{\byte}}}												& \makecell{$\log_L N$ \\ 914 / \SI{347}{\kilo\byte}}												\\ \cline{1-1} \cline{3-3} \cline{6-6}
 
-		\cite{pope} cold					& 																	& \makecell{$\bm{{\nicefrac{N}{B}}}$ \\ \textbf{2175 requests}}														& Fully hiding									& 																									& \makecell{$\bm{N}$ \\ \textbf{498K / \SI[detect-all=true]{9}{\mega\byte}}}						\\
+		\makecell{\cite{pope} \\ cold}					& 																	& \makecell{$\bm{{\nicefrac{N}{B}}}$ \\ \textbf{2175 requests}}														& Fully hiding									& 																									& \makecell{$\bm{N}$ \\ \textbf{498K / \SI[detect-all=true]{9}{\mega\byte}}}						\\
 
 		\midrule
 
