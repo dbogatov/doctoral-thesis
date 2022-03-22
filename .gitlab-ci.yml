@@ -1,6 +1,7 @@
 stages:
   - sync
   - lint
+  - pre-build
   - build
   - test
   - build-review
@@ -11,7 +12,7 @@ stages:
 variables:
   AUTHPASSWORD: "example" # change to "" (empty string) to disable authentication
   # username is always "review" (without quotes)
-  CI_REF: &ref 243771a94611f4c1042d0b707a110a667b7311ac
+  CI_REF: &ref af0528b81f2660205b3485980d1839792720f65d
 
 include:
   # VARIABLES
@@ -100,3 +101,21 @@ include:
 check-links:
   variables:
     BLC_EXCLUDE: -s *10.1007* -s *10.1109* -s epsolute.org --accept-codes 403,503
+
+build:
+  dependencies:
+    - put-docs
+
+put-docs:
+  image: dbogatov/docker-images:alpine-extras-latest-multi-arch
+  stage: pre-build
+  variables:
+    GIT_STRATEGY: fetch
+  script:
+    - ./put-docs.sh 121 report cv for-thesis # CV
+  artifacts:
+    expire_in: 30 min
+    paths:
+      - document/graphics/cv.pdf
+  tags:
+    - docker
