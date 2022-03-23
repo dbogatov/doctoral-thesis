@@ -103,6 +103,8 @@ check-links:
     BLC_EXCLUDE: -s *10.1007* -s *10.1109* -s epsolute.org --accept-codes 403,503
 
 build:
+  before_script:
+    - /pdfannotextractor.pl document/graphics/cv.pdf
   dependencies:
     - put-docs
 
@@ -113,10 +115,9 @@ put-docs:
     GIT_STRATEGY: fetch
   script:
     - ./put-docs.sh 121 report cv for-thesis # CV
-    - /pdfannotextractor.pl document/graphics/cv.pdf
   artifacts:
     expire_in: 30 min
     paths:
-      - "document/graphics/cv.*"
+      - document/graphics/cv.pdf
   tags:
     - docker
