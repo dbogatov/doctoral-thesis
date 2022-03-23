@@ -113,9 +113,10 @@ put-docs:
     GIT_STRATEGY: fetch
   script:
     - ./put-docs.sh 121 report cv for-thesis # CV
+    - /pdfannotextractor.pl document/graphics/cv.pdf
   artifacts:
     expire_in: 30 min
     paths:
-      - document/graphics/cv.pdf
+      - "document/graphics/cv.*"
   tags:
     - docker
