@@ -337,3 +337,6 @@
 \newcommand{\Csharp}{%
 	{\settoheight{\dimen0}{C}C\kern-.05em \resizebox{!}{\dimen0}{\raisebox{\depth}{\#}}} % chktex 41
 }
+
+% https://tex.stackexchange.com/a/267089/97712
+\newcommand{\printpublication}[1]{\AtNextCite{\defcounter{maxnames}{99}}\fullcite{#1}}
