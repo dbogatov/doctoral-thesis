@@ -1,7 +1,7 @@
 \chapter{\texorpdfstring{\acrshort{knn}}{kNN} queries in the snapshot model}\label{section:knn-snapshot}
 \thispagestyle{myheadings}
 
-	In this section I analyze secure \acrshort{knn} queries in the snapshot adversary model.
+	In this chapter I analyze secure \acrshort{knn} queries in the snapshot adversary model.
 	I study the effect of protecting the records with a type of property-preserving encryption on quality of search and efficiency of certain attacks.
 	Specifically, I examine theoretically and practically how accuracy of both \acrshort{knn} search and \acrshort{ml}-based inversion attack degrade with added security.
 
@@ -13,15 +13,31 @@
 		For example, a street map application would define the 2D coordinates of the buildings as objects and Euclidean distance as a metric, then the query could be ``give 5 restaurants closest to the current user position''.
 		A document search application would define the keyword vector for a document as an object and an inner product distance as a metric, then the query could be ``give 3 documents most similar to the given text'' (similar applications may search images, videos and sounds).
 
-		To run a \acrshort{knn} query securely in an outsourced database model, I propose to use an approach similar to \acrshort{ore} for range queries.
-		While to run a range query one needs to be able to \emph{compare} the ciphertexts (exactly what \acrshort{ore} does), to run a \acrshort{knn} query one needs to know \emph{a distance comparison} between pairs of ciphertexts.
-		That is, one needs to maintain (or reveal) an order of distances of all pairs of encrypted objects.
-		For example, if $x$ was further from $y$ than $z$ was, then the encryption of $x$ needs to be further from the encryption of $y$ than the encryption of $z$ is.
+		In this chapter we propose a method and an analysis of running secure \acrshort{knn} queries in outsourced database model.
+		We model our application as a generic document similarity search, where the server stores the embeddings of the documents and returns $k$ closest records to the query embedding.
+		We propose to apply a type of property-preserving encryption over the embeddings on the server while retaining its ability to do nearest-neighbor search.
+		Finally, we simulate an attack against the records --- an \acrshort{ml}-based inversion attack that aims to recover the set of words of a document from its embeddings.
+		Our goal is to observe and study the correlation of the security parameter with search accuracy and attack efficiency.
 
-		Although such a \acrfull{dcpe} scheme would allow running the query with absolute accuracy, the construction would suffer from the same security issues that the \acrshort{ore} methods did.
-		Most of all, while \acrshort{ore}-encrypted dataset reveals the total order, the \acrshort{dcpe}-encrypted values will reveal \emph{the total relative position} of all elements.
-		The exact distances will be hidden (subject to the \acrshort{dcpe} scheme's leakage), but the relative position is a substantial leakage that may lead to reconstruction attacks.
-		To mitigate the leakage we may use a form of \emph{an approximate} \acrshort{dcpe}, which ideally would add controlled noise or inaccuracy to the relative distances.
+		To summarize, our contributions in this work are as follows:
+		\begin{itemize}
+			\item
+				We adapt and implement a \acrfull{dcpe} scheme from \cite{dcpe} to encrypt text embeddings.
+				We analyze the practical aspects of \acrshort{dcpe} scheme's security (e.g., the effects of floating point representation) and benchmark the construction.
+
+			\item
+				We conduct a set of experiments to study the effect of security parameter on search accuracy.
+				We use a fine-tuned \acrshort{bert} model\footnote{Provided by Hamed Zamani} to produce embeddings for the \acrshort{trec} 2020 collection.
+				Given \acrshort{trec} validation set (i.e., ``correct answers'') we run the search for varying security levels and report a number of ranking quality measures.
+
+			\item
+				We adapt a recent \acrshort{ml}-based inversion attack by \textcite{embedding-attacks} against embeddings to our setting.
+				The attack works by training an \acrshort{lstm} model on pairs of sentences and their embeddings.
+				We run this attack for varying security levels, and training on both plaintext and encrypted records.
+
+			\item
+				Finally, we analyze the correlation results for search accuracy and attack efficiency and conclude on practicality of our method.
+		\end{itemize}
 
 	\section{Related Work}
 
@@ -87,6 +103,8 @@
 		That is, the point in the $\beta$-hyperball is deterministically set from the nonce (unique per point) and the key (one for all points), and the final ciphertext is scaled the same way for all points.
 		The \algo{Dec} procedure makes the same steps in reverse correctly setting the point in the hyperball using the nonce and the key.
 
+		\input{figures/fig-dcpe}
+
 		The security of the scheme thus depends on
 		\begin{enumerate*}[label={(\roman*)}]
 			\item the maximum amount of amplification,
@@ -111,26 +129,43 @@
 .
 		\input{figures/tbl-dcpe-benchmarks}
 
-
 	\section{\texorpdfstring{\acrshort{knn}}{kNN} search accuracy}
+
+		The first part of a practical and secure outsourced similarity search application is the search accuracy.
+		In this set of experiments we embed the documents and apply $\beta$-\acrshort{dcpe} to the embeddings.
+		We use existing efficient nearest-neighbor search algorithms and report on ranking quality metrics for different $\beta$.
 
 		With the $\beta$-\acrshort{dcpe} as a component, we can model the protocols similar to \acrshort{ore} ones.
 		In the setup protocol \protocolSetup{}, \user{} simply encrypts the entire input, one vector at a time, and sends the encrypted data over to \server{}.
 		In the query protocol \protocolQuery{}, \user{} encrypts the query with \acrshort{dcpe}, sends the ciphertext to \server{}, while \server{} runs a standard \acrshort{knn} search against the ciphertext.
 		$k$ encrypted vectors are then returned to \user{}, who decrypts them as the last step.
-		These protocols run for a single set of secrets including $\beta$.
-		To measure the effect of different levels of security on search accuracy, I propose to repeat the experiments for different values of $\beta$.
+		These protocols are run for a single set of secrets and \acrshort{dcpe} parameters, including $\beta$.
 
-		For the choice of the dataset, I suggest using the established information retrieval \acrshort{trec} test collections.
-		Such collection consists of a set of documents, a set of topics (questions) and a corresponding set of relevance judgments (correct answers).
-		To use the test collection, we need to convert the documents and queries into vectors.\footnote{
-			Hamed Zamani has collaborated with us and provided the vectorized data and query sets.
-		}
+		For the choice of the dataset, we use the established information retrieval \acrshort{trec} 2020 test collections.
+		A \acrshort{trec} collection consists of a set of documents, a set of topics (questions) and a corresponding set of relevance judgments (correct answers).
 		A benefit of using a \acrshort{trec} dataset is being able to evaluate relevant metrics over the produced results, for example, \acrshort{mrr} \cite{mrr} and \acrshort{dcg} \cite{dcg}.
 		We can then track how these metrics, along with the simpler edit distance and set difference over the result, degrade with higher security.
 
-		Lastly, for an actual implementation I suggest using an existing component for the bare \acrshort{knn} search.
-		\acrshort{faiss} \cite{faiss} is a \acrshort{gpu}-enabled library for efficient similarity search and clustering of dense vectors.
-		Given that the \acrshort{trec} vectors are $d = 768$ dimensional with a maximum Euclidean length of 11, \acrshort{faiss} seems to be an ideal candidate.
+		As the embedding mechanism, we use a custom fine-tuned \acrshort{bert} model.\footnote{Provided by Hamed Zamani}
+		\acrfull{bert} is a transformer-based \acrshort{ml} technique for \acrlong{nlp}.
+		An original \acrshort{bert} model, published by \textcite{bert}, has been trained on a BookCorpus \cite{bookcorpus} (800 million words) and English Wikipedia (2.5 billion words) using 24 encoders with 16 bidirectional self-attention heads (for the larger of two versions, $\text{\acrshort{bert}}_\text{LARGE}$).
+		\acrshort{bert}'s main novelty is its bidirectional nature --- it processes all words in relation to each other and not one-by-one.
+		The technology is now prevalent \cite{bert-is-prevalent}, and Google uses \acrshort{bert} in almost every English query\footnote{
+			\url{https://searchengineland.com/google-bert-used-on-almost-every-english-query-342193}
+		}.
+		It is common, however, to use the original \acrshort{bert} model as a base and do training on top.
+		{\color{red}We use one of such fine-tuned \acrshort{bert} models for embedding.}
+
+		The actual experiment is conducted as follows.
+		First, we produce a set of embeddings for 8.8 million documents and 200 queries from \acrshort{trec} 2020 dataset.
+		We observed that the maximum length of an embedding vector is about 11 units.
+		Second, we encrypt the data and queries embeddings using \acrshort{dcpe} and ranging $\beta$ from 0 (meaning exact distance-comparison) to 50, with $\beta = \sqrt{11} \approx 3.3$ hiding about half of the bits of input embeddings.
+		Third, we run the nearest neighbor search on these pairs of data and queries sets using \acrshort{faiss} \cite{faiss}, a \acrshort{gpu}-enabled library for efficient similarity search and clustering of dense vectors.
+		Finally, we report a range of ranking quality metrics and generic \acrshort{knn} result metrics.
+		In particular, we report recall, \acrfull{mrr} \cite{mrr} and \acrfull{dcg} \cite{dcg} metrics to assess the ranking quality with respect to \acrshort{trec} relevance judgments.
+		To keep track of the isolated effect of the approximation factor on the \acrshort{knn} results, we also report the set difference and Damerau-Levenshtein distance \cite{levenshtein-distance,damerau-distance} of actual and expected \acrshort{knn} results.
+
+		\input{figures/fig-knn-search-coarse}
+		\input{figures/fig-knn-search-fine}
 
 	\section{Security against attacks}
