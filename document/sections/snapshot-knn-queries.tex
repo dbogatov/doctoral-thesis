@@ -104,6 +104,7 @@
 			Note that for each encryption the scheme generates a nonce $n$ and uses it along with the key \key{} to generate the coins for the samplers.
 			That is, the point in the $\beta$-hyperball is deterministically set from the nonce (unique per point) and the key (one for all points), and the final ciphertext is scaled the same way for all points.
 			The \algo{Dec} procedure makes the same steps in reverse correctly setting the point in the hyperball using the nonce and the key.
+			See \cref{figure:dcpe} for a visual example of \acrshort{dcpe} encryption.
 
 			\input{figures/fig-dcpe}
 
@@ -228,3 +229,49 @@
 				\input{figures/fig-knn-search-fine}
 
 	\section{Security against attacks}
+
+		The second part of a practical and secure outsourced similarity search application is the protection against attacks.
+		In this set of experiments we adapt a recent \acrshort{ml}-based attack by \textcite{embedding-attacks}.
+		\textcite{embedding-attacks} offer three attacks against the text embeddings:
+		\begin{enumerate*}[label={(\roman*)}]
+			\item \emph{the inversion attack}, which recovers a set of words from a document embedding,
+			\item \emph{the attribute inference attack} that recovers some property of the document by its embedding, such as the gender or age of its author, and
+			\item \emph{the membership inference attack}, which reveals whether a given document was or was not in the training set for the embedding model.
+		\end{enumerate*}
+		The inversion attack can be run in two modes, the white-box and the black-box.
+		The white-box attack assumes the access to an embedding model and therefore can directly use its architecture and parameters to invert the inputs.
+		The black-box attack relies only on being able to use the model to produce an embedding from a document, similar to how a generic embedding \acrshort{api} would work.
+		We use this latter black-box inversion attack in our experiments since it most closely matches the adversary capabilities in our outsourced database setting.
+
+		\subsection{Black-box model inversion attack \texorpdfstring{\cite{embedding-attacks}}{}}
+
+			The black-box inversion attack assumes no knowledge of the embedding model, it can only use it to produce the embeddings.
+			In this section we follow the original notation from \cite{embedding-attacks}.
+
+			The attack works by training another model $\Upsilon$ to recognize the correlation between the set of words $\mathcal{W}(x)$ of a document $x$ and its embedding $\Phi(x)$.
+			The attacker uses some auxillary dataset $\database_\text{aux}$ (same domain works predictably better than cross domain), and produces a collection of $ ( \Phi(x), \mathcal{W}(x) ) $ for all $x \in \database_\text{aux}$.
+			The adversary then trains the attack model $\Upsilon$ to maximize $ \log \Pr_\Upsilon ( \mathcal{W}(x) | \Phi(x) ) $ over dataset $ ( \Phi(x), \mathcal{W}(x) ) $.
+			Finally, the adversary simply queries the model with the embedding $ \Upsilon( \Phi( x ) ) $ and recovers the original words $\mathcal{W}(x)$.
+
+			\textcite{embedding-attacks} offer two models for the inversion attack.
+			The \acrfull{mlc} model assigns a binary label of whether a word is in the set for each word in the dictionary.
+			The objective function is
+			\[
+				\mathcal{L}_{\text{\acrshort{mlc}}} = -\sum_{ w \in \mathcal{V} } \left[ y_w \log( \hat{y}_w ) + (1 - y_w) \log(1 - \hat{y}_w) \right]
+			\]
+			where
+			\begin{itemize}
+				\item $\mathcal{V}$ is a set of possible words, a dictionary,
+				\item $\hat{y}_w = \Pr_\Upsilon( y_w | \Phi( x ) )$ is the predicted probability of word $w$ given $\Upsilon$ conditioned on $\Phi( x )$, and
+				\item $y_w = 1$ if word $w$ is in $x$ and 0 otherwise.
+			\end{itemize}
+
+			A disadvantage of \acrshort{mlc} model is that it predicts all words independently.
+			\textcite{embedding-attacks} therefore offer a more sophisticated approach based on \cite{msp}.
+			A \acrfull{msp} recurrent neural network predicts the next word in the set conditioned on the embedding $\Phi( x )$ and the up to date predicted set of words.
+			The objective function is
+			\[
+				\mathcal{L}_{\text{\acrshort{msp}}} = \sum_{ i = 1 }^\ell \frac{1}{| \mathcal{W}_i |} \sum_{w \in \mathcal{W}_i } - \log \Pr_\Upsilon( w | \mathcal{W}_{ < i }, \Phi( x ) )
+			\]
+			where $\mathcal{W}_{ < i }$ is the set of already predicted words up to a timestamp $i$ and $\mathcal{W}_i$ is the set of words left to predict.
+			According to experiments in \cite{embedding-attacks}, \acrshort{msp} outperforms \acrshort{mlc}.
