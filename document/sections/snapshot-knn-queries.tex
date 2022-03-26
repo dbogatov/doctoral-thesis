@@ -78,7 +78,7 @@
 		First, a fully deterministic \acrfull{dcpe} would reveal at least the frequency of data points (i.e., how many times a point appears in the dataset).
 		Second, even in the plaintext world the use of approximate nearest-neighbor search \cite{scalable-nn,approximate-nn-fixed-d} may be preferred due to the curse of dimensionality \cite{nn-meaningful,nn-curse-of-d} (exact distance is less important in higher dimensions).
 
-		\subsection{\acrshort{dcpe} construction}
+		\subsection{\texorpdfstring{\acrshort{dcpe}}{DCPE} construction}
 
 			A candidate \emph{approximate} \acrshort{dcpe} scheme that we adapt to our solution has been recently proposed by \textcite{dcpe}.
 			The scheme provides the following guarantee on its ciphertexts
@@ -108,7 +108,7 @@
 
 			\input{figures/fig-dcpe}
 
-		\subsection{\acrshort{dcpe} security}
+		\subsection{\texorpdfstring{\acrshort{dcpe}}{DCPE} security}
 
 			The security of the scheme thus depends on
 			\begin{enumerate*}[label={(\roman*)}]
@@ -126,7 +126,7 @@
 			For example, while the representable 32-bit IEEE 754 floating point numbers range from about $1.18 \cdot 10^{-38}$ to $3.4 \cdot 10^{38}$, there are only $2^{32} \approx 4 \cdot 10^9$, 4 billion representable numbers.
 			This, along with the rounding errors, puts some limits on how large $s$ and $\beta$ can be.
 
-		\subsection{\acrshort{dcpe} implementation and benchmarks}
+		\subsection{\texorpdfstring{\acrshort{dcpe}}{DCPE} implementation and benchmarks}
 
 			We offer the first implementation of \cite{dcpe} $\beta$-\acrshort{dcpe} for 32- and 64-bit IEEE 754 numbers in C++.\footnote{
 				\url{https://github.com/private-knn/dcpe}
@@ -136,13 +136,13 @@
 .
 			\input{figures/tbl-dcpe-benchmarks}
 
-	\section{\texorpdfstring{\acrshort{knn}}{kNN} search accuracy}
+	\section{\texorpdfstring{\acrshort{knn}}{kNN} search accuracy}\label{section:knn-snapshot:search}
 
 		The first part of a practical and secure outsourced similarity search application is the search accuracy.
 		In this set of experiments we embed the documents and apply $\beta$-\acrshort{dcpe} to the embeddings.
 		We use existing efficient nearest-neighbor search algorithms and report on ranking quality metrics for different $\beta$.
 
-		\subsection{Secure \acrshort{knn} protocol}
+		\subsection{Secure \texorpdfstring{\acrshort{knn}}{kNN} protocol}
 
 			With the $\beta$-\acrshort{dcpe} as a component, we can model the protocols similar to \acrshort{ore} ones.
 			In the setup protocol \protocolSetup{}, \user{} simply encrypts the entire input, one vector at a time, and sends the encrypted data over to \server{}.
@@ -228,7 +228,7 @@
 
 				\input{figures/fig-knn-search-fine}
 
-	\section{Security against attacks}
+	\section{Security against attacks}\label{section:knn-snapshot:attacks}
 
 		The second part of a practical and secure outsourced similarity search application is the protection against attacks.
 		In this set of experiments we adapt a recent \acrshort{ml}-based attack by \textcite{embedding-attacks}.
@@ -275,3 +275,92 @@
 			\]
 			where $\mathcal{W}_{ < i }$ is the set of already predicted words up to a timestamp $i$ and $\mathcal{W}_i$ is the set of words left to predict.
 			According to experiments in \cite{embedding-attacks}, \acrshort{msp} outperforms \acrshort{mlc}.
+
+		\subsection{Experimental evaluation}\label{section:knn-snapshot:attacks:experiments}
+
+			We have contacted the authors of \cite{embedding-attacks} and obtained a prototype code they used to run the attack.\footnote{
+				\url{https://github.com/google/embedding-tests}
+			}
+			The model $\Upsilon$ is implemented as a one-layer \acrshort{lstm} with \num{300} hidden units.
+			the model is trained for 30 epochs with Adam optimizer \cite{adam-optimizer}, learning rate of $10^{-3}$ and batch size of 256.
+			The actual implementation uses TensorFlow \cite{tensorflow} (version 1) and is naturally optimized for \acrshort{gpu} training.
+
+			We run two sets of experiments corresponding to two adversarial settings.
+			First, similar to \cite{embedding-attacks}, we assume that the adversary has a black-box access to the embedding model $\Phi$ and can use it to train $\Upsilon$, and we call this experiment an \emph{public model}.
+			This setting corresponds to a scenario when the system uses some open embedding model with little to no alterations (i.e., Google AI Platform Training\footnote{
+				\url{https://cloud.google.com/ai-platform/training/docs/algorithms/bert}
+			}).
+			Second, we assume a more realistic scenario where the embedding model $\Phi$ is not available, and the adversary can only use the system as a whole.
+			That is, for a given document $x$, the adversary can only produce the encrypted embedding $\algo{Enc}{\Phi(x)}$.
+			We call this experiment a \emph{private model}.
+			In both experiments the actual outsourced database is encrypted and the difference is in the dataset $\database_\text{aux}$ on which the adversary can train the attack model $\Upsilon$.
+			In the public model experiment the adversary trains on plaintext embeddings while in the private model environment she trains on the already encrypted embeddings.
+
+			For both experiments we have used two datasets.
+			The first dataset is a BookCorpus \cite{bookcorpus} that \textcite{embedding-attacks} used.
+			With this dataset we have been able to verify that our adapted attack implementation produces similar results to original \cite{embedding-attacks}.
+			The second dataset is the \acrshort{trec}, same as in \cref{section:knn-snapshot:search}.
+			With this dataset we can link together the search accuracy and attack efficiency for the same levels of security.
+
+			\subsubsection{Attack efficiency metrics}
+
+				In line with \cite{embedding-attacks}, we define the attack efficiency metrics similar to a generic \acrshort{ml} measurers of accuracy --- precision, recall and F1 score.
+				Precision in our setting is defined as the number of words that the model predicted and that are part of an embedded sentence (i.e., true positives) over the total number of predicted words (all positives).
+				Recall is defined as the number of correctly predicted words (true positives) over the number of all words in the sentence (true positives plus false negatives).
+				F1 score is then the harmonic mean of these two:
+				\[
+					\mathsf{F1} = 2 \cdot frac{ \mathsf{precision} \cdot \mathsf{recall} }{ \mathsf{precision} + \mathsf{recall} }
+				\]
+
+				We go a step further in this direction and given the context of the model --- recovering a set of words from a sentence embedding --- also track the fraction of common words (a.k.a., stop-words) in the predicted set.
+				\acrshort{bert} explicitly encourages including the stop-words in the input because their relative position matters for the context and thus embedding.
+				However, the attack only produces an unordered set of words and not their relative position.
+				Therefore, the \emph{model prediction quality}, the F1 score, may seem high, but it may not imply high \emph{attack efficiency}, because a huge fraction of predicted words are common and thus contribute little to added adversary knowledge.
+				We define the list of stop words as pronouns, verb forms of ``be'', ``have'' and ``do'', some modal verbs, compound forms (e.g., ``you'll''), negations, articles, certain prepositions, conjunctions, adverbs and some more high-frequency words\footnote{
+					The list is adapted from the Snowball processing language: \url{http://snowball.tartarus.org/algorithms/english/stop.txt}.
+				}
+				We also include punctuation and digits to the list, as \acrshort{bert} tokenizes these along with the rest of the words.
+
+			\subsubsection{Baselines}\label{section:knn-snapshot:attacks:experiments:baselines}
+
+				\input{figures/fig-knn-epochs}
+
+				We have established two baselines between which the attack performance over encrypted inputs will lie.
+				The first baseline is the attack on the plaintext inputs (referred to as \emph{plaintext attack}), a replica of the original attack from \cite{embedding-attacks}.
+				The second baseline is the attack on the random embeddings (referred to as \emph{random attack}), which, counterintuitively, does not produce close to zero F1 score.
+
+				In both cases, we have trained the attack model for 30 epochs, see F1 score on \cref{figure:knn-epochs}.
+				We note a number of observations:
+				\begin{enumerate*}[label={(\roman*)}]
+					\item we have replicated the efficiency result of the black-box model inversion attack from \cite[Table 2, F1 score, same domain, $\mathcal{L}_{\text{\acrshort{msp}}}$, \acrshort{bert}]{embedding-attacks},
+					\item for the plaintext attack, the F1 score grows only slightly with higher epochs,
+					\item the random attack produces a far-from-negligible F1 score,
+					\item \acrshort{trec} dataset is much less susceptible to the attack than the originally used BookCorpus.
+				\end{enumerate*}
+
+				On this latter observation, we speculate that the reason is in the size of the input document, and to the lesser extent different embedding mechanism.
+				BookCorpus input document, as used in \cite{embedding-attacks}, is merely a sentence, while \acrshort{trec} document is a larger paragraph.
+				We have tuned the maximum token sequence length (shorter sequences are padded, larger one truncated), but it yielded no improvement.
+				From purely combinatorial perspective, we conclude that the larger input looses more information while being embedded in the same-sized vector.
+
+				The case of random attack is puzzling, as one would expect that there is no information to recover from an a-priori information-less (random) inputs.
+				We have dived deeper than F1 score and inspected the actual words that the attack recovered and observed that almost all of them are stop-words and punctuation.
+				That is, the attack merely established that the input document contained a period, coma, ``the'' and ``a'', and it happened to be right some of time.
+				While such inversion technically results in a \SI{30}{\percent} F1 score, it does not necessarily translate into an information leakage or a privacy violation.
+				We therefore include an evaluation of recovered words as part of our larger analysis.
+
+				We have run all experiments for both BookCorpus and \acrshort{trec} datasets, and we have noticed that although the absolute values of attack efficiency are higher for BookCorpus, all relations and correlations are the same for both datasets.
+				We therefore report on the more relevant \acrshort{trec} dataset in the rest of the chapter.
+
+			\subsubsection{Public model}
+
+				For the public model setting we have used the trained model $\Upsilon$ from the baseline experiments and ran it against the encrypted embeddings.
+				That is, for all documents $x$ in $\database_\text{aux}$, we recovered a set of words from the encrypted embeddings $\Upsilon( \algo{Enc}{ \Phi(x) } )$ and compared it to the set of words in the original document $\mathcal{W}(x)$.
+				We have repeated the process for different values of $\beta \in \{ 1.0, \ldots, 50.0 \}$, see \cref{figure:knn-public}.
+
+				\input{figures/fig-knn-public}
+
+				First, we observe that even for $\beta = 0$, the attack efficiency drops sharply compared to the plaintext baseline.
+				We also see that the
+
+
