@@ -333,7 +333,7 @@
 				We note a number of observations:
 				\begin{enumerate*}[label={(\roman*)}]
 					\item we have replicated the efficiency result of the black-box model inversion attack from \cite[Table 2, \FOne{} score, same domain, $\mathcal{L}_{\text{\acrshort{msp}}}$, \acrshort{bert}]{embedding-attacks},
-					\item for the plaintext attack, the \FOne{} score grows only slightly with higher epochs,
+					\item for the plaintext attack, the \FOne{} score grows stops growing after about $10_\text{th}$ epoch,
 					\item the random attack produces a far-from-negligible \FOne{} score,
 					\item \acrshort{trec} dataset is much less susceptible to the attack than the originally used BookCorpus.
 				\end{enumerate*}
@@ -381,6 +381,9 @@
 		Equipped with the empirical data from experiments on search accuracy and attack efficiency, we can correlate these values with the security parameter, the approximation term $\beta$.
 
 		\input{figures/fig-knn-tradeoff}
+
+		% TODO: axis 10pt, legend 8 pt.
+		% TODO: fix manual constants in plots.
 
 
 	\section{Conclusions and future work}
