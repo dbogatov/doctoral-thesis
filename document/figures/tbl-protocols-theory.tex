@@ -16,8 +16,8 @@
 
 		\toprule
 
-		\multirow{2}{*}{Protocol}			& \multicolumn{2}{c}{\acrshort{io} requests}																																			& \multirow{2}{*}{Leakage}						& \multicolumn{2}{c}{Communication}																																										\\ \cline{2-3} \cline{5-6}
-		\rule{0pt}{10pt}					& Construction														& Query																												&												& Construction																						& Query 																							\\
+		\multirow{2}{*}{Protocol}						& \multicolumn{2}{c}{\acrshort{io} requests}																																			& \multirow{2}{*}{Leakage}						& \multicolumn{2}{c}{Communication}																																										\\ \cline{2-3} \cline{5-6}
+		\rule{0pt}{10pt}								& Construction														& Query																												&												& Construction																						& Query 																							\\
 
 		\toprule
 
@@ -25,7 +25,7 @@
 
 		\midrule
 
-		\cite{florian-protocol}				& \makecell{$\bm{\frac{N}{B}}$ \\ \textbf{494 requests}}			& \makecell{$\log_2 \frac{N}{B} + \frac{r}{B}$ \\ 17 requests}														& \textbf{Total order}							& \makecell{$\log_2 N$ \\ 40 / \SI{671}{\byte}}														& \makecell{$\log_2 N$ \\ 86 / \SI{1453}{\byte}}													\\
+		\cite{florian-protocol}							& \makecell{$\bm{\frac{N}{B}}$ \\ \textbf{494 requests}}			& \makecell{$\log_2 \frac{N}{B} + \frac{r}{B}$ \\ 17 requests}														& \textbf{Total order}							& \makecell{$\log_2 N$ \\ 40 / \SI{671}{\byte}}														& \makecell{$\log_2 N$ \\ 86 / \SI{1453}{\byte}}													\\
 
 		\midrule
 
@@ -35,11 +35,11 @@
 
 		\midrule
 
-		\cite{practical-range-search}		& \textbf{---}														& \makecell{$\bm{r}$ \\ \textbf{40 requests}}																		& Same as \acrshort{sse}						& \textbf{---}																						& \makecell{$\log_2 N$ \\ 2 / \SI{391}{\byte}}														\\
+		\cite{practical-range-search}					& \textbf{---}														& \makecell{$\bm{r}$ \\ \textbf{40 requests}}																		& Same as \acrshort{sse}						& \textbf{---}																						& \makecell{$\log_2 N$ \\ 2 / \SI{391}{\byte}}														\\
 
 		\midrule
 
-		\acrshort{oram}						& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ \textbf{31 requests}}	& \makecell{$\bm{{ \log_2 \frac{N}{B} \left( \log_B \frac{N}{B} + \frac{r}{B} \right) }}$ \\ \textbf{185 requests}}	& \makecell{Fully hiding \\ (access pattern)}	& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ \textbf{143 / \SI[detect-all=true]{18}{\kilo\byte}}}	& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ \textbf{490 / \SI[detect-all=true]{63}{\kilo\byte} }}	\\
+		\acrshort{oram}									& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ \textbf{31 requests}}	& \makecell{$\bm{{ \log_2 \frac{N}{B} \left( \log_B \frac{N}{B} + \frac{r}{B} \right) }}$ \\ \textbf{185 requests}}	& \makecell{Fully hiding \\ (access pattern)}	& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ \textbf{143 / \SI[detect-all=true]{18}{\kilo\byte}}}	& \makecell{$\bm{{ \log^2 \frac{N}{B} }}$ \\ \textbf{490 / \SI[detect-all=true]{63}{\kilo\byte} }}	\\
 
 		\bottomrule
 

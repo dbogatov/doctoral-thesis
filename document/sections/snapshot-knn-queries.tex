@@ -304,19 +304,19 @@
 
 			\subsubsection{Attack efficiency metrics}
 
-				In line with \cite{embedding-attacks}, we define the attack efficiency metrics similar to a generic \acrshort{ml} measurers of accuracy --- precision, recall and F1 score.
+				In line with \cite{embedding-attacks}, we define the attack efficiency metrics similar to a generic \acrshort{ml} measurers of accuracy --- precision, recall and \FOne{} score.
 				Precision in our setting is defined as the number of words that the model predicted and that are part of an embedded sentence (i.e., true positives) over the total number of predicted words (all positives).
 				Recall is defined as the number of correctly predicted words (true positives) over the number of all words in the sentence (true positives plus false negatives).
-				F1 score is then the harmonic mean of these two:
+				\FOne{} score is then the harmonic mean of these two:
 				\[
-					\mathsf{F1} = 2 \cdot frac{ \mathsf{precision} \cdot \mathsf{recall} }{ \mathsf{precision} + \mathsf{recall} }
+					\FOne = 2 \cdot \frac{ \mathsf{precision} \cdot \mathsf{recall} }{ \mathsf{precision} + \mathsf{recall} }
 				\]
 
 				We go a step further in this direction and given the context of the model --- recovering a set of words from a sentence embedding --- also track the fraction of common words (a.k.a., stop-words) in the predicted set.
 				\acrshort{bert} explicitly encourages including the stop-words in the input because their relative position matters for the context and thus embedding.
 				However, the attack only produces an unordered set of words and not their relative position.
-				Therefore, the \emph{model prediction quality}, the F1 score, may seem high, but it may not imply high \emph{attack efficiency}, because a huge fraction of predicted words are common and thus contribute little to added adversary knowledge.
-				We define the list of stop words as pronouns, verb forms of ``be'', ``have'' and ``do'', some modal verbs, compound forms (e.g., ``you'll''), negations, articles, certain prepositions, conjunctions, adverbs and some more high-frequency words\footnote{
+				Therefore, the \emph{model prediction quality}, the \FOne{} score, may seem high, but it may not imply high \emph{attack efficiency}, because a huge fraction of predicted words are common and thus contribute little to added adversary knowledge.
+				We define the list of stop words as pronouns, verb forms of ``be'', ``have'' and ``do'', some modal verbs, compound forms (e.g., ``you'll''), negations, articles, certain prepositions, conjunctions, adverbs and some more high-frequency words.\footnote{
 					The list is adapted from the Snowball processing language: \url{http://snowball.tartarus.org/algorithms/english/stop.txt}.
 				}
 				We also include punctuation and digits to the list, as \acrshort{bert} tokenizes these along with the rest of the words.
@@ -327,14 +327,14 @@
 
 				We have established two baselines between which the attack performance over encrypted inputs will lie.
 				The first baseline is the attack on the plaintext inputs (referred to as \emph{plaintext attack}), a replica of the original attack from \cite{embedding-attacks}.
-				The second baseline is the attack on the random embeddings (referred to as \emph{random attack}), which, counterintuitively, does not produce close to zero F1 score.
+				The second baseline is the attack on the random embeddings (referred to as \emph{random attack}), which, counterintuitively, does not produce close to zero \FOne{} score.
 
-				In both cases, we have trained the attack model for 30 epochs, see F1 score on \cref{figure:knn-epochs}.
+				In both cases, we have trained the attack model for 30 epochs, see \FOne{} score on \cref{figure:knn-epochs}.
 				We note a number of observations:
 				\begin{enumerate*}[label={(\roman*)}]
-					\item we have replicated the efficiency result of the black-box model inversion attack from \cite[Table 2, F1 score, same domain, $\mathcal{L}_{\text{\acrshort{msp}}}$, \acrshort{bert}]{embedding-attacks},
-					\item for the plaintext attack, the F1 score grows only slightly with higher epochs,
-					\item the random attack produces a far-from-negligible F1 score,
+					\item we have replicated the efficiency result of the black-box model inversion attack from \cite[Table 2, \FOne{} score, same domain, $\mathcal{L}_{\text{\acrshort{msp}}}$, \acrshort{bert}]{embedding-attacks},
+					\item for the plaintext attack, the \FOne{} score grows only slightly with higher epochs,
+					\item the random attack produces a far-from-negligible \FOne{} score,
 					\item \acrshort{trec} dataset is much less susceptible to the attack than the originally used BookCorpus.
 				\end{enumerate*}
 
@@ -344,9 +344,9 @@
 				From purely combinatorial perspective, we conclude that the larger input looses more information while being embedded in the same-sized vector.
 
 				The case of random attack is puzzling, as one would expect that there is no information to recover from an a-priori information-less (random) inputs.
-				We have dived deeper than F1 score and inspected the actual words that the attack recovered and observed that almost all of them are stop-words and punctuation.
+				We have dived deeper than \FOne{} score and inspected the actual words that the attack recovered and observed that almost all of them are stop-words and punctuation.
 				That is, the attack merely established that the input document contained a period, coma, ``the'' and ``a'', and it happened to be right some of time.
-				While such inversion technically results in a \SI{30}{\percent} F1 score, it does not necessarily translate into an information leakage or a privacy violation.
+				While such inversion technically results in a \SI{30}{\percent} \FOne{} score, it does not necessarily translate into an information leakage or a privacy violation.
 				We therefore include an evaluation of recovered words as part of our larger analysis.
 
 				We have run all experiments for both BookCorpus and \acrshort{trec} datasets, and we have noticed that although the absolute values of attack efficiency are higher for BookCorpus, all relations and correlations are the same for both datasets.
@@ -360,7 +360,34 @@
 
 				\input{figures/fig-knn-public}
 
-				First, we observe that even for $\beta = 0$, the attack efficiency drops sharply compared to the plaintext baseline.
-				We also see that the
+				We observe that even for $\beta = 0$, the attack efficiency drops sharply compared to the plaintext baseline.
+				We also see that the metric values drop further as $\beta$ increase, starting slowly for small $\beta$, then accelerating for $\beta$ 10 to 30 and than slowing down again as the values get close to the random baseline.
+				Finally, we note that the fraction of stop-words grows fast as the security increases.
+
+			\subsubsection{Private model}
+
+				For the private model experiments we have trained the model $\Upsilon$ on the already encrypted embeddings for 30 epochs.
+				That is, the model $\Upsilon$ is trained on $ ( \algo{Enc}{ \Phi(x) }, \mathcal{W}(x) ) $ pairs from the training dataset and then we run predictions for the auxillary encrypted embedding, similar to public model.
+				The training and validation datasets are encrypted with the same set of public and private parameters (i.e., same key \key{}, $s$ and $\beta$).
+
+				\input{figures/tbl-knn-private}
+
+				We have chosen the $\beta$ values of $0.0$ and $4.0$ as well as random embeddings to produce the datasets, see \cref{table:knn-private}.
+				We immediately notice that the attack model accuracy metrics are similar among all three datasets, with $\beta = 4.0$ and random being almost equal.
+				This result implies that for the case of private model --- when the adversary has only black-box access to the system as a whole --- the protection by the \acrshort{dcpe} is absolute.
+
+	\section{Search accuracy against security tradeoff}
+
+		Equipped with the empirical data from experiments on search accuracy and attack efficiency, we can correlate these values with the security parameter, the approximation term $\beta$.
+
+		\input{figures/fig-knn-tradeoff}
+
+
+	\section{Conclusions and future work}
+
+		Try other attacks.
+
+
+
 
 
