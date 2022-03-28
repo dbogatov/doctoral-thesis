@@ -39,31 +39,31 @@
 				Finally, we analyze the correlation results for search accuracy and attack efficiency and conclude on practicality of our method.
 		\end{itemize}
 
-	\section{Related Work}
+		\subsection{Related Work}
 
-		Work in this area is naturally split into two groups --- mechanisms and constructions that offer certain security guarantees for nearest-neighbor queries, and attacks against those constructions.
+			Work in this area is naturally split into two groups --- mechanisms and constructions that offer certain security guarantees for nearest-neighbor queries, and attacks against those constructions.
 
-		A work immediately related to ours is that of \textcite{quick-n}.
-		QuickN offers an adaptation of nearest-neighbor search algorithm in conventional tree data structures (i.e., R-trees) to well-established \acrfull{ope} schemes.
-		Unlike our solution that involves a novel property-preserving encryption scheme specifically designed for high-dimensional vectors, QuickN encrypts each vector dimension separately with \acrshort{ope}.
-		\cite{quick-n} includes the experiments with attacks against their solution (attack of \textcite{leakage-abuse-grubs-2017}) and report high degree of protection against them.
+			A work immediately related to ours is QuickN by \textcite{quick-n}.
+			QuickN offers an adaptation of nearest-neighbor search algorithm in conventional tree data structures (i.e., R-trees) to well-established \acrfull{ope} schemes.
+			Unlike our solution that involves a novel property-preserving encryption scheme specifically designed for high-dimensional vectors, QuickN encrypts each vector dimension separately with \acrshort{ope}.
+			\cite{quick-n} includes the experiments with attacks against their solution (attack by \textcite{leakage-abuse-grubs-2017}) and report high degree of protection against them.
 
-		QuickN approach of applying \acrshort{ope} to an R-tree, however, has some disadvantages.
-		First, an ideal stateless \acrshort{ope} has been shown inferior (\cite{ope-leakage}) to its counterpart, an \acrfull{ore} in which the comparison over ciphertexts is defined explicitly.\footnote{
-			\cite{quick-n} uses mOPE \cite{ope-ideal-security-protocol} which is an interactive protocol and not a traditional lightweight stateless \acrshort{ope} like \cite{bclo-ope}.
-			Since mOPE is an ideal (though stateful) \acrshort{ope}, \cite{quick-n} do not include \acrshort{ope} leakage in their security definition.
-		}
-		An \acrshort{ore}, in turn, can have a varying level of security, with the higher security level translating into lower comparison performance.
-		In QuickN, an R-tree-based nearest-neighbor algorithm involves a very high number of comparisons, linear in data dimensionality.
-		With the cost of comparison no longer negligible, the overhead of query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
-		Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positive results even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
+			QuickN approach of applying \acrshort{ope} to an R-tree, however, has some disadvantages.
+			First, an ideal stateless \acrshort{ope} has been shown inferior (\cite{ope-leakage}) to its counterpart, an \acrfull{ore} in which the comparison over ciphertexts is defined explicitly.\footnote{
+				\cite{quick-n} uses mOPE \cite{ope-ideal-security-protocol} which is an interactive protocol and not a traditional lightweight stateless \acrshort{ope} like \cite{bclo-ope}.
+				Since mOPE is an ideal (though stateful) \acrshort{ope}, \cite{quick-n} do not include \acrshort{ope} leakage in their security definition.
+			}
+			An \acrshort{ore}, in turn, can have a varying level of security, with the higher security level translating into lower comparison performance \cite{ore-benchmark-17}.
+			In QuickN, an R-tree-based nearest-neighbor algorithm involves a very high number of comparisons, linear in data dimensionality.
+			With the cost of comparison no longer negligible, the overhead of query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
+			Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positive results even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
 
-		\textcite{knn-aspe} offer a novel scheme, ASPE, that preserves a special type of scalar product.
-		ASPE is then naturally integrated in existing \acrshort{knn} algorithms that rely on a scalar product.
-		\cite{knn-aspe} is similar to ours in that we also apply a property-preserving encryption scheme to existing \acrshort{knn} algorithms.
-		ASPE is different in that it preserves a scalar product while we preserve an L2 distance comparison, and ASPE has been broken in \cite{secure-nn-revisited-break-aspe} (although an attack is a chosen plaintext attack, i.e., one cannot decrypt a random ciphertext).
+			\textcite{knn-aspe} offer a novel scheme, ASPE, that preserves a special type of scalar product.
+			ASPE is then naturally integrated in existing \acrshort{knn} algorithms that rely on a scalar product.
+			\cite{knn-aspe} is similar to ours in that we also apply a property-preserving encryption scheme to existing \acrshort{knn} algorithms.
+			ASPE is different in that it preserves a scalar product while we preserve an $\text{L}_2$ distance comparison, and ASPE has been broken in \cite{secure-nn-revisited-break-aspe} (although an attack is a chosen plaintext attack, i.e., one cannot decrypt a random ciphertext).
 
-		Other works either target different aspects of query security, like integrity and soundness of results \cite{knn-integrity-soundness,svknn}, or involve mechanisms other than property-preserving encryption \cite{seceqp,practical-approx-knn,knn-sharing-keys,knn-mult-data-owners,knn-over-encrypted,knn-paillier,knn-blind,knn-homomorphism,knn-strong-location-privacy,knn-no-anonymizers,knn-efficient,knn-new-casper}.
+			Other works either target different aspects of query security, like integrity and soundness of results \cite{knn-integrity-soundness,svknn}, or involve mechanisms other than property-preserving encryption \cite{seceqp,practical-approx-knn,knn-sharing-keys,knn-mult-data-owners,knn-over-encrypted,knn-paillier,knn-blind,knn-homomorphism,knn-strong-location-privacy,knn-no-anonymizers,knn-efficient,knn-new-casper}.
 
 	\section{\texorpdfstring{\acrlong{dcpe}}{Distance Comparison Preserving Encryption}}
 
@@ -86,22 +86,22 @@
 				\forall x, y, z \in \mathbb{X} : \algo{Dist}{x, y} < \algo{Dist}{x, z} - \beta \\
 				\implies \algo{Dist}{f(x), f(y)} < \algo{Dist}{f(x), f(z)}
 			\end{multline*}
-			where $\mathbb{X} \subseteq \mathbb{R}^d$ is the set of $d$-dimensional vectors of real numbers, \algo{Dist} is the inner product distance over elements in $\mathbb{X}$, and $\beta$ is the approximation term.
+			where $\mathbb{X} \subseteq \mathbb{R}^d$ is the set of $d$-dimensional vectors of real numbers, \algo{Dist} is the $\text{L}_2$ distance over elements in $\mathbb{X}$, and $\beta$ is the approximation term.
 			Parameter $\beta$ partially defines the security of the encrypted set --- the larger $\beta$, the fewer distance comparisons are preserved, the less accurate the search and the reconstruction attacks would be.
-			\textcite{dcpe} prove protection against membership inference attacks \cite{memebership-inference-attacks-knn} (whether an individual is in the database or not), and against approximate frequency-finding attacks (how many times the element appears in the set, see \cite{leakage-abuse-grubs-2017} for \acrshort{ore} frequency attacks).
-			As for the choice of $\beta$, \textcite{dcpe} proves that $\beta \approx \sqrt{\max N}$ would hide about half of the input bits, for $\max N$ being the maximum vector length in the dataset.
+			\textcite{dcpe} prove protection against membership inference attacks \cite{memebership-inference-attacks-knn} (whether an individual is in the database or not), and against the approximate frequency-finding attacks (how many times the element appears in the set, see \cite{leakage-abuse-grubs-2017} for \acrshort{ore} frequency attacks).
+			As for the choice of $\beta$, \textcite{dcpe} prove that $\beta \approx \sqrt{\max N}$ would hide about half of the input bits, for $\max N$ being the maximum vector length in the dataset.
 
 			\input{figures/alg-dcpe}
 
-			\textcite{dcpe} offer an instantiation of the $\beta$-\acrshort{dcpe} scheme (though not an implementation) that we have adapted for our needs and show on \cref{algorithm:dcpe}.
+			\textcite{dcpe} offer an instantiation of the $\beta$-\acrshort{dcpe} scheme (though not an implementation) that we have adapted to our needs and show on \cref{algorithm:dcpe}.
 
 			The \algo{KeyGen} procedure generates a key \key{} and an amplification factor $s$.
 
-			The \algo{Enc} procedure ``encrypts'' an object by moving it in space in a way that it is hard to recover its original position and its distance-comparison respective to other encrypted points is preserved.
+			The \algo{Enc} procedure ``encrypts'' an object by moving it in space in a way that makes it hard to recover its original position and its distance-comparison respective to other encrypted points is preserved.
 			The algorithm first constructs a hyperball of radius $\beta$, the approximation term, around the input point.
 			The routine then samples a new point uniformly inside that hyperball.
 			Finally, that new point is projected into the ciphertext point according to the amplification factor $s$.
-			Note that for each encryption the scheme generates a nonce $n$ and uses it along with the key \key{} to generate the coins for the samplers.
+			Note that for each encryption the scheme generates a fresh nonce $n$ and uses it along with the key \key{} to generate the coins for the samplers.
 			That is, the point in the $\beta$-hyperball is deterministically set from the nonce (unique per point) and the key (one for all points), and the final ciphertext is scaled the same way for all points.
 			The \algo{Dec} procedure makes the same steps in reverse correctly setting the point in the hyperball using the nonce and the key.
 			See \cref{figure:dcpe} for a visual example of \acrshort{dcpe} encryption.
@@ -132,7 +132,7 @@
 				\url{https://github.com/private-knn/dcpe}
 			}
 			The code is documented, tested and benchmarked, see \cref{table:dcpe-benchmarks}.
-			Observe that the difference in performance between encryption and decryption is predictably minimal, and the overhead of encryption grows slower than linearly with dimensionality.
+			Observe that the difference in performance between encryption and decryption is predictably minimal, and the overhead of encryption grows slower-than-linearly with dimensionality.
 .
 			\input{figures/tbl-dcpe-benchmarks}
 
@@ -170,7 +170,7 @@
 			The actual experiment is conducted as follows.
 			First, we produce a set of embeddings for 8.8 million documents and 200 queries from \acrshort{trec} 2020 dataset.
 			We observed that the maximum length of an embedding vector is about 11 units.
-			Second, we encrypt the data and queries embeddings using \acrshort{dcpe} and ranging $\beta$ from 0 (meaning exact distance-comparison) to 50, with $\beta = \sqrt{11} \approx 3.3$ hiding about half of the bits of input embeddings.
+			Second, we encrypt the data and queries embeddings using \acrshort{dcpe} and range $\beta$ from 0 (meaning exact distance-comparison) to 50, with $\beta = \sqrt{11} \approx 3.3$ hiding about half of the bits of input embeddings.
 			Third, we run the nearest neighbor search on these pairs of data and queries sets using \acrshort{faiss} \cite{faiss}, a \acrshort{gpu}-enabled library for efficient similarity search and clustering of dense vectors.
 			Finally, we report a range of ranking quality metrics and generic \acrshort{knn} result metrics.
 
@@ -188,7 +188,7 @@
 				where $\mathbb{Q}$ is the sample of queries and $\mathsf{rank}_i$ is the rank position of the first relevant document for the $i_\text{th}$ query.
 
 				\acrfull{ndcg} is another measure of ranking quality most used in web search engine algorithms.
-				Its main goal is to produce a metric that would promote these two assumptions.
+				Its main goal is to produce a metric that would promote the following two assumptions.
 				First, documents' relevance implies its usefulness, and second, highly relevant documents are more useful if they have higher rank (appear earlier in result list).
 				\acrshort{ndcg} is a normalized version of discounted cumulative gain, and is defined as the actual over ideal gain up to a position $p$
 				\[
@@ -202,29 +202,29 @@
 
 				To keep track of the isolated effect of the approximation factor on the \acrshort{knn} results, we also report the set difference and Damerau-Levenshtein distance \cite{levenshtein-distance,damerau-distance} of actual and expected \acrshort{knn} results.
 				Result distance is measured as the minimal number of insert, delete and swap operations to get one set from the other.
-				The inclusion of swap operation make metric penalize less the case when the search returned the correct set with only a few documents transposed.
-				This property is especially useful for us since the approximate distance-comparison preservation results exactly in this kind of small error in the output.
+				The inclusion of swap operation makes metric penalize less the case when the search returned the correct set with only a few documents transposed.
+				This property is especially useful for us since the approximate distance comparison preservation results exactly in this kind of small error in the output.
 				Result difference is simply a set difference of two outputs.
-				This metric does not penalize the wrong order of documents as long as all $k$ relevant document are present.
+				This metric does not penalize the wrong order of documents as long as all $k$ relevant documents are present.
 				For the ease of exposition, we report these two metrics as the fraction of total number of returned documents.
-				That is, for \num{1000} returned documents the distance of
+				That is, for \num{1000} returned documents the distance of \num{853} would be reported as \SI{85.3}{\percent}.
 
 			\subsection{Results for varying $\beta$}
 
 				\input{figures/fig-knn-search-coarse}
 
 				We have run two sets of experiments to see how these metrics change with varying security parameter $\beta$.
-				For first set of $\beta$ values, we ranged the parameter from 0 to 50 with increment of $1.0$, see \cref{figure:knn-search-coarse}.
-				Higher values of $\beta$ predictably degraded the search accuracy, but we wanted to see how quickly and since which values of $\beta$ the accuracy starts to fall noticeably.
+				For first the set of $\beta$ values, we ranged the parameter from 0 to 50 with increment of $1.0$, see \cref{figure:knn-search-coarse}.
+				Higher values of $\beta$ predictably degraded the search accuracy, but we wanted to see how quickly and after which values of $\beta$ the accuracy starts to fall noticeably.
 
-				First, we notice that the result difference grows close to linearly with $\beta$, which means that each new security level knocks out a few correct response from the set proportionally.
-				Second, we see that the result distance jumps immediately to almost \SI{100}{\percent}, which means that even tiny approximation term significantly perturbs the order of the responses, but not given low difference, not the content of the result.
+				First, we notice that the result difference grows close to linearly with $\beta$, which means that each new security level knocks out a few correct responses from the set proportionally.
+				Second, we see that the result distance jumps immediately to almost \SI{100}{\percent}, which means that even tiny approximation term significantly perturbs the order of the responses, but given low difference, not the content of the result.
 				Finally, we observe that at about $\beta = 9$, the \acrshort{trec} metrics start to fall sharply and throughout the entire range of $\beta$ they fall in accord.
 
 				For the maximum vector length of 11, the $\beta$ value that hides half of the input bits is $\beta = \sqrt{11} \approx 3.3$.
 				To see the metrics behavior at around this point, we ran the experiments again, now ranging $\beta$ in finer manner, from $0.0$ to $5.0$ with the increment of $0.1$, see \cref{figure:knn-search-fine}.
 				We confirm that for $\beta = \sqrt{\max N}$, the values of the ranking quality metrics are sufficiently close to the plaintext values.
-				\emph{We therefore conclude that protection \acrshort{dcpe} offer comes cheap in terms of search accuracy.}
+				\emph{We therefore conclude that the bit-security \acrshort{dcpe} offers comes cheap in terms of search accuracy.}
 
 				\input{figures/fig-knn-search-fine}
 
@@ -268,7 +268,7 @@
 
 			A disadvantage of \acrshort{mlc} model is that it predicts all words independently.
 			\textcite{embedding-attacks} therefore offer a more sophisticated approach based on \cite{msp}.
-			A \acrfull{msp} recurrent neural network predicts the next word in the set conditioned on the embedding $\Phi( x )$ and the up to date predicted set of words.
+			A \acrfull{msp} recurrent neural network predicts the next word in the set conditioned on the embedding $\Phi( x )$ and the up-to-date predicted set of words.
 			The objective function is
 			\[
 				\mathcal{L}_{\text{\acrshort{msp}}} = \sum_{ i = 1 }^\ell \frac{1}{| \mathcal{W}_i |} \sum_{w \in \mathcal{W}_i } - \log \Pr_\Upsilon( w | \mathcal{W}_{ < i }, \Phi( x ) )
@@ -282,11 +282,11 @@
 				\url{https://github.com/google/embedding-tests}
 			}
 			The model $\Upsilon$ is implemented as a one-layer \acrshort{lstm} with \num{300} hidden units.
-			the model is trained for 30 epochs with Adam optimizer \cite{adam-optimizer}, learning rate of $10^{-3}$ and batch size of 256.
+			The model is trained for 30 epochs with Adam optimizer \cite{adam-optimizer}, learning rate of $10^{-3}$ and batch size of 256.
 			The actual implementation uses TensorFlow \cite{tensorflow} (version 1) and is naturally optimized for \acrshort{gpu} training.
 
 			We run two sets of experiments corresponding to two adversarial settings.
-			First, similar to \cite{embedding-attacks}, we assume that the adversary has a black-box access to the embedding model $\Phi$ and can use it to train $\Upsilon$, and we call this experiment an \emph{public model}.
+			First, similar to \cite{embedding-attacks}, we assume that the adversary has a black-box access to the embedding model $\Phi$ and can use it to train $\Upsilon$, and we call this experiment a \emph{public model}.
 			This setting corresponds to a scenario when the system uses some open embedding model with little to no alterations (i.e., Google AI Platform Training\footnote{
 				\url{https://cloud.google.com/ai-platform/training/docs/algorithms/bert}
 			}).
@@ -299,7 +299,7 @@
 			For both experiments we have used two datasets.
 			The first dataset is a BookCorpus \cite{bookcorpus} that \textcite{embedding-attacks} used.
 			With this dataset we have been able to verify that our adapted attack implementation produces similar results to original \cite{embedding-attacks}.
-			The second dataset is the \acrshort{trec}, same as in \cref{section:knn-snapshot:search}.
+			The second dataset is the \acrshort{trec} 2020, same as in \cref{section:knn-snapshot:search}.
 			With this dataset we can link together the search accuracy and attack efficiency for the same levels of security.
 
 			\subsubsection{Attack efficiency metrics}
@@ -319,13 +319,13 @@
 				We define the list of stop words as pronouns, verb forms of ``be'', ``have'' and ``do'', some modal verbs, compound forms (e.g., ``you'll''), negations, articles, certain prepositions, conjunctions, adverbs and some more high-frequency words.\footnote{
 					The list is adapted from the Snowball processing language: \url{http://snowball.tartarus.org/algorithms/english/stop.txt}.
 				}
-				We also include punctuation and digits to the list, as \acrshort{bert} tokenizes these along with the rest of the words.
+				We also include punctuation and digits in the list, as \acrshort{bert} tokenizes these along with the rest of the words.
 
 			\subsubsection{Baselines}\label{section:knn-snapshot:attacks:experiments:baselines}
 
 				\input{figures/fig-knn-epochs}
 
-				We have established two baselines between which the attack performance over encrypted inputs will lie.
+				We have established two baselines between which the attack performance over encrypted inputs is assumed to lie.
 				The first baseline is the attack on the plaintext inputs (referred to as \emph{plaintext attack}), a replica of the original attack from \cite{embedding-attacks}.
 				The second baseline is the attack on the random embeddings (referred to as \emph{random attack}), which, counterintuitively, does not produce close to zero \FOne{} score.
 
@@ -333,20 +333,20 @@
 				We note a number of observations:
 				\begin{enumerate*}[label={(\roman*)}]
 					\item we have replicated the efficiency result of the black-box model inversion attack from \cite[Table 2, \FOne{} score, same domain, $\mathcal{L}_{\text{\acrshort{msp}}}$, \acrshort{bert}]{embedding-attacks},
-					\item for the plaintext attack, the \FOne{} score grows stops growing after about $10_\text{th}$ epoch,
+					\item for the plaintext attack, the \FOne{} score stops growing after about $10_\text{th}$ epoch,
 					\item the random attack produces a far-from-negligible \FOne{} score,
 					\item \acrshort{trec} dataset is much less susceptible to the attack than the originally used BookCorpus.
 				\end{enumerate*}
 
 				On this latter observation, we speculate that the reason is in the size of the input document, and to the lesser extent different embedding mechanism.
 				BookCorpus input document, as used in \cite{embedding-attacks}, is merely a sentence, while \acrshort{trec} document is a larger paragraph.
-				We have tuned the maximum token sequence length (shorter sequences are padded, larger one truncated), but it yielded no improvement.
-				From purely combinatorial perspective, we conclude that the larger input looses more information while being embedded in the same-sized vector.
+				We have tuned the maximum token sequence length (shorter sequences are padded, larger ones are truncated), but it yielded no improvement.
+				From a purely combinatorial perspective, we conclude that the larger input looses more information while being embedded in the same-sized vector.
 
 				The case of random attack is puzzling, as one would expect that there is no information to recover from an a-priori information-less (random) inputs.
 				We have dived deeper than \FOne{} score and inspected the actual words that the attack recovered and observed that almost all of them are stop-words and punctuation.
-				That is, the attack merely established that the input document contained a period, coma, ``the'' and ``a'', and it happened to be right some of time.
-				While such inversion technically results in a \SI{30}{\percent} \FOne{} score, it does not necessarily translate into an information leakage or a privacy violation.
+				That is, the attack merely established that the input document contained a period, coma, ``the'' and ``a'', and it happened to be right some of the time.
+				While such inversion technically results in an \FOne{} score as high as about \SI{22}{\percent}, it does not necessarily translate into an information leakage or a privacy violation.
 				We therefore include an evaluation of recovered words as part of our larger analysis.
 
 				We have run all experiments for both BookCorpus and \acrshort{trec} datasets, and we have noticed that although the absolute values of attack efficiency are higher for BookCorpus, all relations and correlations are the same for both datasets.
@@ -361,20 +361,20 @@
 				\input{figures/fig-knn-public}
 
 				We observe that even for $\beta = 0$, the attack efficiency drops sharply compared to the plaintext baseline.
-				We also see that the metric values drop further as $\beta$ increase, starting slowly for small $\beta$, then accelerating for $\beta$ 10 to 30 and than slowing down again.
+				We also see that the metric values drop further as $\beta$ increases, starting slowly for small $\beta$, then accelerating for $\beta$ 10 to 30 and then slowing down again.
 				Interestingly, we observe that the attack efficiency dives below the lower baseline, the random embeddings.
-				We conclude that $\beta \approx 27$, which is about 2.5 times the maximum length of the input vector, produces the security equivalent to symmetric encryption.
+				We conclude that $\beta \approx 27$, which is about 2.5 times the maximum length of the input vectors, produces the security equivalent to symmetric encryption.
 				Finally, we note that the fraction of stop-words grows fast as the security increases.
 
 			\subsubsection{Private model}
 
 				For the private model experiments we have trained the model $\Upsilon$ on the already encrypted embeddings for 30 epochs.
-				That is, the model $\Upsilon$ is trained on $ ( \algo{Enc}{ \Phi(x) }, \mathcal{W}(x) ) $ pairs from the training dataset and then we run predictions for the auxillary encrypted embedding, similar to public model.
+				That is, the model $\Upsilon$ is trained on $ ( \algo{Enc}{ \Phi(x) }, \mathcal{W}(x) ) $ pairs from the training dataset and then we run predictions for the encrypted auxillary embeddings, similar to public model.
 				The training and validation datasets are encrypted with the same set of public and private parameters (i.e., same key \key{}, $s$ and $\beta$).
 
 				\input{figures/tbl-knn-private}
 
-				We have chosen the $\beta$ values of $0.0$ and $4.0$ as well as random embeddings to produce the datasets, see \cref{table:knn-private}.
+				We have chosen $\beta$ values of $0.0$ and $4.0$ as well as random embeddings to produce the datasets, see \cref{table:knn-private}.
 				We immediately notice that the attack model accuracy metrics are similar among all three datasets, with $\beta = 4.0$ and random being almost equal.
 				This result implies that for the case of private model --- when the adversary has only black-box access to the system as a whole --- the protection by the \acrshort{dcpe} is absolute.
 
@@ -384,17 +384,17 @@
 
 		\input{figures/fig-knn-tradeoff}
 
-		We note that the accuracy degrades faster than attack efficiency, which implies that there is a tradeoff between functionality and security.
-		Depending on the accuracy loss that the application can tolerate, the plot on \cref{figure:knn-tradeoff} can tell what the level of protection against the inversion attack would be at that level.
-		This plot also demonstrates the levels of accuracy and security for the $\beta$ as a derivative of the dataset, in particular, the length of the longest embedding vector $\max N$.
+		We note that the search accuracy degrades faster than attack efficiency, which implies that there is a tradeoff between functionality and security.
+		Depending on the accuracy loss that the application can tolerate, the plot on \cref{figure:knn-tradeoff} can tell what level of protection against the inversion attack would be at that search accuracy.
+		This plot also demonstrates the levels of accuracy and security for the $\beta$ as a derivative of the dataset, in particular, the length of the longest vector embedding $\max N$.
 
-		We observe that at $\beta = \sqrt{\max N}$, the accuracy corresponds to a plaintext dataset and the attack efficiency has dropped significantly compared to the plaintext version.
-		We also see that at $\beta = \max N$ both accuracy and attack efficiency drop insubstantially compared to $\beta = \sqrt{\max N}$.
+		We observe that at $\beta = \sqrt{\max N}$, the search accuracy corresponds to a plaintext dataset and the attack efficiency has dropped significantly compared to the plaintext version.
+		We also see that at $\beta = \max N$ both search accuracy and attack efficiency drop insubstantially compared to $\beta = \sqrt{\max N}$.
 		Finally, we note that at $\beta = 2 \cdot \max N$, although both measures drop significantly, after that point the accuracy goes down much faster, which implies that increasing $\beta$ beyond twice the longest vector size is pessimal.
 		This value of $\beta$ is also close to a point where the attack \FOne{} score intercepts the \FOne{} score of a random embedding attack, which further confirms that this value of $\beta$ is optimal.
 
-		\emph{Given the significant drop of attack efficiency for smaller $\beta$ while retaining almost optimal search accuracy, we conclude that the method of applying a \acrlong{dcpe} to embedding to secure \acrshort{knn} queries is efficient.}
-		The system we developed is also highly tuneable, with the $\beta$ corresponding to the application-specific accuracy and security requirements.
+		\emph{Given the significant drop of attack efficiency for smaller $\beta$ while retaining almost optimal search accuracy, we conclude that our method of applying a \acrlong{dcpe} to an embedding to protect \acrshort{knn} queries is efficient.}
+		The system we developed is also highly tuneable, with $\beta$ corresponding to the application-specific accuracy and security requirements.
 		Finally, the construction is cheap in terms of performance and functionality --- the encryption of inputs is very fast and is done only once as a preprocessing step, and the existing algorithms work naturally over encrypted data.
 
 		% TODO: axis 10pt, legend 8 pt.
@@ -408,11 +408,11 @@
 
 		\subsubsection{Future Work}
 
-			An immediate deeper analysis of inversion attack over encrypted embeddings may include an evaluation of the words that the attack model returns beyond simple matching against a set of stop-words.
+			An immediate deeper analysis of inversion attack over encrypted embeddings may include an evaluation of the words that the attack model returns beyond simple matching against the set of stop-words.
 			It is reasonable to assume that with stronger encryption the \emph{quality} of the predicted words may degrade, where the quality may be defined as the frequency of a word in the vocabulary, for example.
 
-			Another direction can be running other attack attacks against the embedding, beyond the inversion attack.
-			These may be some of the \textcite{embedding-attacks} or adapting lots of general attacks against \acrshort{ml} models, like membership attacks \cite{membership-attacks,enhanced-membership-attacks}.
+			Another direction can be running other attacks against the embedding, beyond the inversion attack.
+			These may be some of the \textcite{embedding-attacks} attacks or adaptations of lots of general attacks against \acrshort{ml} models, like membership attacks \cite{membership-attacks,enhanced-membership-attacks}.
 
 			Finally, the \acrshort{dcpe} adapted from \cite{dcpe} preserves Euclidean distance.
 			It would be interesting to explore which results the inner-product distance comparison preserving encryption would produce.
