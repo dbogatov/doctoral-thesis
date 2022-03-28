@@ -7,7 +7,7 @@
 
 	\section{Introduction}
 
-		Nearest-neighbor search is a type of optimization problem that, given a set of objects and a distance metric, requires finding the object closest to a given object according to the distance metric.
+		Nearest-neighbor search is a type of optimization problem that, given a set of objects and a distance metric, requires finding the object closest to a given point according to the distance metric.
 		A \acrfull{knn} search is a subtype of a general nearest-neighbor problem where $k$ closest objects are requested.
 		Applications that use \acrshort{knn} search only need to define the objects and the metric.
 		For example, a street map application would define the 2D coordinates of the buildings as objects and Euclidean distance as a metric, then the query could be ``give 5 restaurants closest to the current user position''.
@@ -16,7 +16,7 @@
 		In this chapter we propose a method and an analysis of running secure \acrshort{knn} queries in outsourced database model.
 		We model our application as a generic document similarity search, where the server stores the embeddings of the documents and returns $k$ closest records to the query embedding.
 		We propose to apply a type of property-preserving encryption over the embeddings on the server while retaining its ability to do nearest-neighbor search.
-		Finally, we simulate an attack against the records --- an \acrshort{ml}-based inversion attack that aims to recover the set of words of a document from its embeddings.
+		Finally, we simulate an attack against the records --- an \acrshort{ml}-based inversion attack that aims to recover the set of words of a document from its embedding.
 		Our goal is to observe and study the correlation of the security parameter with search accuracy and attack efficiency.
 
 		To summarize, our contributions in this work are as follows:
@@ -361,7 +361,9 @@
 				\input{figures/fig-knn-public}
 
 				We observe that even for $\beta = 0$, the attack efficiency drops sharply compared to the plaintext baseline.
-				We also see that the metric values drop further as $\beta$ increase, starting slowly for small $\beta$, then accelerating for $\beta$ 10 to 30 and than slowing down again as the values get close to the random baseline.
+				We also see that the metric values drop further as $\beta$ increase, starting slowly for small $\beta$, then accelerating for $\beta$ 10 to 30 and than slowing down again.
+				Interestingly, we observe that the attack efficiency dives below the lower baseline, the random embeddings.
+				We conclude that $\beta \approx 27$, which is about 2.5 times the maximum length of the input vector, produces the security equivalent to symmetric encryption.
 				Finally, we note that the fraction of stop-words grows fast as the security increases.
 
 			\subsubsection{Private model}
@@ -382,15 +384,35 @@
 
 		\input{figures/fig-knn-tradeoff}
 
+		We note that the accuracy degrades faster than attack efficiency, which implies that there is a tradeoff between functionality and security.
+		Depending on the accuracy loss that the application can tolerate, the plot on \cref{figure:knn-tradeoff} can tell what the level of protection against the inversion attack would be at that level.
+		This plot also demonstrates the levels of accuracy and security for the $\beta$ as a derivative of the dataset, in particular, the length of the longest embedding vector $\max N$.
+
+		We observe that at $\beta = \sqrt{\max N}$, the accuracy corresponds to a plaintext dataset and the attack efficiency has dropped significantly compared to the plaintext version.
+		We also see that at $\beta = \max N$ both accuracy and attack efficiency drop insubstantially compared to $\beta = \sqrt{\max N}$.
+		Finally, we note that at $\beta = 2 \cdot \max N$, although both measures drop significantly, after that point the accuracy goes down much faster, which implies that increasing $\beta$ beyond twice the longest vector size is pessimal.
+		This value of $\beta$ is also close to a point where the attack \FOne{} score intercepts the \FOne{} score of a random embedding attack, which further confirms that this value of $\beta$ is optimal.
+
+		\emph{Given the significant drop of attack efficiency for smaller $\beta$ while retaining almost optimal search accuracy, we conclude that the method of applying a \acrlong{dcpe} to embedding to secure \acrshort{knn} queries is efficient.}
+		The system we developed is also highly tuneable, with the $\beta$ corresponding to the application-specific accuracy and security requirements.
+		Finally, the construction is cheap in terms of performance and functionality --- the encryption of inputs is very fast and is done only once as a preprocessing step, and the existing algorithms work naturally over encrypted data.
+
 		% TODO: axis 10pt, legend 8 pt.
 		% TODO: fix manual constants in plots.
 
+	\section{Conclusions}
 
-	\section{Conclusions and future work}
+		In this work we have developed and analyzed the mechanism of answering \acrshort{knn} queries securely in outsourced setting.
+		We have adapted a \acrshort{dcpe} scheme, ran experiments on search accuracy and inversion attack efficiency over encrypted inputs.
+		We have analyzed the correlation between the accuracy and security, and have concluded on viability and efficiency of the general approach.
 
-		Try other attacks.
+		\subsubsection{Future Work}
 
+			An immediate deeper analysis of inversion attack over encrypted embeddings may include an evaluation of the words that the attack model returns beyond simple matching against a set of stop-words.
+			It is reasonable to assume that with stronger encryption the \emph{quality} of the predicted words may degrade, where the quality may be defined as the frequency of a word in the vocabulary, for example.
 
+			Another direction can be running other attack attacks against the embedding, beyond the inversion attack.
+			These may be some of the \textcite{embedding-attacks} or adapting lots of general attacks against \acrshort{ml} models, like membership attacks \cite{membership-attacks,enhanced-membership-attacks}.
 
-
-
+			Finally, the \acrshort{dcpe} adapted from \cite{dcpe} preserves Euclidean distance.
+			It would be interesting to explore which results the inner-product distance comparison preserving encryption would produce.

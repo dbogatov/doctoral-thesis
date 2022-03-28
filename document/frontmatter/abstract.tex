@@ -9,7 +9,8 @@ The thesis then proceeds with \epsolute{} --- an efficient range query engine in
 In \epsolute{}, security is achieved in a setting with a much stronger adversary where she can continuously observe everything on the server, and leaking even the result size can enable a reconstruction attack.
 \epsolute{} proposes a definition, construction, analysis, and experimental evaluation of a system that provably hides both access pattern and communication volume while remaining efficient.
 
-The dissertation concludes with the analysis of secure \acrlong{knn} queries, in which the security is achieved similarly to \acrshort{ope}/\acrshort{ore} solutions --- encrypting the input with an approximate \acrlong{dcpe} scheme so that the inputs are perturbed, but the query algorithm still produces accurate results.
+The dissertation concludes with the analysis of secure \acrlong{knn} queries, in which the security is achieved similarly to \acrshort{ope}/\acrshort{ore} solutions --- encrypting the input with an approximate \acrlong{dcpe} scheme so that the inputs, the points in a hyperspace, are perturbed, but the query algorithm still produces accurate results.
 In the analysis, we adapt and run a series of experiments to observe the tradeoff between search accuracy and attack effectiveness.
 We use \acrshort{trec} datasets and queries for the search, and track the accuracy metrics such as \acrshort{mrr} and \acrshort{ndcg}.
 For the attacks, we build an \acrshort{lstm} model that trains on the correlation between a sentence and its embedding and then predicts words from the embedding.
+We conclude on viability and practicality of the solution.
