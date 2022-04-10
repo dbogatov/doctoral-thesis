@@ -1,7 +1,7 @@
 \chapter{Background}\label{section:background}
 \thispagestyle{myheadings}
 
-	In this section, I will go over the building blocks required to construct the outsourced database systems and their components that I will discuss in the next chapters.
+	In this section, we will go over the building blocks required to construct the outsourced database systems and their components that we will discuss in the next chapters.
 	These prerequisites include the symmetric encryption, \acrshortpl{oram} and PathORAM \cite{path-oram} in particular, \acrlong{dp} and \acrshort{dp} sanitizers, and finally, \acrlongpl{tee}.
 	\emph{Some of the following sections were paraphrased or taken verbatim from my published work \cite{ore-benchmark-17,epsolute}.}
 
@@ -35,7 +35,7 @@
 
 		\subsection{Components}
 
-			Note that for the practical purposes I define the encryption algorithm as randomized --- producing different ciphertext for the same plaintext on every invocation.
+			Note that for the practical purposes we define the encryption algorithm as randomized --- producing different ciphertext for the same plaintext on every invocation.
 			While this is how the symmetric encryption scheme is used in applications, formally, producing the deterministic ciphertext and randomizing it are different operations.
 
 			The randomness is produced independently, typically using a \acrfull{prg}, and is used for both secrecy and integrity (which is necessary for \acrshort{cca} security).
@@ -71,16 +71,16 @@
 		Note that the \acrshort{oram} protocols typically differ in the way the storage is organized and manipulated, but are similar in that the records or blocks are symmetrically encrypted (see \cref{section:background:encryption}).
 
 		\acrshort{oram} protocols are generally stateful, after each execution the client and server states are updated.
-		\emph{For brevity, throughout the thesis I will assume the \acrshort{oram} state updates are implicit, including the encryption key generated and maintained by the client.}
+		\emph{For brevity, throughout the thesis we will assume the \acrshort{oram} state updates are implicit, including the encryption key generated and maintained by the client.}
 
 		Some existing efficient \acrshort{oram} protocols are Square Root \acrshort{oram} \cite{oram-theory}, Hierarchical \acrshort{oram} \cite{oram-original}, Binary-Tree \acrshort{oram} \cite{binary-tree-oram}, Interleave Buffer Shuffle Square Root \acrshort{oram} \cite{shortest-path-oram}, TP-ORAM \cite{tp-oram}, PathORAM \cite{path-oram} and TaORAM \cite{taostore}.
-		For detailed descriptions of each protocol, I recommend the work of \textcite{oram-survey-feifei}.
+		For detailed descriptions of each protocol, we recommend the work of \textcite{oram-survey-feifei}.
 		The latter three \acrshortpl{oram} achieve the lowest communication and storage overheads, $\bigO{\log \dataSize}$ and \bigO{\dataSize}, respectively.
 
 		\subsection{PathORAM}
 
 			PathORAM \cite{path-oram} is one of the most commonly used \acrshort{oram} protocols due to its efficiency and simplicity.
-			In this section I briefly describe this construction as it is used as an \acrshort{oram} instantiation in the rest of the thesis.
+			In this section we briefly describe this construction as it is used as an \acrshort{oram} instantiation in the rest of the thesis.
 
 			In the PathORAM, both the client \client{} and the server \server{} are stateful.
 			The server stores the encrypted records (blocks) grouped in buckets, and the buckets form a binary tree.
@@ -181,7 +181,7 @@
 
 			\subsubsection{Composition}
 
-				Finally, in this thesis I will make use of a \emph{composition} theorem (adapted from \cite{privacy-integrated-queries}) based on \cite{differential-privacy-original,our-data-ourselves}. % chktex 2
+				Finally, in this thesis we will make use of a \emph{composition} theorem (adapted from \cite{privacy-integrated-queries}) based on \cite{differential-privacy-original,our-data-ourselves}. % chktex 2
 				It concerns executions of multiple differentially private mechanisms on non-disjoint and disjoint inputs.
 
 				\begin{theorem}\label{theorem:composition}

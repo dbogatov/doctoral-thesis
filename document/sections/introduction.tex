@@ -12,11 +12,11 @@
 
 	Protecting the private information beyond cloud provider guarantees typically requires encrypting it in a way that preserves the ability to process it.
 	A line of research targets securing outsourced database systems, but often achieves protection at the cost of efficiency too high for a solution to be viable for practical applications.
-	In this thesis, I will cover the constructions that are used to answer different types of database queries in the outsourced model while providing both provable security and practical efficiency guarantees.
+	In this thesis, we will cover the constructions that are used to answer different types of database queries in the outsourced model while providing both provable security and practical efficiency guarantees.
 
 	\section{Model}
 
-		In this work, I consider \emph{an outsourced database system} model, a notion first introduction in \cite{outsourced-db-intro}, adapted from \cite{generic-attacks-kellaris} and \cite{epsolute}.
+		In this work, we consider \emph{an outsourced database system} model, a notion first introduction in \cite{outsourced-db-intro}, adapted from \cite{generic-attacks-kellaris} and \cite{epsolute}.
 
 		\subsection{Outsourced database model}\label{section:introduction:model:odb}
 
@@ -35,7 +35,7 @@
 
 			In an outsourced database system we are not aiming for perfect security, because the stronger the data protection guarantees are the harder it is to manipulate these data, the less efficient and functional the system becomes.
 			There will always be some leakage, and our goal is to quantify, analyze and reduce it, while retaining the system's performance and usability.
-			In terms of security models, I define two types of adversaries --- a \emph{snapshot} and a \emph{persistent} adversaries.
+			In terms of security models, we define two types of adversaries --- a \emph{snapshot} and a \emph{persistent} adversaries.
 
 			As the name suggests, a snapshot adversary can see a ``snapshot'' of the server's data at multiple points in time.
 			One can think of such an attack as if someone steals a hard drive or accesses a backup.
@@ -58,7 +58,7 @@
 
 			The type of query \query{} is deliberately left abstract.
 			The outsourced database system assumes that a query contains a way (a predicate) to select only the records whose search keys satisfy it.
-			In this work, I consider the following types of queries.
+			In this work, we consider the following types of queries.
 
 			\paragraph*{A point query.}
 				This query selects records whose key is equal to a given value.
@@ -82,15 +82,15 @@
 
 	\section{Thesis structure}
 
-		In \cref{section:background}, I will cover the building blocks that are used in the outsourced database systems.
+		In \cref{section:background}, we will cover the building blocks that are used in the outsourced database systems.
 		These blocks include the encryption, \acrshort{oram} and \acrlong{dp}.
 		\cref{section:related-work} includes the overview of approaches that provide the privacy and/or security in the outsourced setting.
 		The chapter also includes the overview of the attacks against the mechanisms.
 		\cref{section:range-snapshot} analyses in detail the range query mechanisms in the snapshot adversary model.
 		The chapter includes the sections from my published work, the comparative evaluation of the secure range query protocols \cite{ore-benchmark-17}.
 		\cref{section:range-persistent} proposes a novel solution for the range queries in the persistent adversary model, \epsolute{} \cite{ore-benchmark-17}.
-		In \cref{section:knn-snapshot}, I propose a mechanism to answer \acrlong{knn} queries in a snapshot adversary setting using a type of property-preserving encryption similar to \acrshort{ope}.
-		In the chapter I describe the encryption method, the set of experiments to empirically measure the search accuracy and the level of protection against the attacks.
+		In \cref{section:knn-snapshot}, we propose a mechanism to answer \acrlong{knn} queries in a snapshot adversary setting using a type of property-preserving encryption similar to \acrshort{ope}.
+		In the chapter we describe the encryption method, the set of experiments to empirically measure the search accuracy and the level of protection against the attacks.
 
 		\subsection{Works published during the Ph.D. program}
 
