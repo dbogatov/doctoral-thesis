@@ -20,41 +20,37 @@
 
 			A weaker security definition, \acrfull{ind-cpa}, intuitively, requires that the ciphertext leaks nothing about the plaintext.
 			To formalize the requirement, the adversary can give the challenger a set of plaintext pairs to encrypt, and the challenger responds with a set of ciphertexts where the left or the right part was encrypted.
-			The adversary can then use any (polynomial) algorithm over the ciphertexts and make a guess of whether the left or the right part was encrypted.
+			The adversary can then use any (polynomial-time) algorithm over the ciphertexts and make a guess of whether the left or the right part was encrypted.
 			The claim is, if there is anything that the ciphertext leaks about the plaintext, there exists an adversary who will win.
 			The security claim is therefore contrapositive --- the scheme is \acrshort{ind-cpa} secure iff there is no such adversary that wins the game.
-			The \acrshort{ind-cpa} definition can be upgraded to allow the adversary to choose the plaintexts adaptively (\acrshort{cpa}2), or require the ciphertext be indistinguishable from a random bit-string (\acrshort{cpa}\$).
 
-			\acrshort{ind-cpa} security is not by itslef sufficient since it does not account for the decryption part of the scheme.
+			\acrshort{ind-cpa} security is not by itself sufficient since it does not account for the decryption part of the scheme.
 			There are known attacks that decrypt the plaintext (i.e., defeat the encryption) if the adversary can trigger the decryption and observe the process or the result (see padding attack \cite{padding-attack} and \acrshort{xml} encryption attack \cite{xml-break-encryption}).
 
 			The stronger definition, \acrfull{ind-cca}, captures the decryption component.
-			It extends the \acrshort{ind-cpa} game in that the adversary can now request the challenger to decrypt \emph{any} ciphertext of her choice \emph{except} the ones that the chalenger himself encypted for the adversary.
+			It extends the \acrshort{ind-cpa} game in that the adversary can now request the challenger to decrypt \emph{any} ciphertext of her choice \emph{except} the ones that the challenger himself encrypted for the adversary.
 			The adversary still outputs a guess of the two worlds and wins if reliably guesses correctly.
 			Note that in this game if the decryption can fail for any reason, or even if \adversary{} can observe any difference in execution for different inputs, the scheme is insecure.
-			Therefore, \acrshort{ind-cca} immediately rules out the aformentioned attacks \cite{padding-attack,xml-break-encryption}.
-			Similarly to \acrshort{ind-cpa}, \acrshort{ind-cca} also has the adaptive and indistinguishable\hyp{}from\hyp{}pseudorandom variants \acrshort{cca}2 and \acrshort{cca}\$.
+			Therefore, \acrshort{ind-cca} immediately rules out the aforementioned attacks \cite{padding-attack,xml-break-encryption}.
 
 		\subsection{Components}
 
 			Note that for the practical purposes I define the encryption algorithm as randomized --- producing different ciphertext for the same plaintext on every invocation.
 			While this is how the symmetric encryption scheme is used in applications, formally, producing the deterministic ciphertext and randomizing it are different operations.
 
-			Internally, the encryption scheme typically consists of a keyed \acrfull{prp} (also known as a \emph{block cipher}), a \acrfull{prg} that is used to generate a (pseudo)random \acrfull{iv} and a block cipher \emph{mode of operation}.\footnote{% chktex 36
-				Here I describe the \emph{block ciphers} family of symmetric encryption algorithms.
-				Streaming ciphers are not used in this thesis.
-			}
-			First, the input $m \in \bin^*$ is split into blocks (depending on the underlying block cipher, for example, 128 bits) and the last block is padded if necessary.
-			Second, the pseudorandom \acrlong{iv} of size of the block is generated with a \acrshort{prg}.
-			Intuitively, this is the part that contributes the  ``randomness'' to the process.\footnote{
-				There are some modes of operation that do not require the \acrlong{iv}, such as \acrfull{ecb} mode, but these are insecure.
-			}
-			Finally, the \acrshort{iv} is prepended to the plaintext blocks and the algorithm applies the permutation to one block at a time with the input masked according to the mode of operation.
-			The resulting object is a ciphertext that is one block longer than a plaintext due to \acrshort{iv}.
-			In practical systems, the ciphertext is then broken up into components, like the ciphertext material itself, the \acrshort{iv}, the version of the key, etc.
+			The randomness is produced independently, typically using a \acrfull{prg}, and is used for both secrecy and integrity (which is necessary for \acrshort{cca} security).
+			After obtaining the random bits, the algorithm repeatedly uses the block cipher (formally, a \acrfull{prp}), with the number of invocations linear in the message length.
+			How the randomness and the message are combined is defined by the \emph{mode of operation} and differs from one encryption scheme to another.
+			Typically, the randomness comes in a form of a block, an \acrfull{iv}, filled with random bits.
+			The mode of operation then defines how the blocks and the \acrshort{iv} are combined together.
+
+			In practical systems, the ciphertext is then broken up into components, like the ciphertext material itself, the \acrshort{iv} (varies by the scheme), the version of the key, etc.
 			Also note that the encryption scheme key has a maximum number of times it can be used for encryption (its \emph{operational lifetime}).
 
-			\acrfull{aes} \cite{aes-nist} is a \acrshort{nist}-standardized block cipher, which, along with the standardized mode of operation \cite{nist-modes} and \acrshort{prg} \cite{nist-prg} used to generate the \acrshort{iv}, forms the symmetric encryption system.
+			When it comes to the real-world encryption systems, we use standardized primitives --- a block cipher (\acrshort{prp}), a \acrlong{prg} and a mode of operation.
+			\acrfull{aes} \cite{aes-nist} is a \acrshort{nist}-standardized block cipher, which operates on 128-bit blocks.
+			\acrshort{nist} also offers recommendations for random number generator mechanisms \cite{nist-prg-mechanism}, constructions \cite{nist-prg-constructions} and sources of entropy \cite{nist-prg-entropy}.
+			Lastly, some of the commonly used modes of operation are \acrshort{cbc} and \acrshort{ctr} \cite{nist-modes} modes for general-purpose encryption, \acrshort{gcm} \cite{nist-gcm} for an authenticated encryption and \acrshort{xts} \cite{ieee-xts} for encryption of data on block-oriented devices (e.g., disks).
 
 	\section{\texorpdfstring{\acrlong{oram}}{Oblivious Random Access Machine}}\label{section:background:oram}
 
@@ -62,10 +58,10 @@
 		An adversarial server can monitor the actual accessed locations, but she cannot tell a read from a write, the content of the block or even whether the same logical location is being referenced.
 		The notion was first defined by \textcite{oram-theory} and \textcite{oram-original}.
 
-		More formally, a $(\eta_1, \eta_2)$-\acrshort{oram} protocol is a two-party protocol between a client \client{} and a server \server{} who stores a memory array.
-		In each round, the client \client{} has input $(o, a, d)$, where $o$ is an access type (\oramRead{} or \oramWrite{}), $a$ is a memory address and $d$ is a new data value, or $\bot$ for read operation.
-		The input of \server{} is the current array.
-		Via the protocol, the server updates the memory or returns to \user{} the data stored at the requested memory location, respectively.
+		More formally, a $(\eta_1, \eta_2)$-\acrshort{oram} protocol is a two-party protocol between a client \client{} and a server \server{} who maintains the storage in a form of array of blocks.
+		In each round, the client \client{} has input $(o, a, d)$, where $o$ is an access type (\oramRead{} or \oramWrite{}), $a$ is a storage block address and $d$ is a new data value, or $\bot$ for read operation.
+		The input of \server{} is the current storage array.
+		Via the protocol, the server updates the storage or returns to \user{} the data stored at the requested block, respectively.
 		We speak of a sequence of such operations as a program \oramProgram{} being \emph{executed under the \acrshort{oram}}.
 
 		An \acrshort{oram} protocol must satisfy correctness and security.
@@ -158,6 +154,10 @@
 				\end{itemize}
 			\end{definition}
 
+			In \cref{definition:dp-danitizer}, the query is a predicate, which is defined as in \cref{section:introduction:model:odb}, and it returns a scalar 0 or 1 when executed over a search key (an attribute) $d \in \searchKeyDomain$.
+			$\algo{B}{ \serverDS, \query }$ then returns a count, a scalar value which bounds the number of search keys that satisfy the query.
+			For example, a query \query{} can be a range query, then $ \sum_i \query(d_i) $ is the number of records in the range, and $ \algo{B}{ \serverDS, \query } $ returns a scalar value of noise (the fake records), such that it is within $\alpha$ from the true count.
+
 			\begin{remark}\label{remark:dp-sanitizer-guarantees}
 				Given an $(\epsilon, \delta, \alpha, \beta)$-\acrshort{dp} sanitizer as in \cref{definition:dp-danitizer} one can replace the answer $\algo{B}{ \serverDS, \query }$ with $\textsc{B}^\prime ( \serverDS, \allowbreak \query ) = \algo{B}{ \serverDS, \query } + \alpha$.
 				Hence, with probability $1 - \beta$, for all $\query \in \querySet$, $0 \leq \algo{\ensuremath{\textsc{B}^\prime}}{ \serverDS, \query } - \sum_i \query(d_i) \leq 2 \alpha$.
@@ -165,8 +165,9 @@
 			\end{remark}
 
 			The main idea of \emph{sanitization} (a.k.a.\ private data release) is to release specific noisy statistics on a private dataset once, which can then be combined in order to answer an arbitrary number of queries without violating privacy.
-			Depending on the query type and the notion of differential privacy (i.e., pure or approximate), different upper bounds on the error have been proven.
-			Omitting the dependency on $\epsilon,\delta$, in case of point queries over domain size \domainSize{}, pure differential privacy results in $\alpha = \bigTheta{\log \domainSize}$ \cite{bounds-on-sample-complexity}, while for approximate differential privacy $\alpha = \bigO{1}$ \cite{private-learning-and-sanitization}.
+			Depending on the query type (see \cref{section:intro:model:query-types}) and the notion of differential privacy (i.e., pure or approximate), different upper bounds on the error have been proven.
+			Omitting the dependency on $\epsilon, \delta$, in case of point queries over domain size \domainSize{}, pure differential privacy results in $\alpha = \bigTheta{\log \domainSize}$ \cite{bounds-on-sample-complexity}, while for approximate differential privacy $\alpha = \bigO{1}$ \cite{private-learning-and-sanitization}.
+			Note that the sanitizers add noise to a count of records, and for the point queries the count is the number of records with a given categorical value (i.e., number of female students in a class).
 			For range queries over domain size \domainSize{}, these bounds are $\alpha = \bigTheta{\log \domainSize}$ for pure differential privacy \cite{non-interactive-database-privacy,dp-under-observation}, and $\alpha = \bigO{(\log^{*} \domainSize)^{1.5}}$ for approximate differential privacy (with an almost matching lower bound of $\alpha = \bigOmega{\log^{*} \domainSize}$) \cite{private-learning-and-sanitization, dp-release, privately-learning-thresholds}.
 			More generally, \textcite{non-interactive-database-privacy} showed that any finite query set \querySet{} can be sanitized, albeit non-efficiently.
 
