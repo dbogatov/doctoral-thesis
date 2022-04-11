@@ -89,13 +89,13 @@
 		\cref{section:range-snapshot} analyses in detail the range query mechanisms in the snapshot adversary model.
 		The chapter includes the sections from my published work, the comparative evaluation of the secure range query protocols \cite{ore-benchmark-17}.
 		\cref{section:range-persistent} proposes a novel solution for the range queries in the persistent adversary model, \epsolute{} \cite{ore-benchmark-17}.
-		In \cref{section:knn-snapshot}, we propose a mechanism to answer \acrlong{knn} queries in a snapshot adversary setting using a type of property-preserving encryption similar to \acrshort{ope}.
+		In \cref{section:knn-snapshot}, we propose \kanon{} \cite{k-anon} --- a mechanism to answer similarity search (i.e., \acrlong{knn}) queries in a snapshot adversary setting using a type of property-preserving encryption similar to \acrshort{ope}.
 		In the chapter we describe the encryption method, the set of experiments to empirically measure the search accuracy and the level of protection against the attacks.
 
-		\subsection{Works published during the Ph.D. program}
+		\subsection{Works published or submitted during the Ph.D. program}
 
 			\newlength{\citationLength}
-			\settowidth{\citationLength}{\cite{bogatov-idemix-2020}}
+			\settowidth{\citationLength}{\cite{k-anon}}
 			\begin{description}[
 				leftmargin=\dimexpr\citationLength+1.0em\relax,
 				labelindent=0pt,
@@ -103,6 +103,7 @@
 			]
 				\item[\cite{ore-benchmark-17}] \printpublication{ore-benchmark-17}
 				\item[\cite{epsolute}] \printpublication{epsolute}
+				\item[\cite{k-anon}] \printpublication{k-anon}
 				\item[\cite{bogatov-idemix-2020}] \printpublication{bogatov-idemix-2020}
 				\item[\cite{dispot}] \printpublication{dispot}
 			\end{description}

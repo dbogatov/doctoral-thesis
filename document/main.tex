@@ -23,9 +23,16 @@
 	\copyrightpage%
 	\cleardoublepage%
 
-	% TODO conditionally uncomment
-	\approvalpagewithcomment%
-	% \approvalpage%
+	\ifdefined\approval%
+		\ifthenelse{\equal{\approval}{scan}}
+		{
+			\input{approval-page}
+		}
+		{}
+	\else
+		\approvalpage%
+	\fi
+
 	\cleardoublepage%
 
 	\IfFileExists%

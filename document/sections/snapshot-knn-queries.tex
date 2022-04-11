@@ -39,32 +39,6 @@
 				Finally, we analyze the correlation results for search accuracy and attack efficiency and conclude on practicality of our method.
 		\end{itemize}
 
-		\subsection{Related Work}
-
-			Work in this area is naturally split into two groups --- mechanisms and constructions that offer certain security guarantees for nearest-neighbor queries, and attacks against those constructions.
-
-			A work immediately related to ours is QuickN by \textcite{quick-n}.
-			QuickN offers an adaptation of nearest-neighbor search algorithm in conventional tree data structures (i.e., R-trees) to well-established \acrfull{ope} schemes.
-			Unlike our solution that involves a novel property-preserving encryption scheme specifically designed for high-dimensional vectors, QuickN encrypts each vector dimension separately with \acrshort{ope}.
-			\cite{quick-n} includes the experiments with attacks against their solution (attack by \textcite{leakage-abuse-grubs-2017}) and report high degree of protection against them.
-
-			QuickN approach of applying \acrshort{ope} to an R-tree, however, has some disadvantages.
-			First, an ideal stateless \acrshort{ope} has been shown inferior (\cite{ope-leakage}) to its counterpart, an \acrfull{ore} in which the comparison over ciphertexts is defined explicitly.\footnote{
-				\cite{quick-n} uses mOPE \cite{ope-ideal-security-protocol} which is an interactive protocol and not a traditional lightweight stateless \acrshort{ope} like \cite{bclo-ope}.
-				Since mOPE is an ideal (though stateful) \acrshort{ope}, \cite{quick-n} do not include \acrshort{ope} leakage in their security definition.
-			}
-			An \acrshort{ore}, in turn, can have a varying level of security, with the higher security level translating into lower comparison performance \cite{ore-benchmark-17}.
-			In QuickN, an R-tree-based nearest-neighbor algorithm involves a very high number of comparisons, linear in data dimensionality.
-			With the cost of comparison no longer negligible, the overhead of query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
-			Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positive results even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
-
-			\textcite{knn-aspe} offer a novel scheme, ASPE, that preserves a special type of scalar product.
-			ASPE is then naturally integrated in existing \acrshort{knn} algorithms that rely on a scalar product.
-			\cite{knn-aspe} is similar to ours in that we also apply a property-preserving encryption scheme to existing \acrshort{knn} algorithms.
-			ASPE is different in that it preserves a scalar product while we preserve an $\text{L}_2$ distance comparison, and ASPE has been broken in \cite{secure-nn-revisited-break-aspe} (although an attack is a chosen plaintext attack, i.e., one cannot decrypt a random ciphertext).
-
-			Other works either target different aspects of query security, like integrity and soundness of results \cite{knn-integrity-soundness,svknn}, or involve mechanisms other than property-preserving encryption \cite{seceqp,practical-approx-knn,knn-sharing-keys,knn-mult-data-owners,knn-over-encrypted,knn-paillier,knn-blind,knn-homomorphism,knn-strong-location-privacy,knn-no-anonymizers,knn-efficient,knn-new-casper}.
-
 	\section{\texorpdfstring{\acrlong{dcpe}}{Distance Comparison Preserving Encryption}}
 
 		A promising approach in secure \acrshort{knn} evaluation is using a property-preserving encryption scheme to allow the existing search algorithms to work with minimal alterations.
@@ -150,20 +124,25 @@
 			$k$ encrypted vectors are then returned to \user{}, who decrypts them as the last step.
 			These protocols are run for a single set of secrets and \acrshort{dcpe} parameters, including $\beta$.
 
-			For the choice of the dataset, we use the established information retrieval \acrshort{trec} 2020 test collections.
+			For the choice of the dataset, we use the established information retrieval \acrshort{trec} 2020 test collections (MS MARCO passage retrieval collection \cite{ms-marco}).
 			A \acrshort{trec} collection consists of a set of documents, a set of topics (questions) and a corresponding set of relevance judgments (correct answers).
 			A benefit of using a \acrshort{trec} dataset is being able to evaluate relevant metrics over the produced results, for example, \acrshort{mrr} \cite{mrr} and \acrshort{ndcg} \cite{dcg}.
 			We can then track how these metrics, along with the simpler edit distance and set difference over the result, degrade with higher security.
 
-			As the embedding mechanism, we use a custom fine-tuned \acrshort{bert} model.\footnote{Provided by Hamed Zamani}
+			As the embedding mechanism, we use a custom fine-tuned \acrshort{bert} model.
 			\acrfull{bert} is a transformer-based \acrshort{ml} technique for \acrlong{nlp}.
 			An original \acrshort{bert} model, published by \textcite{bert}, has been trained on a BookCorpus \cite{bookcorpus} (800 million words) and English Wikipedia (2.5 billion words) using 24 encoders with 16 bidirectional self-attention heads (for the larger of two versions, $\text{\acrshort{bert}}_\text{LARGE}$).
 			\acrshort{bert}'s main novelty is its bidirectional nature --- it processes all words in relation to each other and not one-by-one.
 			The technology is now prevalent \cite{bert-is-prevalent}, and Google uses \acrshort{bert} in almost every English query\footnote{
 				\url{https://searchengineland.com/google-bert-used-on-almost-every-english-query-342193}
 			}.
+
 			It is common, however, to use the original \acrshort{bert} model as a base and do training on top.
-			{\color{red}We use one of such fine-tuned \acrshort{bert} models for embedding.}
+			We trained a \acrshort{bert}-based dense retrieval model that uses \acrshort{bert} for representing both queries and documents and inner product for computing their similarity \cite{hamed-custom-bert}.
+			The parameters between both \acrshort{bert} models (for queries and documents) are shared.
+			We used cross entropy loss function for training and used the standard MS MARCO \cite{ms-marco} training set.
+			The produced vectors by the \acrshort{bert} model are used in our experiments for approximate nearest neighbor indexing of documents and retrieval for queries.
+			We used the test queries produced by the Deep Learning Track of the \acrfull{trec} in 2020 in our experiments.
 
 		\subsection{Experimental evaluation}
 

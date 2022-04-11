@@ -46,19 +46,3 @@
 	The main contribution of this work is to present an experimental evaluation using both real and synthetic datasets using our new framework that tracks not only time but also primitive usage, \acrshort{io} complexity, and communication cost.
 	In the process, we present improvements for some of the schemes that make them more efficient and/or more secure.
 	To make understanding of these schemes easier for the reader, we present the main ideas behind these constructions, discuss their security definitions and leakage profiles, and provide an analysis of implementation challenges for each one.
-
-	\subsection{Related work}
-
-		% list rom FH-OPE paper and "An Ideal-Security Protocol for Order-Preserving Encoding"
-		A number of \acrshort{ope} schemes have been proposed recently including \cite{ope-original, anti-tamper-dbs, bclo-ope, ope-leakage, ope-beyond-one-wayness, ope-early-fh-ope, ope-beyond-ideal-object, ope-mv-opes, fh-ope, ope-mv-popes, ope-multi-user, ope-note, ope-for-encrypted-dbs, ope-structure, ope-non-linear}. % chktex 2
-		\textcite{ope-ideal-security-protocol} present a nice analysis of these schemes and they are the first to show that using a stateful scheme you can achieve the ideal security guarantees for \acrshort{ope}.
-		We pick two of these schemes (BCLO \cite{bclo-ope} and FH-OPE \cite{fh-ope}) that are the most representative and outperform other schemes.
-
-		In addition, there are a number of \acrshort{ore} schemes \cite{ore-original, clww-ore, lewi-wu-ore, parameter-hiding-ore, parameter-hiding-ore, ore-learning, ore-partial, ore-multi-client} that have been proposed. % chktex 2
-		We choose the most practical and most secure of them \cite{clww-ore, lewi-wu-ore, parameter-hiding-ore}, to include in the comparison. % chktex 2
-		Also, there are some approaches that assume an outsourced setting where the client may have to communicate with the server during query processing \cite{pope, florian-protocol, secure-queries-overview, practical-range-search}.
-		We choose two of these protocols \cite{pope, florian-protocol} because they are based on order-preserving approaches and therefore have similar security models with \acrshort{ore} schemes.
-		We would like to point out that there are some other methods that can be used to run range queries on encrypted data that use different types of schemes and techniques.
-		See \cite{secure-queries-overview} and \cite{protocols-survey} for an overview of other methods. % chktex 2
-		In this paper we consider two of the protocols proposed in \cite{practical-range-search} that use \acrfull{sse}.
-		We stress that the schemes and protocols discussed here should be used with care, and it is up to the practitioner how to use them given their security and performance profiles.

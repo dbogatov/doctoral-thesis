@@ -6,6 +6,7 @@
 % For page frame
 % \usepackage[showframe]{geometry}
 
+\usepackage{savesym}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage[
 	lambda,
@@ -42,6 +43,17 @@
 \usepackage{bm}
 \usepackage{interval}
 \usepackage{rotating}
+\usepackage{frcursive}
+\usepackage{inslrmin}
+\usepackage{calligra}
+\usepackage{wedn}
+\usepackage{pbsi}
+\usepackage{aurical}
+\usepackage{inslrmin}
+\usepackage{calligra}
+\savesymbol{st} % \st has been already defined, likely in cryptocode
+\usepackage{soul}
+\restoresymbol{TXF}{st}
 \PassOptionsToPackage{hyphens}{url}
 \definecolor{BrightRed}{RGB}{204, 0, 0}
 \definecolor{DarkRed}{RGB}{102, 0, 0}
@@ -76,7 +88,7 @@
 \usepackage[all]{nowidow}
 \usepackage{hyphenat}
 \usepackage[inline]{enumitem}
-\usepackage[binary-units]{siunitx}
+\usepackage{siunitx}
 \usepackage[mathscr]{eucal}
 \usepackage{longtable}
 \usepackage{makecell}
@@ -206,6 +218,7 @@
 
 \newcommand{\crypte}{Crypt\ensuremath{\epsilon}}
 \newcommand{\epsolute}{\ensuremath{\mathcal{E}}p\-so\-lu\-te}
+\newcommand{\kanon}{\ensuremath{k\text{-a}n\text{o}n}}
 
 \newcommand{\record}{\ensuremath{r}}
 \newcommand{\recordID}{\ensuremath{\record^\mathsf{ID}}}

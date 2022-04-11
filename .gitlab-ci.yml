@@ -103,6 +103,8 @@ check-links:
     BLC_EXCLUDE: -s *10.1007* -s *10.1109* -s epsolute.org --accept-codes 403,503,999
 
 build:
+  variables:
+    BUILD_ARGS: " | -a | -n"
   before_script:
     - /pdfannotextractor.pl document/graphics/cv.pdf
   dependencies:

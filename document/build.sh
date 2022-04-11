@@ -11,11 +11,12 @@ CWD=$(pwd)
 : ${JOBNAME:=report}
 DRAFT=""
 FAST=false
+APPROVAL=""
 SYNCTEX=1
 
-usage() { echo "Usage: $0 [-f -d]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-f -d -a -n]" 1>&2; exit 1; }
 
-while getopts "df" o
+while getopts "dfan" o
 do
 	case "${o}" in
 		f)
@@ -24,6 +25,14 @@ do
 		d)
 			DRAFT="\def\draft{true}"
 			JOBNAME="$JOBNAME-draft"
+			;;
+		a)
+			APPROVAL="\def\approval{scan}"
+			JOBNAME="$JOBNAME-approval-scan"
+			;;
+		n)
+			APPROVAL="\def\approval{none}"
+			JOBNAME="$JOBNAME-approval-none"
 			;;
 		*)
 			usage
@@ -51,7 +60,7 @@ latexmk -cd -dvi- -f -pdf -ps- -time -shell-escape \
 	-outdir=${OUTDIR} \
 	--synctex=${SYNCTEX} \
 	--interaction=${INTERACTION} \
-	-pdflatex='pdflatex %O "\def\dummy{} '${REVIEW}' '${DRAFT}' \input %S "' \
+	-pdflatex='pdflatex %O "\def\dummy{} '${REVIEW}' '${DRAFT}' '${APPROVAL}' \input %S "' \
 	main
 
 if [ $FAST == false ]
