@@ -23,24 +23,29 @@
 	\copyrightpage%
 	\cleardoublepage%
 
-	\ifdefined\approval%
-		\ifthenelse{\equal{\approval}{scan}}
-		{
-			\input{approval-page}
-		}
-		{}
-	\else
-		\approvalpage%
-	\fi
+	\approvalpage%
 
 	\cleardoublepage%
 
 	\IfFileExists%
 		{frontmatter/quote.tex}
 		{
-			\newpage
-			\input{frontmatter/quote}
-			\cleardoublepage%
+			\ifx\noAcks\undefined%
+				\newpage
+				\input{frontmatter/quote}
+				\cleardoublepage%
+			\fi
+		}
+		{}
+
+	\IfFileExists%
+		{frontmatter/dedication.tex}
+		{
+			\ifx\noAcks\undefined%
+				\newpage
+				\input{frontmatter/dedication}
+				\cleardoublepage%
+			\fi
 		}
 		{}
 
@@ -49,9 +54,11 @@
 	\IfFileExists%
 		{frontmatter/acknowledgments.tex}
 		{
-			\newpage
-			\input{frontmatter/acknowledgments}
-			\cleardoublepage%
+			\ifx\noAcks\undefined%
+				\newpage
+				\input{frontmatter/acknowledgments}
+				\cleardoublepage%
+			\fi
 		}
 		{}
 
@@ -59,15 +66,6 @@
 		\input{frontmatter/abstract}
 	\end{abstractpage}
 	\cleardoublepage%
-
-	\IfFileExists%
-		{frontmatter/preface.tex}
-		{
-			\newpage
-			\input{frontmatter/preface}
-			\cleardoublepage%
-		}
-		{}
 
 	\setcounter{tocdepth}{4}
 	\phantomsection%

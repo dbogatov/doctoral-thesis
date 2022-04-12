@@ -11,12 +11,11 @@ CWD=$(pwd)
 : ${JOBNAME:=report}
 DRAFT=""
 FAST=false
-APPROVAL=""
 SYNCTEX=1
 
-usage() { echo "Usage: $0 [-f -d -a -n]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-f -d -e -n]" 1>&2; exit 1; }
 
-while getopts "dfan" o
+while getopts "dfen" o
 do
 	case "${o}" in
 		f)
@@ -26,13 +25,13 @@ do
 			DRAFT="\def\draft{true}"
 			JOBNAME="$JOBNAME-draft"
 			;;
-		a)
-			APPROVAL="\def\approval{scan}"
-			JOBNAME="$JOBNAME-approval-scan"
+		e)
+			APPROVAL="\def\emptyApproval{true}"
+			JOBNAME="$JOBNAME-empty-approval"
 			;;
 		n)
-			APPROVAL="\def\approval{none}"
-			JOBNAME="$JOBNAME-approval-none"
+			ACKS="\def\noAcks{true}"
+			JOBNAME="$JOBNAME-no-acks"
 			;;
 		*)
 			usage
@@ -60,7 +59,7 @@ latexmk -cd -dvi- -f -pdf -ps- -time -shell-escape \
 	-outdir=${OUTDIR} \
 	--synctex=${SYNCTEX} \
 	--interaction=${INTERACTION} \
-	-pdflatex='pdflatex %O "\def\dummy{} '${REVIEW}' '${DRAFT}' '${APPROVAL}' \input %S "' \
+	-pdflatex='pdflatex %O "\def\dummy{} '${REVIEW}' '${DRAFT}' '${APPROVAL}' '${ACKS}' \input %S "' \
 	main
 
 if [ $FAST == false ]

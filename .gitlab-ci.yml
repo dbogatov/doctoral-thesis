@@ -104,7 +104,7 @@ check-links:
 
 build:
   variables:
-    BUILD_ARGS: " | -a | -n"
+    BUILD_ARGS: " | -e | -n"
   before_script:
     - /pdfannotextractor.pl document/graphics/cv.pdf
   dependencies:
