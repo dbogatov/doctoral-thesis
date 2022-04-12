@@ -77,21 +77,22 @@
 		A work immediately related to ours is QuickN by \textcite{quick-n}.
 		QuickN offers an adaptation of nearest-neighbor search algorithm in conventional tree data structures (i.e., R-trees) to well-established \acrfull{ope} schemes.
 		Unlike our solution that involves a novel property-preserving encryption scheme specifically designed for high-dimensional vectors, QuickN encrypts each vector dimension separately with \acrshort{ope}.
-		\cite{quick-n} includes the experiments with attacks against their solution (attack by \textcite{leakage-abuse-grubs-2017}) and report high degree of protection against them.
+		\cite{quick-n} includes the experiments with attacks against their solution (attack by \textcite{leakage-abuse-grubs-2017}) and report a high degree of protection against them (at most \SI{3.7}{\percent} matching rate for the inference attacks against coordinates represented as a pair of longitude and latitude).
 
 		QuickN approach of applying \acrshort{ope} to an R-tree, however, has some disadvantages.
 		First, an ideal stateless \acrshort{ope} has been shown inferior (\cite{ope-leakage}) to its counterpart, an \acrfull{ore} in which the comparison over ciphertexts is defined explicitly.\footnote{
 			\cite{quick-n} uses mOPE \cite{ope-ideal-security-protocol} which is an interactive protocol and not a traditional lightweight stateless \acrshort{ope} like \cite{bclo-ope}.
-			Since mOPE is an ideal (though stateful) \acrshort{ope}, \cite{quick-n} do not include \acrshort{ope} leakage in their security definition.
+			Since mOPE is an ideal (though stateful) \acrshort{ope}, \textcite{quick-n} do not include \acrshort{ope} leakage in their security definition.
 		}
 		An \acrshort{ore}, in turn, can have a varying level of security, with the higher security level translating into lower comparison performance \cite{ore-benchmark-17}.
 		In QuickN, an R-tree-based nearest-neighbor algorithm involves a very high number of comparisons, linear in data dimensionality.
 		With the cost of comparison no longer negligible, the overhead of query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
 		Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positive results even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
 
-		\textcite{knn-aspe} offer a novel scheme, ASPE, that preserves a special type of scalar product.
-		ASPE is then naturally integrated in existing \acrshort{knn} algorithms that rely on a scalar product.
-		\cite{knn-aspe} is similar to ours in that we also apply a property-preserving encryption scheme to existing \acrshort{knn} algorithms.
-		ASPE is different in that it preserves a scalar product while we preserve an $\text{L}_2$ distance comparison, and ASPE has been broken in \cite{secure-nn-revisited-break-aspe} (although an attack is a chosen plaintext attack, i.e., one cannot decrypt a random ciphertext).
+		\textcite{knn-aspe} propose a novel scheme, \acrshort{aspe}, that preserves a special type of scalar product.
+		Namely, \acrfull{aspe} scheme preserves the scalar product of a database point and a query point, but not the product of a database point with itself or another database point.
+		\acrshort{aspe} is then naturally integrated in existing \acrshort{knn} algorithms that use such asymmetric scalar product in their indices.
+		The work of \textcite{knn-aspe} is similar to \kanon{} in that we also apply a property-preserving encryption scheme to existing \acrshort{knn} algorithms.
+		\acrshort{aspe} is different in that it preserves a scalar product while we preserve an $\text{L}_2$ distance comparison, and \acrshort{aspe} has been broken in \cite{secure-nn-revisited-break-aspe} (although the attack is a chosen plaintext attack, i.e., one cannot decrypt a random ciphertext).
 
 		Other works either target different aspects of query security, like integrity and soundness of results \cite{knn-integrity-soundness,svknn}, or involve mechanisms other than property-preserving encryption \cite{seceqp,practical-approx-knn,knn-sharing-keys,knn-mult-data-owners,knn-over-encrypted,knn-paillier,knn-blind,knn-homomorphism,knn-strong-location-privacy,knn-no-anonymizers,knn-efficient,knn-new-casper}.
