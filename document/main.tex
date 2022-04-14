@@ -49,8 +49,6 @@
 		}
 		{}
 
-	% TODO cita Dasha thesis
-
 	\IfFileExists%
 		{frontmatter/acknowledgments.tex}
 		{
@@ -70,7 +68,10 @@
 	\setcounter{tocdepth}{4}
 	\phantomsection%
 	\addcontentsline{toc}{chapter}{Contents}
-	\tableofcontents
+	{
+		\setstretch{1.48}
+		\tableofcontents
+	}
 	\cleardoublepage%
 
 	\newpage
@@ -88,7 +89,7 @@
 	\addcontentsline{toc}{chapter}{\listfigurename}
 	% \cleardoublepage%
 
-	\addtocontents{toc}{\protect\contentsline{chapter}{\protect{}List of Acronyms}{xvi}{link}}
+	\addtocontents{toc}{\protect\contentsline{chapter}{\protect{}List of Acronyms}{xix}{link}}
 	\printglossaries%
 	\cleardoublepage%
 
@@ -110,6 +111,16 @@
 	\cleardoublepage%
 	\input{sections/conclusion}
 	\cleardoublepage%
+
+	\begin{appendices}
+
+		\input{endmatter/appendix-idemix-abstract}
+		\cleardoublepage%
+
+		\input{endmatter/appendix-dispot-abstract}
+		\cleardoublepage%
+
+	\end{appendices}
 
 	\newpage
 	\singlespace%
