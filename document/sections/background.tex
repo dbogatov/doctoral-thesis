@@ -85,14 +85,14 @@
 			In the PathORAM, both the client \client{} and the server \server{} are stateful.
 			The server stores the encrypted records (blocks) grouped in buckets, and the buckets form a binary tree.
 			The client's storage, although asymptotically linear in the data size, is relatively small in practice.
-			The client stores the \emph{position map} that maps the record ID to a leaf in the server tree storage and a small amount of stash, which can store some plaintext blocks on the client side.
+			The client stores the \emph{position map} that maps the record \acrshort{id} to a leaf in the server tree storage and a small amount of stash, which can store some plaintext blocks on the client side.
 
 			The main invariant of the protocol is that at all times the ciphertext of the record $a$ is stored somewhere on the \emph{path} from the root to the leaf that is mapped to $a$, or in the stash (hence the name of the construction).
 
 			The \acrshort{oram} is initialized with a binary tree of buckets with all buckets containing valid encryptions of dummy records.
 			The position map is sampled at random (filled with permuted distinct numbers).
 
-			Main routine of the \acrshort{oram} is an access sub-protocol, which is similar for read \oramRead{} and write \oramWrite{} type of access (remember, \acrshort{oram} hides the type of access from the curious server).
+			Main routine of the \acrshort{oram} is an access sub-protocol, which is similar for read \oramRead{} and write \oramWrite{} types of access (remember, \acrshort{oram} hides the type of access from the curious server).
 			In PathORAM, the access $(o, a, d)$ consists of four steps.
 			First, remap the current leaf $x$ for $a$ to a new random leaf $x^\prime$.
 			Second, read the entire path to leaf $x$ (all buckets from root to leaf) into the client stash.
@@ -105,13 +105,13 @@
 			\begin{equation}\label{equation:path-oram-stash}
 				\probability{ \mathsf{stash\ size} > x } \leq 14 \cdot (0.6002) ^ x
 			\end{equation}
-			If the probability of a protocol failure is thought of as the adversary's advantage (the probability to break the security), then the stash size equivalent to 128-bit security is about 100 blocks for the bucket of size 5 \cite[Figure 5]{path-oram}.
+			If the probability of a protocol failure is thought of as the adversary's advantage (the probability of breaking the security), then the stash size equivalent to 128-bit security is about 100 blocks for the bucket of size 5 \cite[Figure 5]{path-oram}.
 
 	\section{\texorpdfstring{\acrlong{dp}}{Differential Privacy}}
 
 		\acrfull{dp} is a guarantee on a mechanism that takes a dataset and returns some result.
 		The guarantee states that for two neighboring databases (that differ in exactly one record), the probability that the adversary will understand by looking at the output, which of the two databases was used as an input, is bounded.
-		More formally, the \acrlong{dp} is defined in \cref{definition:dp}.
+		More formally, \acrlong{dp} is defined in \cref{definition:dp}.
 
 		\begin{definition}[\acrlong{dp}, adapted from \cite{our-data-ourselves, differential-privacy-original}]\label{definition:dp}
 			A randomized algorithm \algo{A} is $(\epsilon, \delta)$-differentially private if for all $\database_1 \sim \database_2 \in \searchKeyDomain^\dataSize$, and for all subsets $\mathcal{O}$ of the output space of \algo{A},
@@ -130,8 +130,8 @@
 		Therefore, $\epsilon$ is called \emph{a privacy budget} of a \acrshort{dp} system.
 		$\delta$ term is additive and therefore must be small by itself.
 		This term is essentially a probability that the entire system fails.
-		For example, if \algo{A} is a randomized algorithm that fails with a certain chance, this probability will be $\delta$.
-		For instance, a PathORAM \cite{path-oram} algorithm can have a stash overflow with a bounded probability \cite[Theorem 1]{path-oram} and it will cause the entire algorithm to fail.
+		For example, if \algo{A} is randomized and fails with a certain chance, this probability will be $\delta$.
+		For instance, a PathORAM \cite{path-oram} algorithm can have a stash overflow with a bounded probability \cite[Theorem 1]{path-oram} and it will cause the entire system to fail.
 		If PathORAM is used in a \acrshort{dp} system then this probability, however small, bounded and negligible, will have to be accounted for in $\delta$.
 
 		Note that \cref{definition:dp} describes a property of \algo{A} and not a construction method.
@@ -154,7 +154,7 @@
 				\end{itemize}
 			\end{definition}
 
-			In \cref{definition:dp-danitizer}, the query is a predicate, which is defined as in \cref{section:introduction:model:odb}, and it returns a scalar 0 or 1 when executed over a search key (an attribute) $d \in \searchKeyDomain$.
+			In \cref{definition:dp-danitizer}, the query is a predicate, which is defined as in \cref{section:introduction:model:odb}, and it returns a binary 0 or 1 when executed over a search key (an attribute) $d \in \searchKeyDomain$.
 			$\algo{B}{ \serverDS, \query }$ then returns a count, a scalar value which bounds the number of search keys that satisfy the query.
 			For example, a query \query{} can be a range query, then $ \sum_i \query(d_i) $ is the number of records in the range, and $ \algo{B}{ \serverDS, \query } $ returns a scalar value of noise (the fake records), such that it is within $\alpha$ from the true count.
 
@@ -165,10 +165,10 @@
 			\end{remark}
 
 			The main idea of \emph{sanitization} (a.k.a.\ private data release) is to release specific noisy statistics on a private dataset once, which can then be combined in order to answer an arbitrary number of queries without violating privacy.
-			Depending on the query type (see \cref{section:intro:model:query-types}) and the notion of differential privacy (i.e., pure or approximate), different upper bounds on the error have been proven.
-			Omitting the dependency on $\epsilon, \delta$, in case of point queries over domain size \domainSize{}, pure differential privacy results in $\alpha = \bigTheta{\log \domainSize}$ \cite{bounds-on-sample-complexity}, while for approximate differential privacy $\alpha = \bigO{1}$ \cite{private-learning-and-sanitization}.
+			Depending on the query type (see \cref{section:intro:model:query-types}) and the notion of \acrlong{dp} (i.e., pure or approximate), different upper bounds on the error have been proven.
+			Omitting the dependency on $\epsilon$ and $\delta$, in case of point queries over domain size \domainSize{}, pure \acrlong{dp} results in $\alpha = \bigTheta{\log \domainSize}$ \cite{bounds-on-sample-complexity}, while for approximate \acrlong{dp} $\alpha = \bigO{1}$ \cite{private-learning-and-sanitization}.
 			Note that the sanitizers add noise to a count of records, and for the point queries the count is the number of records with a given categorical value (i.e., number of female students in a class).
-			For range queries over domain size \domainSize{}, these bounds are $\alpha = \bigTheta{\log \domainSize}$ for pure differential privacy \cite{non-interactive-database-privacy,dp-under-observation}, and $\alpha = \bigO{(\log^{*} \domainSize)^{1.5}}$ for approximate differential privacy (with an almost matching lower bound of $\alpha = \bigOmega{\log^{*} \domainSize}$) \cite{private-learning-and-sanitization, dp-release, privately-learning-thresholds}.
+			For range queries over domain size \domainSize{}, these bounds are $\alpha = \bigTheta{\log \domainSize}$ for pure \acrlong{dp} \cite{non-interactive-database-privacy,dp-under-observation}, and $\alpha = \bigO{(\log^{*} \domainSize)^{1.5}}$ for approximate \acrlong{dp} (with an almost matching lower bound of $\alpha = \bigOmega{\log^{*} \domainSize}$) \cite{private-learning-and-sanitization, dp-release, privately-learning-thresholds}.
 			More generally, \textcite{non-interactive-database-privacy} showed that any finite query set \querySet{} can be sanitized, albeit non-efficiently.
 
 			\subsubsection{Answering point and range queries with differential privacy}
@@ -182,13 +182,13 @@
 			\subsubsection{Composition}
 
 				Finally, in this thesis we will make use of a \emph{composition} theorem (adapted from \cite{privacy-integrated-queries}) based on \cite{differential-privacy-original,our-data-ourselves}. % chktex 2
-				It concerns executions of multiple differentially private mechanisms on non-disjoint and disjoint inputs.
+				It concerns executions of multiple \acrshort{dp} mechanisms on non-disjoint and disjoint inputs.
 
 				\begin{theorem}\label{theorem:composition}
-					Let \fromNtoM{\algo{A}}{1}{r} be mechanisms, such that each $\algo{A}_i$ provides $\epsilon_i$-differential privacy.
+					Let \fromNtoM{\algo{A}}{1}{r} be mechanisms, such that each $\algo{A}_i$ provides $\epsilon_i$-\acrshort{dp}.
 					Let \fromNtoM{\database}{1}{r} be pairwise non-disjoint (resp., disjoint) datasets.
 					Let $\algo{A}$ be another mechanism that executes $\algo{A}_1(\database_1), \ldots, \algo{A}_r(\database_r)$ using independent randomness for each $\algo{A}_i$, and returns their outputs.
-					Then, mechanism $\algo{A}$ is $\left( \sum_{i=1}^r \epsilon_i \right)$-differentially private (resp., $\left( \max_{i=1}^r \epsilon_i \right)$-differentially private).
+					Then, mechanism $\algo{A}$ is $\left( \sum_{i=1}^r \epsilon_i \right)$-\acrshort{dp} (resp., $\left( \max_{i=1}^r \epsilon_i \right)$-\acrshort{dp}).
 				\end{theorem}
 
 	\section{\texorpdfstring{\acrlongpl{tee}}{Trusted Execution Environments}}
@@ -201,7 +201,7 @@
 
 		\input{figures/fig-enclave}
 
-		While \acrshort{tee} is a concept defining an execution environment, specific solutions include a hardware security module (a plug-in device with a protected memory and a crypto-optimized processing unit), an \acrshort{fpga}, and a set of extensions to an existing processor architecture, such as an \acrshort{sgx} for Intel x86 or Secure Encrypted Virtualization \cite{amd-memory-encryption} for AMD\@.
+		While \acrshort{tee} is a concept defining an execution environment, specific solutions include a hardware security module (a plug-in device with a protected memory and a crypto-optimized processing unit), an \acrshort{fpga}, and a set of extensions to an existing processor architecture, such as an \acrshort{sgx} for Intel x86, Secure Encrypted Virtualization \cite{amd-memory-encryption} for AMD and Apple's Secure Enclave\footnote{\url{https://support.apple.com/guide/security/secure-enclave-sec59b0b31ff/web}}.
 		Of all these, Intel \acrshort{sgx} is the most widely used technology.
 
 		\subsection{\texorpdfstring{\acrlong{sgx}}{Software Guard Extensions}}
@@ -233,4 +233,4 @@
 			Such leakage implies that the normal database application cannot be placed directly in the enclave and be deemed secure, because access pattern has been effectively exploited up to a reconstruction attack \cite{generic-attacks-kellaris}.
 			One then has to design the application specifically to conceal the access pattern.
 			For example, ZeroTrace \cite{zerotrace} is a variant of PathORAM \cite{path-oram} that is internally oblivious and thus can work in \acrshort{sgx}.
-			Oblix \cite{oblix} is another example of a structure that is, in \textcite{oblix} own terms, doubly-oblivious --- internally in how manages memory and registers, and externally in how it interacts with a storage.
+			Oblix \cite{oblix} is another example of a structure that is, in \textcite{oblix} own terms, doubly-oblivious --- internally in how it manages memory and registers, and externally in how it interacts with a storage.

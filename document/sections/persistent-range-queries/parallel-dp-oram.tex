@@ -74,8 +74,8 @@
 
 		\protocolGamma{} is depicted in \cref{algorithm:dp-oram-parallel}.
 		There are a few extensions to the subroutines and notation from \cref{algorithm:dp-oram}.
-		\algo{CreateIndex} and \algo{Lookup} now build and query the index which maps a search key to a pair --- the record ID and the \acrshort{oram} ID (1 to \oramsNumber{}) which stores the record.
-		\Crefrange{algorithm:dp-oram-parallel:gamma:setup:line-4}{algorithm:dp-oram-parallel:gamma:setup:line-5} of \cref{algorithm:dp-oram-parallel} \protocolSetup{} repeat for each \acrshort{oram} and operate on the records partitioned for the given \acrshort{oram} using hash function \algo{H} on the record ID\@.
+		\algo{CreateIndex} and \algo{Lookup} now build and query the index which maps a search key to a pair --- the record \acrshort{id} and the \acrshort{oram} \acrshort{id} (1 to \oramsNumber{}) which stores the record.
+		\Crefrange{algorithm:dp-oram-parallel:gamma:setup:line-4}{algorithm:dp-oram-parallel:gamma:setup:line-5} of \cref{algorithm:dp-oram-parallel} \protocolSetup{} repeat for each \acrshort{oram} and operate on the records partitioned for the given \acrshort{oram} using hash function \algo{H} on the record \acrshort{id}.
 		A shared \acrshort{dp} structure is created with the sanitizer \algo{A} (\cref{algorithm:dp-oram-parallel:gamma:setup:line-6}).
 		In \cref{algorithm:dp-oram-parallel} \protocolQuery{}, the total number of \acrshort{oram} requests is computed once (\cref{algorithm:dp-oram-parallel:gamma:query:line-4}).
 		\Crefrange{algorithm:dp-oram-parallel:gamma:query:line-5}{algorithm:dp-oram-parallel:gamma:query:line-6} repeat for each \acrshort{oram} and operate on the subset of records stored in the given \acrshort{oram}.
@@ -94,7 +94,7 @@
 			To address this inefficiency, we have designed a way to combine the requests in a batch and reduce the number of network requests to the bare minimum.
 			We have implemented this method over PathORAM, which we use for the $(\eta_1, \eta_2)$-\acrshort{oram} protocol, but the idea applies to most tree-based \acrshortpl{oram} (similar to \cite{parallel-oram-improved}).
 
-			Our optimization utilizes the fact that all PathORAM leaf IDs are known in advance and paths in a tree-based storage share the buckets close to the root.
+			Our optimization utilizes the fact that all PathORAM leaf \acrshortpl{id} are known in advance and paths in a tree-based storage share the buckets close to the root.
 			The core idea is to read all paths first, processes the requests and and then write all paths back.
 			This way the client makes a single \texttt{read} request, which is executed much faster than many small requests.
 			Requests are then processed in main memory, including re-encryptions.

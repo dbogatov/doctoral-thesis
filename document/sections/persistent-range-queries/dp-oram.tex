@@ -15,8 +15,8 @@
 				An $(\epsilon, \delta, \alpha, \beta)$-differentially private sanitizer $(\algo{A}, \algo{B})$ for \querySet{} and negligible $\beta$, which satisfies the non-negative noise guarantee from \cref{remark:dp-sanitizer-guarantees}.
 			\item
 				A pair of algorithms \algo{CreateIndex} and \algo{Lookup}.
-				\algo{CreateIndex} consumes \database{} and produces an index data structure \indexI{} that maps a search key \searchKey{} to a list of record IDs \recordID{} corresponding to the given search key.
-				\algo{Lookup} consumes \indexI{} and \query{} and returns a list $T = \fromNtoM{\recordID}{1}{{\abs{T}}}$ of record IDs matching the supplied query.
+				\algo{CreateIndex} consumes \database{} and produces an index data structure \indexI{} that maps a search key \searchKey{} to a list of record \acrshortpl{id} \recordID{} corresponding to the given search key.
+				\algo{Lookup} consumes \indexI{} and \query{} and returns a list $T = \fromNtoM{\recordID}{1}{{\abs{T}}}$ of record \acrshortpl{id} matching the supplied query.
 		\end{itemize}
 
 		Our protocol $\protocol = (\protocolSetup, \protocolQuery)$ of \epsolute{} works as shown in \cref{algorithm:dp-oram}.
@@ -26,7 +26,7 @@
 		\paragraph*{Setup protocol \; \texorpdfstring{\protocolSetup{}}{}}
 
 			Let \user{}'s input be a database \databaseDef{} (\cref{algorithm:dp-oram:setup:line-2}).
-			\user{} creates an index \indexI{} mapping search keys to record IDs corresponding to these keys (\cref{algorithm:dp-oram:setup:line-3}).
+			\user{} creates an index \indexI{} mapping search keys to record \acrshortpl{id} corresponding to these keys (\cref{algorithm:dp-oram:setup:line-3}).
 			\user{} sends over the records to \server{} by executing the \acrshort{oram} protocol on the specified sequence (\crefrange{algorithm:dp-oram:setup:line-4}{algorithm:dp-oram:setup:line-5}).
 			\user{} generates a \acrshort{dp} structure \serverDS{} over the search keys using sanitizer \algo{A}, and sends \serverDS{} over to \server{} (\cref{algorithm:dp-oram:setup:line-6}).
 			The output of \user{} is \indexI{} and of \server{} is \serverDS{}; final \acrshort{oram} states of \server{} and \user{} are implicit, including encryption key \queryKey{} (\cref{algorithm:dp-oram:setup:line-7}).
@@ -37,7 +37,7 @@
 			One can think of these inputs as outputs of \protocolSetup{} (\cref{algorithm:dp-oram:query:line-2}).
 			\user{} immediately sends the query to \server{}, which uses the sanitizer \algo{B} to compute the total number of requests $c$, while \user{} uses index \indexI{} to derive the true indices of the records the query \query{} targets (\cref{algorithm:dp-oram:query:line-3}).
 			\user{} receives $c$ from \server{} and prepares two \acrshort{oram} sequences: $\oramProgram_\mathsf{true}$ for real records retrieval, and $\oramProgram_\mathsf{noise}$ to pad the number of requests to $c$ to perturb the communication volume.
-			$\oramProgram_\mathsf{noise}$ includes valid non-repeating record IDs that are not part of the true result set $T$ (\crefrange{algorithm:dp-oram:query:line-4}{algorithm:dp-oram:query:line-5}).
+			$\oramProgram_\mathsf{noise}$ includes valid non-repeating record \acrshortpl{id} that are not part of the true result set $T$ (\crefrange{algorithm:dp-oram:query:line-4}{algorithm:dp-oram:query:line-5}).
 			\user{} fetches the records, both real and fake, from \server{} using the \acrshort{oram} protocol (\cref{algorithm:dp-oram:query:line-6}).
 			The output of \user{} is the filtered set of records requested by the query $\query{}$; final \acrshort{oram} states of \server{} and \user{} are implicit (\cref{algorithm:dp-oram:query:line-7}).
 

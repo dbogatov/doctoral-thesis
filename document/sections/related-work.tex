@@ -8,11 +8,11 @@
 	\section{Range query security in a snapshot model}
 
 		In \cref{section:range-snapshot} we explore the methods of answering range queries in a snapshot adversary setting.
-		We group these methods into those replying on \acrshort{ope} / \acrshort{ore} schemes coupled with regular database range indices, such as \BPlus{} tree, and other mostly interactive constructions that use custom data structures to support secure indexing.
+		We group these methods into those relying on \acrshort{ope} / \acrshort{ore} schemes coupled with regular database range indices, such as \BPlus{} tree, and other mostly interactive constructions that use custom data structures to support secure indexing.
 
-		The list of recently proposed \acrshort{ope} schemes includes \cite{ope-original, anti-tamper-dbs, bclo-ope, ope-leakage, ope-beyond-one-wayness, ope-early-fh-ope, ope-beyond-ideal-object, ope-mv-opes, fh-ope, ope-mv-popes, ope-multi-user, ope-note, ope-for-encrypted-dbs, ope-structure, ope-non-linear, ope-mdope, ope-outsourced-database, fh-ope-imporved-update}. % chktex 2
-		\textcite{ope-ideal-security-protocol} present a nice analysis of these schemes and they are the first to show that using a stateful scheme you can achieve the ideal security guarantees for \acrshort{ope}.
-		In addition, there are a number of \acrshort{ore} schemes \cite{ore-original, clww-ore, lewi-wu-ore, parameter-hiding-ore, parameter-hiding-ore, ore-learning, ore-partial, ore-multi-client,  delegatable-ore, multi-client-ore} and related protocols \cite{ore-sorel} that have been proposed. % chktex 2
+		The list of recently proposed \acrfull{ope} schemes includes \cite{ope-original, anti-tamper-dbs, bclo-ope, ope-leakage, ope-beyond-one-wayness, ope-early-fh-ope, ope-beyond-ideal-object, ope-mv-opes, fh-ope, ope-mv-popes, ope-multi-user, ope-note, ope-for-encrypted-dbs, ope-structure, ope-non-linear, ope-mdope, ope-outsourced-database, fh-ope-imporved-update}. % chktex 2
+		\textcite{ope-ideal-security-protocol} present a nice analysis of these schemes and they are the first to show that using a stateful scheme one can achieve the ideal security guarantees for \acrshort{ope}.
+		In addition, there are a number of \acrfull{ore} schemes \cite{ore-original, clww-ore, lewi-wu-ore, parameter-hiding-ore, parameter-hiding-ore, ore-learning, ore-partial, ore-multi-client,  delegatable-ore, multi-client-ore} and related protocols \cite{ore-sorel} that have been proposed. % chktex 2
 		After the introduction of \acrshort{ope} / \acrshort{ore} as the means of protecting range indices, a line of attacks \cite{leakage-abuse-attacks-cash-15,attacks-what-else-revealed,inference-attacks-naveed-15, ore-file-injection-attack} have emerged.
 
 		The second group of approaches assumes an outsourced setting where the client may have to communicate with the server during query processing \cite{pope, florian-protocol, secure-queries-overview, practical-range-search}.
@@ -27,11 +27,10 @@
 
 	\section{Range query security in a persistent model}
 
-		For the persistent adversary setting, we group the related secure databases, engines, and indices into three categories
+		For the persistent adversary setting, we group the related secure databases, engines, and indices into two categories
 		\begin{enumerate*}[label={(\roman*)}]
-			\item systems that are oblivious or volume-hiding and do not require \acrfull{tee},
-			\item constructions that rely on \acrshort{tee} (usually, Intel \acrshort{sgx}),
-			\item solutions that use property-preserving or semantically secure encryption and target primarily a snapshot adversary.
+			\item systems that are oblivious or volume-hiding and do not require \acrfull{tee}, and
+			\item constructions that rely on \acrshort{tee} (usually, Intel \acrshort{sgx}).
 		\end{enumerate*}
 		In this section, where relevant, we aim to compare the related work to our own point and range query solution, \epsolute{} \cite{epsolute}, see \cref{section:range-persistent}.
 		\emph{We claim that \epsolute{} is the most secure and practical range- and point-query engine in the outsourced database model, that protects both \acrfull{ap} and \acrfull{cv} using \acrlong{dp}, while not relying on \acrshort{tee}, linear scan or padding result size to the maximum.}
@@ -53,7 +52,7 @@
 			Unlike \epsolute{}, PINED-RQ allows false negatives (i.e., result records not included in the answer), and does not protect against \acrshort{ap} leakage.
 			On the theoretical side, \textcite{differential-obliviousness} (followed by \textcite{differential-obliviousness-followup}) treat the \acrshort{ap} itself as something to protect with \acrshort{dp}.
 			\cite{differential-obliviousness} introduces a notion of differential obliviousness that is admittedly weaker than the full obliviousness used in \epsolute{}. % chktex 2
-			Most importantly, \cite{differential-obliviousness} ensures differential privacy w.r.t.~the \acrshort{oram} only, while \epsolute{} ensures \acrshort{dp} w.r.t.~the entire view of the adversary. % chktex 2
+			Most importantly, \cite{differential-obliviousness} ensures differential privacy with respect to the \acrshort{oram} only, while \epsolute{} ensures \acrshort{dp} with respect to the entire view of the adversary. % chktex 2
 
 		\subsection{Enclave-based solutions}
 
@@ -71,13 +70,12 @@
 
 	\section{\texorpdfstring{\acrshort{knn}}{kNN} query security in a snapshot model}
 
-		Work in this area is naturally split into two groups --- mechanisms and constructions that offer certain security guarantees for nearest-neighbor queries, and attacks against those constructions.
 		In this section, where relevant, we aim to compare the related work to our own \acrshort{knn} query solution, \kanon{} \cite{k-anon}, see \cref{section:knn-snapshot}.
 
 		A work immediately related to ours is QuickN by \textcite{quick-n}.
 		QuickN offers an adaptation of nearest-neighbor search algorithm in conventional tree data structures (i.e., R-trees) to well-established \acrfull{ope} schemes.
 		Unlike our solution that involves a novel property-preserving encryption scheme specifically designed for high-dimensional vectors, QuickN encrypts each vector dimension separately with \acrshort{ope}.
-		\cite{quick-n} includes the experiments with attacks against their solution (attack by \textcite{leakage-abuse-grubs-2017}) and report a high degree of protection against them (at most \SI{3.7}{\percent} matching rate for the inference attacks against coordinates represented as a pair of longitude and latitude).
+		\cite{quick-n} includes the experiments with attacks against their solution (attack by \textcite{leakage-abuse-grubs-2017}) and report a high degree of protection against them (at most \SI{3.7}{\percent} matching rate for the inference attacks against coordinates represented as pairs of longitude and latitude).
 
 		QuickN approach of applying \acrshort{ope} to an R-tree, however, has some disadvantages.
 		First, an ideal stateless \acrshort{ope} has been shown inferior (\cite{ope-leakage}) to its counterpart, an \acrfull{ore} in which the comparison over ciphertexts is defined explicitly.\footnote{
@@ -86,7 +84,7 @@
 		}
 		An \acrshort{ore}, in turn, can have a varying level of security, with the higher security level translating into lower comparison performance \cite{ore-benchmark-17}.
 		In QuickN, an R-tree-based nearest-neighbor algorithm involves a very high number of comparisons, linear in data dimensionality.
-		With the cost of comparison no longer negligible, the overhead of query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
+		With the cost of comparison no longer negligible, the overhead of a query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
 		Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positive results even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
 
 		\textcite{knn-aspe} propose a novel scheme, \acrshort{aspe}, that preserves a special type of scalar product.

@@ -4,7 +4,7 @@
 	The core primitive for their construction is a \acrfull{sse} scheme.
 	An \acrshort{sse} scheme is a server-client protocol in which the server stores a specially encrypted keywords-to-documents map, and a client can query documents with keywords while the server
 	learns neither keywords nor the documents.
-	Note that the map stores short document identifiers instead of the actual documents, and we will use the term ``documents'' to mean ``document identifiers'' or ``record IDs'' in this section.
+	Note that the map stores short document identifiers instead of the actual documents, and we will use the term ``documents'' to mean ``document identifiers'' or ``record \acrshortpl{id}'' in this section.
 
 	The construction treats record values as documents and index ranges as keywords so that records can be retrieved by the ranges that include them.
 	Specifically, a client builds a virtual binary tree over the domain of indices and assigns each record a set of keywords, which is the path from that record to the root.
