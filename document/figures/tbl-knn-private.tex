@@ -1,17 +1,22 @@
-\begin{table}[!ht]
-	\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} l c c >{\bfseries}c c } % chktex 26
-		\toprule
-			Dataset							& Precision		& Recall	& \FOne{} score & \% of non-stop-words	\\
-		\midrule
-			Encrypted with $\beta = 0.0$	& 38.84			& 27.64		& 32.30			& 2.31					\\
-			Encrypted with $\beta = 4.0$	& 36.28			& 26.61		& 30.70			& 3.21					\\
-			Random embeddings				& 36.07			& 26.61		& 30.62			& 0.00					\\
-		\bottomrule
-	\end{tabular*}
-	\caption[Inversion attack performance for the private model experiments]{
-		Inversion attack performance for the private model experiments.
-		The attack model $\Upsilon$ is both trained and validated on the specified datasets.
-		{\color{red}TODO\@: these values are for BookCorpus 5 epochs.}
-	}%
-	\label{table:knn-private}
-\end{table}
+{
+	\def\arraystretch{1.2}
+	\begin{table}[!ht]
+		\begin{tabular*}{\linewidth}{ !{\extracolsep\fill} l c c >{\bfseries}c c } % chktex 26
+			\toprule
+				Dataset (encrypted with $\beta$)												& Precision		& Recall	& \FOne{} score & \% of non-stop-words	\\
+			\midrule
+				$\beta = 0$							& 41.59			& 23.36		& 29.91			& TODO					\\
+				$\beta = \ceil{\sqrt{\max N}} = 4$	& 41.91			& 23.75		& 30.32			& TODO					\\
+				$\beta \approx \max N = 11$			& 40.82 		& 24.20 	& 30.39			& TODO					\\
+				$\beta \approx 2 \cdot \max N = 22$	& 40.44 		& 23.75 	& 29.92			& TODO					\\
+			\midrule
+				Random embeddings					& 35.91			& 26.49		& 30.49			& TODO					\\
+			\bottomrule
+		\end{tabular*}
+		\caption[Inversion attack performance for the private model experiments]{
+			Inversion attack performance for the private model experiments.
+			The attack model $\Upsilon$ is both trained and validated on the specified datasets.
+		}%
+		\label{table:knn-private}
+	\end{table}
+}

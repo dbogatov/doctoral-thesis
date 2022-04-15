@@ -357,8 +357,8 @@
 
 				\input{figures/tbl-knn-private}
 
-				We have chosen $\beta$ values of $0.0$ and $4.0$ as well as random embeddings to produce the datasets, see \cref{table:knn-private}.
-				We immediately notice that the attack model accuracy metrics are similar among all three datasets, with $\beta = 4.0$ and random being almost equal.
+				To produce the datasets, we have chosen $\beta$ values of $0.0$, $\ceil{\sqrt{\max N}}$, $\max N$ and $2 \cdot \max N$ (for $\max N \approx 11$ being the longest input length), as well as random embeddings, see \cref{table:knn-private}.
+				We immediately notice that the attack model accuracy metrics are similar among all five datasets, with the metrics for encrypted and random embeddings being almost equal.
 				This result implies that for the case of private model --- when the adversary has only black-box access to the system as a whole --- the protection by the \acrshort{dcpe} is absolute.
 
 	\section{Search accuracy against security tradeoff}
