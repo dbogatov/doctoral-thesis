@@ -1,7 +1,7 @@
 \chapter{\texorpdfstring{\acrshort{knn}}{kNN} queries in the snapshot model}\label{section:knn-snapshot}
 \thispagestyle{myheadings}
 
-	In this chapter we analyze secure \acrshort{knn} queries in the snapshot adversary model.
+	In this chapter we describe and analyze \kanon{}, a system that executes secure \acrshort{knn} queries in the snapshot adversary model.
 	We study the effect of protecting the records with a type of property-preserving encryption on quality of search and efficiency of certain attacks.
 	Specifically, we examine theoretically and practically how accuracy of both \acrshort{knn} search and \acrshort{ml}-based inversion attack degrade with added security.
 
@@ -22,6 +22,10 @@
 		To summarize, our contributions in this work are as follows:
 		\begin{itemize}
 			\item
+				We construct \kanon{} --- a secure similarity search system in snapshot adversary setting.
+				We analyze the correlation of system's security with search accuracy and attack efficiency, and conclude on practicality of the \kanon{} system.
+
+			\item
 				We adapt and implement a \acrfull{dcpe} scheme from \cite{dcpe} to encrypt text embeddings.
 				We analyze the practical aspects of \acrshort{dcpe} scheme's security (e.g., the effects of floating point representation) and benchmark the construction.
 
@@ -35,15 +39,13 @@
 				The attack works by training an \acrshort{lstm} model on pairs of sentences and their embeddings.
 				We run this attack for varying security levels, and training on both plaintext and encrypted records.
 
-			\item
-				Finally, we analyze the correlation results for search accuracy and attack efficiency and conclude on practicality of our method.
 		\end{itemize}
 
 	\section{\texorpdfstring{\acrlong{dcpe}}{Distance Comparison Preserving Encryption}}
 
 		A promising approach in secure \acrshort{knn} evaluation is using a property-preserving encryption scheme to allow the existing search algorithms to work with minimal alterations.
 		\acrshort{aspe} scheme by \textcite{knn-aspe} is a step in this direction, but their scheme has been shown insecure under a type of chosen plaintext attack in \cite{secure-nn-revisited-break-aspe}.
-		Using a common \acrshort{ope} scheme over vector values to encrypt to object for the purpose of running \acrshort{knn} queries on them has been explored in \cite{quick-n}, but this approach incurs high overhead linear in dimensionality.
+		Using a common \acrshort{ope} scheme over vector values to encrypt the objects for the purpose of running \acrshort{knn} queries on them has been explored in \cite{quick-n}, but this approach incurs high overhead linear in dimensionality.
 		See more detailed related work analysis in \cref{section:related-work:knn}.
 		We, therefore, need a different method --- a scheme that operates over high-dimensional vectors and preserves a property that is required to answer the nearest-neighbor queries.
 
@@ -71,15 +73,15 @@
 			\textcite{dcpe} offer an instantiation of the $\beta$-\acrshort{dcpe} scheme (though not an implementation) that we have adapted to our needs and show on \cref{algorithm:dcpe}.
 
 			The \algo{KeyGen} procedure generates a key \key{} and an amplification factor $s$.
-			The key participates in generating the random coins needed to produce deterministic execution, and the amplification factor controls the magnitude of projection of a the plaintext object into the ciphertext.
+			The key participates in generating the random coins needed to produce deterministic execution, and the amplification factor controls the magnitude of projection of a plaintext object into the ciphertext.
 
-			The \algo{Enc} procedure ``encrypts'' an object by moving it in space in a way that makes it hard to recover its original position and its distance-comparison respective to other encrypted points is preserved.
+			The \algo{Enc} procedure ``encrypts'' an object by moving it in space in a way that makes it hard to recover its original position while its distance-comparison respective to other encrypted points is preserved.
 			The algorithm first constructs a hypersphere of radius $\beta$, the approximation term, around the input point.
 			The routine then samples a new point uniformly inside that hypersphere.
 			Finally, that new point is projected into the ciphertext point according to the amplification factor $s$.
 			Note that for each encryption the scheme generates a fresh nonce $n$ and uses it along with the key \key{} to generate the coins for the samplers.
-			That is, the point in the $\beta$-hypersphere is deterministically set from the nonce (``\textbf{n}umber used only \textbf{once}'', unique per point) and the key (one for all points), and the final ciphertext is scaled the same way for all points.
-			The \algo{Dec} procedure makes the same steps in reverse correctly setting the point in the hypersphere using the nonce and the key.
+			That is, the point in the $\beta$-hypersphere is deterministically set from the nonce (``\textbf{n}umber used only \textbf{once}'', unique per point) and the key (one for all points), and the final ciphertext is projected the same way for all points.
+			The \algo{Dec} procedure makes the same steps in reverse, correctly setting the point in the hypersphere using the nonce and the key.
 			See \cref{figure:dcpe} for a visual example of \acrshort{dcpe} encryption.
 
 			\input{figures/fig-dcpe}
@@ -114,13 +116,13 @@
 
 	\section{\texorpdfstring{\acrshort{knn}}{kNN} search accuracy}\label{section:knn-snapshot:search}
 
-		The first part of a practical and secure outsourced similarity search application is the search accuracy.
+		The first part of \kanon{} is the search accuracy.
 		In this set of experiments, we embed the documents and apply $\beta$-\acrshort{dcpe} to the embeddings.
 		We use existing efficient nearest-neighbor search algorithms and report on ranking quality metrics for different $\beta$.
 
 		\subsection{Secure \texorpdfstring{\acrshort{knn}}{kNN} protocol}
 
-			With the $\beta$-\acrshort{dcpe} as a component, we can model the protocols similar to \acrshort{ore} ones.
+			With the $\beta$-\acrshort{dcpe} as a component, we can model the \kanon{} protocols similar to \acrshort{ore} with \BPlus{} tree ones.
 			In the setup protocol \protocolSetup{}, \user{} simply encrypts the entire input, one vector at a time, and sends the encrypted data over to \server{}.
 			In the query protocol \protocolQuery{}, \user{} encrypts the query with \acrshort{dcpe}, sends the ciphertext to \server{}, while \server{} runs a standard \acrshort{knn} search against the ciphertext.
 			$k$ encrypted vectors are then returned to \user{}, which decrypts them as the last step.
@@ -150,7 +152,7 @@
 
 			The actual experiment is conducted as follows.
 			First, we produce a set of embeddings for 8.8 million documents and 200 queries from \acrshort{trec} 2020 dataset.
-			We observed that the maximum length of an embedding vector is about 11 units.
+			We observed that the maximum length of an embedding vector is about $\sqrt{\max N} \approx 11$ units.
 			Second, we encrypt the record and query embeddings using \acrshort{dcpe} and range $\beta$ from 0 (meaning exact distance-comparison) to 50, with $\beta = \sqrt{11} \approx 3.3$ hiding about half of the bits of input embeddings.
 			Third, we run the nearest neighbor search on these pairs of data and queries sets using \acrshort{faiss} \cite{faiss}, a \acrshort{gpu}-enabled library for efficient similarity search and clustering of dense vectors.
 			Finally, we report a range of ranking quality metrics and generic \acrshort{knn} result metrics.
@@ -170,7 +172,7 @@
 
 				\acrfull{ndcg} is another measure of ranking quality most used in web search engine algorithms.
 				Its main goal is to produce a metric that would promote the following two assumptions.
-				First, documents' relevance implies its usefulness, and second, highly relevant documents are more useful if they have higher rank (appear earlier in result list).
+				First, a document's relevance implies its usefulness, and second, highly relevant documents are more useful if they have higher rank (appear earlier in the result list).
 				\acrshort{ndcg} is a normalized version of discounted cumulative gain, and is defined as the actual over ideal gain up to a position $p$
 				\[
 					\mathsf{\acrshort{ndcg}}_p = \frac{\mathsf{DCG}_p}{\mathsf{IDCG}_p} = \frac{ \sum_{i=1}^p \frac{ \mathsf{relevance}_i }{ \log_2 (i + 1) } }{ \sum_{i=1}^{ \algo{Rel}{p} } \frac{ \mathsf{relevance}_i }{ \log_2 (i + 1) } } \; ,
@@ -195,23 +197,23 @@
 				\input{figures/fig-knn-search-coarse}
 
 				We run two sets of experiments to see how these metrics change with varying the security parameter $\beta$.
-				For first the set of $\beta$ values, we ranged the parameter from 0 to 50 with increments of $1.0$, see \cref{figure:knn-search-coarse}.
+				For the first set of $\beta$ values, we ranged the parameter from 0 to 50 with increments of $1.0$, see \cref{figure:knn-search-coarse}.
 				Higher values of $\beta$ predictably degraded the search accuracy, but we wanted to see how quickly and after which values of $\beta$ the accuracy starts to fall noticeably.
 
 				First, we notice that the result difference grows close to linearly with $\beta$, which means that each new security level knocks out a few correct responses from the set proportionally.
 				Second, we see that the result distance jumps immediately to almost \SI{100}{\percent}, which means that even a tiny approximation term significantly perturbs the order of the responses, but given low difference between the answer sets, not the content of the result.
 				Finally, we observe that at about $\beta = 9$, the \acrshort{trec} metrics start to fall sharply and throughout the entire range of $\beta$ they fall in accord.
 
-				For the maximum vector length of 11, the $\beta$ value that hides half of the input bits is $\beta = \sqrt{11} \approx 3.3$.
+				For the maximum vector length of $\sqrt{\max N} \approx 11$, the $\beta$ value that hides half of the input bits is $\beta = \sqrt{11} \approx 3.3$.
 				To see the metrics behavior at around this point, we ran the experiments again, now ranging $\beta$ in finer manner, from $0.0$ to $5.0$ with increments of $0.1$, see \cref{figure:knn-search-fine}.
-				We confirm that for $\beta = \sqrt{\max N}$, the values of the ranking quality metrics are sufficiently close to the plaintext values.
-				\emph{We therefore conclude that the bit-security \acrshort{dcpe} offers comes a low search accuracy penalty.}
+				We confirm that for $\beta = \sqrt{\max N} \approx 3.3$, the values of the ranking quality metrics are sufficiently close to the plaintext values.
+				\emph{We therefore conclude that the bit-security \acrshort{dcpe} offers comes with a low search accuracy penalty.}
 
 				\input{figures/fig-knn-search-fine}
 
 	\section{Security against attacks}\label{section:knn-snapshot:attacks}
 
-		The second part of a practical and secure outsourced similarity search application is the protection against attacks.
+		The second part of \kanon{} is the protection against attacks.
 		In this set of experiments, we adapt a recent \acrshort{ml}-based attack by \textcite{embedding-attacks}.
 		\textcite{embedding-attacks} offer three attacks against text embeddings:
 		\begin{enumerate*}[label={(\roman*)}]
@@ -226,7 +228,7 @@
 
 		\subsection{Black-box model inversion attack \texorpdfstring{\cite{embedding-attacks}}{}}
 
-			The black-box inversion attack assumes no knowledge of the embedding model, it can only use it to produce the embeddings.
+			The black-box inversion attack assumes no knowledge of the embedding model; it can only use it to produce the embeddings.
 			In this section we follow the original notation by \textcite{embedding-attacks}.
 
 			The attack works by training another model $\Upsilon$ to recognize the correlation between the set of words $\mathcal{W}(x)$ of a document $x$ and its embedding $\Phi(x)$.
@@ -293,7 +295,7 @@
 					\FOne = 2 \cdot \frac{ \mathsf{precision} \cdot \mathsf{recall} }{ \mathsf{precision} + \mathsf{recall} }
 				\]
 
-				We go a step further in this direction and given the context of the model --- recovering a set of words from a sentence embedding --- also track the fraction of common words (a.k.a., stop-words) in the predicted set.
+				We go a step further in this direction and given the context of the model --- recovering a set of words from a sentence embedding --- also track the fraction of common words (a.k.a.\ stop-words) in the predicted set.
 				\acrshort{bert} explicitly encourages including the stop-words in the input because their relative position matters for the context and thus embedding.
 				However, the attack only produces an unordered set of words and not their relative position.
 				Therefore, the \emph{model prediction quality}, the \FOne{} score, may seem high, but it may not imply high \emph{attack efficiency}, because a huge fraction of predicted words are common and thus contribute little to added adversary knowledge.
@@ -307,7 +309,7 @@
 				\input{figures/fig-knn-epochs}
 
 				We have established two baselines between which the attack performance over encrypted inputs is assumed to lie.
-				The first baseline is the attack on the plaintext inputs (referred to as \emph{plaintext attack}), a replica of the original attack from \cite{embedding-attacks}.
+				The first baseline is the attack on the plaintext inputs (referred to as \emph{plaintext attack}), a replica of the original attack by \textcite{embedding-attacks}.
 				The second baseline is the attack on the random embeddings (referred to as \emph{random attack}), which, counterintuitively, does not produce close to zero \FOne{} score.
 
 				In both cases, we have trained the attack model for 30 epochs (see \FOne{} score on \cref{figure:knn-epochs}).
@@ -350,7 +352,7 @@
 			\subsubsection{Private model}
 
 				For the private model experiments, we have trained the model $\Upsilon$ on the already encrypted embeddings for 30 epochs.
-				That is, the model $\Upsilon$ is trained on $ ( \algo{Enc}{ \Phi(x) }, \mathcal{W}(x) ) $ pairs from the training dataset and then we run predictions for the encrypted auxillary embeddings, similar to public model.
+				That is, the model $\Upsilon$ is trained on $ ( \algo{Enc}{ \Phi(x) }, \allowbreak \mathcal{W}(x) ) $ pairs from the training dataset and then we run predictions for the encrypted auxillary embeddings, similar to public model.
 				The training and validation datasets are encrypted with the same set of public and private parameters (i.e., same key \key{}, $s$ and $\beta$).
 
 				\input{figures/tbl-knn-private}
@@ -361,7 +363,7 @@
 
 	\section{Search accuracy against security tradeoff}
 
-		Equipped with the empirical data from experiments on search accuracy and attack efficiency, we can correlate these values with the security parameter, the approximation term $\beta$.
+		Equipped with the empirical data from \kanon{} experiments on search accuracy and attack efficiency, we can correlate these values with the security parameter, the approximation term $\beta$.
 
 		\input{figures/fig-knn-tradeoff}
 
@@ -374,15 +376,15 @@
 		Finally, we note that at $\beta = 2 \cdot \max N$, although both measures drop significantly, after that point the accuracy goes down much faster, which implies that increasing $\beta$ beyond twice the longest vector size is pessimal.
 		This value of $\beta$ is also close to a point where the attack \FOne{} score intercepts the \FOne{} score of a random embedding attack, which further confirms that this value of $\beta$ is optimal.
 
-		\emph{Given the significant drop of attack efficiency for smaller $\beta$ while retaining almost optimal search accuracy, we conclude that our method of applying a \acrlong{dcpe} to an embedding to protect \acrshort{knn} queries is efficient.}
-		The system we developed is also highly tuneable, with $\beta$ corresponding to the application-specific accuracy and security requirements.
-		Finally, the construction is cheap in terms of performance and functionality --- the encryption of inputs is very fast and is done only once as a preprocessing step, and the existing algorithms work naturally over encrypted data.
+		\emph{Given the significant drop of attack efficiency for smaller $\beta$ while retaining almost optimal search accuracy, we conclude that \kanon{} (applying a \acrlong{dcpe} to an embedding to protect \acrshort{knn} queries) is efficient.}
+		\kanon{} developed is also highly tuneable, with $\beta$ corresponding to the application-specific accuracy and security requirements.
+		Finally, the construction is cheap in terms of performance and functionality --- the encryption of inputs is very fast and is done only once as a preprocessing step, and the existing algorithms work naturally over the encrypted data.
 
 	\section{Conclusions}
 
-		In this work, we developed and analyzed a mechanism for answering \acrshort{knn} queries securely in an outsourced setting.
+		In this work, we developed and analyzed \kanon{}, a system that answers \acrshort{knn} queries securely in an outsourced setting.
 		We adapted a \acrshort{dcpe} scheme, ran experiments on search accuracy and inversion attack efficiency over encrypted inputs.
-		We analyzed the correlation between the accuracy and security, and concluded the approach provides meaningful and tunable security and attack resiliency guarantees for a comparatively small penalty in search accuracy.
+		We analyzed the correlation between the accuracy and security, and concluded that the approach provides meaningful and tunable security and attack resiliency guarantees for a comparatively small penalty in search accuracy.
 
 		\subsubsection{Future Work}
 
