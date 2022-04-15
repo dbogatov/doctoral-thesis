@@ -3,10 +3,10 @@
 	We have implemented our solution as a modular client-server application in C++.
 	We open-sourced all components of the software set: PathORAM\footnote{\url{https://github.com/epsolute/path-oram}} and B+ tree\footnote{\url{https://github.com/epsolute/b-plus-tree}} implementations and the main query executor\footnote{\url{https://github.com/epsolute/epsolute}}.
 	We provide PathORAM and B+ tree components as C++ libraries to be used in other projects; the code is documented, benchmarked and tested (228 tests covering \SI{100}{\percent} of the code).
-	We have also published our datasets and query sets\footnote{\url{http://csr.bu.edu/dp-oram/}}.
+	We have also published our datasets and query sets.\footnote{\url{http://csr.bu.edu/dp-oram/}}
 
 	For cryptographic primitives, we used OpenSSL library (version 1.1.1i).
-	For symmetric encryption in \acrshort{oram} we have used \acrshort{aes} in CBC mode \cite{aes-nist,nist-modes} with a 256-bits key (i.e., $\eta_2 = 2^{-256}$), for the hash algorithm \algo{H} used to partition records among \acrshortpl{oram} we have used \acrshort{sha}-256 algorithm \cite{nist-hash}.
+	For symmetric encryption in \acrshort{oram} we have used \acrshort{aes} in \acrshort{cbc} mode \cite{aes-nist,nist-modes} with a 256-bits key (i.e., $\eta_2 = 2^{-256}$), for the hash algorithm \algo{H} used to partition records among \acrshortpl{oram} we have used \acrshort{sha}-256 algorithm \cite{nist-hash}.
 	Aggregate tree fanout \fanout{} is 16, proven to be optimal in \cite{hierarchical-methods-for-dp}.
 
 	We designed our experiments to answer the following questions:
@@ -56,12 +56,12 @@
 		We choose the \protocolGamma{} because it outperforms \protocolNoGamma{} in all experiments (see \textbf{\ref{item:question-scalability}} in \cref{section:range-persistent:experiments:results}).
 		In the setting, there are 64 Redis services (8 services per one Redis server \acrshort{vm}), 8 \acrshort{oram} machines communicating with 8 Redis services each, and the client, which communicates with these 8 \acrshort{oram} machines.
 		We have empirically found this configuration optimal for the compute nodes and network that we used in the experiments.
-		\acrshort{oram} and Redis servers run on GCP \texttt{n1-standard-16} \acrshortpl{vm} (Ubuntu 18.04), in regions \texttt{us-east4} and \texttt{us-east1} respectively.
+		\acrshort{oram} and Redis servers run on \acrshort{gcp} \texttt{n1-standard-16} \acrshortpl{vm} (Ubuntu 18.04), in regions \texttt{us-east4} and \texttt{us-east1} respectively.
 		Client machine runs \texttt{n1-highmem-16} \acrshort{vm} in the same region as \acrshort{oram} machines.
 		The ping time between the regions (i.e.\ between trusted and untrusted zones) is \SI{12}{\milli\second} and the effective bandwidth is \SI{150}{\mega\byte\per\second}.
 		Ping within a region is negligible.
 
-		Default \acrshort{dp} parameters are $\epsilon = \ln(2) \approx \num{0.693}$ and $\beta = 2^{-20}$, which are consistent with the other \acrshort{dp} applications proposed in the literature \cite{choosing-epsilon}.
+		Default \acrshort{dp} parameters are $\epsilon = \ln(2) \approx \num{0.693}$ and $\beta = 2^{-20}$, which are consistent with the other \acrshort{dp} applications in the literature \cite{choosing-epsilon}.
 		Buckets number is set as the largest power of $\fanout = 16$ that is no greater than the domain of the dataset \domainSize{}.
 
 		Default dataset is a uniform dataset of $10^6$ records with domain size $10^4$, and uniformly sampled queries with selectivity \SI{0.5}{\percent}.
@@ -82,7 +82,7 @@
 			Conventional \acrshort{rdbms} represents the most efficient and least private and secure solution in our set.
 			While MySQL and PostgreSQL offer some encryption options and no differential privacy, for our experiments we turned off security features for maximal performance.
 			We have run queries against MySQL and PostgreSQL varying data and record sizes.
-			We used \texttt{n1-standard-32} GCP \acrshortpl{vm} in \texttt{us-east1} region, running MySQL version 14.14 and PostgreSQL version 10.14.
+			We used \texttt{n1-standard-32} \acrshort{gcp} \acrshortpl{vm} in \texttt{us-east1} region, running MySQL version 14.14 and PostgreSQL version 10.14.
 
 		\subsubsection*{Linear Scan}
 
@@ -95,7 +95,7 @@
 		\subsubsection*{Shrinkwrap}
 
 			Shrinkwrap \cite{shrinkwrap} is a construction that answers federated \acrshort{sql} queries hiding both access pattern and communication volume.
-			Using the EMP toolkit \cite{emp-toolkit} and the code Shrinkwrap authors shared with us, we implemented a prototype that only answers range queries.
+			Using the \acrshort{emp} \cite{emp-toolkit} and the code Shrinkwrap authors shared with us, we implemented a prototype that only answers range queries.
 			This part of Shrinkwrap amounts to making a scan over the input marking the records satisfying the range, sorting the input, and then revealing the result set plus \acrshort{dp} noise to the client.
 			For the latter part we have adapted Shrinkwrap's Truncated Laplace Mechanism \cite[Definition 4]{shrinkwrap} to hierarchical method \cite{hierarchical-methods-for-dp} in order to be able to answer an unbounded number of all possible range queries.
 			We have emulated the outsourced database setting by using two \texttt{n1-standard-32} servers in different regions (\SI{12}{\milli\second} ping and \SI{150}{\mega\byte\per\second} bandwidth) executing the algorithm in a circuit model (the faster option per Shrinkwrap experiments) and then revealing the result to the trusted client.
@@ -144,7 +144,7 @@
 			According to our experiments, \epsolute{} eclipses the linear scan at \SI{4}{\kibi\byte}, 64 threads and only \emph{ten thousand records} (both mechanisms complete in about \SI{120}{\milli\second}).
 			For a default setting (at a million records), the difference is \textbf{18 times}, see \cref{figure:linear-scan}.
 
-			Because Shrinkwrap sorts the input obliviously in a circuit model, it incurs $\bigO{n \log n}$ comparisons, each resulting in multiple circuit gates, which is much more expensive than the linear scan.
+			Because Shrinkwrap sorts the input obliviously in a circuit model, it then incurs $\bigO{n \log n}$ comparisons, each resulting in multiple circuit gates, which is much more expensive than the linear scan.
 			Unlike linear scan, however, Shrinkwrap does not require much client memory as the client merely coordinates the query.
 			While Shrinkwrap supports richer set of relational operators, for range queries alone \epsolute{} is \textbf{three orders of magnitude} faster.
 
@@ -233,7 +233,7 @@
 			Horizontal scaling is a necessity for a practical system, this is the motivation for the parallelization in the first place.
 			Ideally, performance should improve proportionally to the parallelization factor, number of \acrshortpl{oram} in our case, \oramsNumber{}.
 
-			For scalability experiments we run the default setting for both \protocolNoGamma{} and \protocolGamma{} (\emph{no-$\gamma$-method} and \emph{$\gamma$-method} respectively) varying the number of \acrshortpl{oram} \oramsNumber{}, from 8 to 96 (maximum virtual \acrshortpl{cpu} on a GCP \acrshort{vm}).
+			For scalability experiments we run the default setting for both \protocolNoGamma{} and \protocolGamma{} (\emph{no-$\gamma$-method} and \emph{$\gamma$-method} respectively) varying the number of \acrshortpl{oram} \oramsNumber{}, from 8 to 96 (maximum virtual \acrshortpl{cpu} on a \acrshort{gcp} \acrshort{vm}).
 			The results are visualized on \cref{figure:scalability}.
 			We report two positive observations:
 			\begin{enumerate*}[label={(\roman*)}]

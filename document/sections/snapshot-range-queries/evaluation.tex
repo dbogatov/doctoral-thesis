@@ -30,9 +30,9 @@
 			{.NET Core} uses platform-specific implementation of \acrshort{aes}, thus leverages \texttt{AES-NI} \acrshort{cpu} instruction.
 			In our project all key sizes are 128 bits, as is \acrshort{aes} block size.
 
-			We implemented \acrshort{aes}-based \acrshort{prg}, which uses \acrshort{aes} \cite{aes-nist} in CTR mode \cite{nist-modes} and caches unused entropy (as suggested in \cite{aes-ctr-rfc}).
+			We implemented \acrshort{aes}-based \acrshort{prg}, which uses \acrshort{aes} \cite{aes-nist} in \acrshort{ctr} mode \cite{nist-modes} and caches unused entropy (as suggested in \cite{aes-ctr-rfc}).
 			For \acrshort{prf}, since we need only 128-bit inputs and outputs, we used one application of \acrshort{aes} \cite[Proposition 3.27]{intro-to-modern-crypto}.
-			For symmetric encryption we use \acrshort{aes} with a random initialization vector in CBC mode \cite[Section 3.6.2]{intro-to-modern-crypto}.
+			For symmetric encryption we use \acrshort{aes} with a random initialization vector in \acrshort{cbc} mode \cite[Section 3.6.2]{intro-to-modern-crypto}.
 			For hash we use default {.NET Core} \acrshort{sha}-2 implementation.
 			For \acrshort{prp}, we implemented unbalanced Feistel networks \cite{unbalanced-feistel} for large inputs and Knuth shuffle \cite{knuth-shuffle} for small inputs.
 			Please see the README of project's repository\footnote{\url{https://github.com/dbogatov/ore-benchmark}} for low-level details.
