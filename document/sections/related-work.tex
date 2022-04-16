@@ -85,7 +85,7 @@
 		An \acrshort{ore}, in turn, can have a varying level of security, with the higher security level translating into lower comparison performance \cite{ore-benchmark-17}.
 		In QuickN, an R-tree-based nearest-neighbor algorithm involves a very high number of comparisons, linear in data dimensionality.
 		With the cost of comparison no longer negligible, the overhead of a query over 2D or 3D is already high, saying nothing of 768-dimensional vectors that our work targets.
-		Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positive results even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
+		Second, QuickN protocol is not single-round (i.e., it takes two roundtrips per query) and it returns a large number of false positives even for a minimal $k$ (\num{4000} false positives for $10^6$ dataset and $k = 1$).
 
 		\textcite{knn-aspe} propose a novel scheme, \acrshort{aspe}, that preserves a special type of scalar product.
 		Namely, \acrfull{aspe} scheme preserves the scalar product of a database point and a query point, but not the product of a database point with itself or another database point.
