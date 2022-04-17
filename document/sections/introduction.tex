@@ -97,6 +97,14 @@
 		\cref{section:range-persistent} proposes a novel solution for the range queries in the persistent adversary model, \epsolute{} \cite{ore-benchmark-17}.
 		In \cref{section:knn-snapshot}, we describe \kanon{} \cite{k-anon} --- a mechanism to answer similarity search (i.e., \acrlong{knn}) queries in a snapshot adversary setting using a type of property-preserving encryption similar to \acrshort{ope}.
 		In the chapter we describe the encryption method, the set of experiments to empirically measure the search accuracy and the level of protection against the attacks.
+		The source code of this thesis is publicly available.\footnote{
+			The thesis has been compiled
+			\ifthenelse%
+				{\equal{\version}{local-dev}}
+				{locally}
+				{from \href{https://github.com/dbogatov/doctoral-thesis/commit/\version}{\texttt{dbogatov/doctoral-thesis@\version}}}
+			on \today{}.
+		}
 
 		\subsection{Works completed during the Ph.D. program}
 
