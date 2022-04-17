@@ -26,7 +26,7 @@
 				We analyze the correlation of system's security with search accuracy and attack efficiency, and conclude on practicality of the \kanon{} system.
 
 			\item
-				We adapt and implement a \acrfull{dcpe} scheme from \cite{dcpe} to encrypt text embeddings.
+				We implement a \acrfull{dcpe} scheme from \cite{dcpe} and adapt it to encrypt text embeddings.
 				We analyze the practical aspects of \acrshort{dcpe} scheme's security (e.g., the effects of floating point representation) and benchmark the construction.
 
 			\item
@@ -118,7 +118,7 @@
 
 		The first part of \kanon{} is the search accuracy.
 		In this set of experiments, we embed the documents and apply $\beta$-\acrshort{dcpe} to the embeddings.
-		We use existing efficient nearest-neighbor search algorithms and report on ranking quality metrics for different $\beta$.
+		We use existing efficient \acrshort{knn} search algorithms and report ranking quality metrics for different $\beta$.
 
 		\subsection{Secure \texorpdfstring{\acrshort{knn}}{kNN} protocol}
 

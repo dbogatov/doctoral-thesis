@@ -6,7 +6,7 @@
 	The encryption algorithm works by splitting the domain into two parts according to a value sampled from the \acrfull{hg}, and splitting the range in half recursively.
 	When the domain size contains a single element, the corresponding ciphertext is sampled uniformly from the current range.
 
-	All pseudo-random decisions are made by an internal \acrshort{prg} (refereed to as $\tapegen$ in \cite{bclo-ope}).
+	All pseudo-random decisions are made by an internal \acrshort{prg} (refereed to as \algo{TapeGen} in \cite{bclo-ope}).
 	This way not only the algorithm is deterministic, but also decryption is possible.
 	The decryption procedure takes the same ``path'' of splitting domain and range, and when the domain size reaches one, the only value left is the original plaintext.
 

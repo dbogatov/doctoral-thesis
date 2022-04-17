@@ -1,6 +1,9 @@
 % chktex-file 1
 % chktex-file 8
 
+\newlength{\dcpeAlgInterLength}
+\setlength{\dcpeAlgInterLength}{0.18ex}
+
 \begin{algorithm*}[ht!]
 
 	\begin{pchstack}
@@ -11,7 +14,7 @@
 			\pcreturn (s, \key)
 		}
 
-		\hspace{0.9ex}
+		\hspace{\dcpeAlgInterLength}
 
 		\procedure[linenumbering]{\algo{Enc}{ (s, \key), \vec{m} }}{
 			n \sample \bin^\secpar														\\
@@ -24,7 +27,7 @@
 			\pcreturn \vec{c}
 		}
 
-		\hspace{0.9ex}
+		\hspace{\dcpeAlgInterLength}
 
 		\procedure[linenumbering]{\algo{Dec}{ (s, \key), (\vec{c}, n) }}{
 			\mathsf{coins}_n || \mathsf{coins}_u \gets \algo{\acrshort{prf}}{\key, n}	\\
