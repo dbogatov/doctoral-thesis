@@ -1,10 +1,23 @@
 % cSpell:disable
 
-\documentclass{report}
+\documentclass[letter]{report}
 
-\usepackage[final]{pdfpages}
+\usepackage{graphicx}
+\usepackage{pgffor}
+\usepackage[margin=0in]{geometry}
+\usepackage{pax}
 
-\usepackage{hyperref}
+\newcounter{pdfpages}
+\newcommand*{\getpdfpages}[1]{%
+	\begingroup
+		\sbox0{%
+			\includegraphics{#1}%%
+			\setcounter{pdfpages}{\pdflastximagepages}%
+		}%
+	\endgroup
+}
+
+\usepackage[hidelinks]{hyperref}
 
 \hypersetup{
 	pdfauthor   = {Dmytro Bogatov <dmytro@bu.edu>},
@@ -28,7 +41,10 @@
 
 \begin{document}
 
-	\includepdf[pages=-,pagecommand={},fitpaper=true]{file.pdf}
+	\getpdfpages{file}
+	\foreach \x in {1,...,\value{pdfpages}} {
+		\includegraphics[width=\paperwidth,keepaspectratio,page=\x]{file}
+	}
 
 	\nocite{*}
 
