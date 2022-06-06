@@ -1,136 +1,35 @@
 % cSpell:disable
 
-\documentclass[12pt,letterpaper]{report}
+\documentclass{report}
 
-\input{version}
+\usepackage[final]{pdfpages}
 
-\input{preamble}
+\usepackage{hyperref}
 
-\input{glossary}
+\hypersetup{
+	pdfauthor   = {Dmytro Bogatov <dmytro@bu.edu>},
+	pdftitle    = {Secure and Efficient Query Processing in Outsourced Databases},
+	pdfsubject  = {Doctoral Dissertation},
+	pdfkeywords = {OPE, ORE, Range Query Protocols, Epsolute, kNN},
+	pdfcreator  = {LaTeX with hyperref package},
+	pdfproducer = {dvips + ps2pdf}
+}
+
+\usepackage[
+	backend=biber,
+	style=alphabetic,
+	giveninits=false,
+	sorting=nyt,
+	maxbibnames=1000,
+	maxalphanames=4
+]{biblatex}
+
+\bibliography{bibfile}
 
 \begin{document}
 
-	\input{meta}
+	\includepdf[pages=-,pagecommand={},fitpaper=true]{file.pdf}
 
-	\ifthenelse{1=1}{
-		\maketitle
-	}{
-		Not particularly proud, but it seems necessary.
-		I use pandoc to convert Tex to text and then run some plain text analysis.
-		For some reason pandoc fails for the \\maketitle statement.
-		However, it is not smart enough to deduce that this condition is always true, while Tex is.
-	}
-	\cleardoublepage%
-
-	\copyrightpage%
-	\cleardoublepage%
-
-	\approvalpage%
-
-	\cleardoublepage%
-
-	\IfFileExists%
-		{frontmatter/quote.tex}
-		{
-			\ifx\noAcks\undefined%
-				\newpage
-				\input{frontmatter/quote}
-				\cleardoublepage%
-			\fi
-		}
-		{}
-
-	\IfFileExists%
-		{frontmatter/dedication.tex}
-		{
-			\ifx\noAcks\undefined%
-				\newpage
-				\input{frontmatter/dedication}
-				\cleardoublepage%
-			\fi
-		}
-		{}
-
-	\IfFileExists%
-		{frontmatter/acknowledgments.tex}
-		{
-			\ifx\noAcks\undefined%
-				\newpage
-				\input{frontmatter/acknowledgments}
-				\cleardoublepage%
-			\fi
-		}
-		{}
-
-	\begin{abstractpage}
-		\input{frontmatter/abstract}
-	\end{abstractpage}
-	\cleardoublepage%
-
-	\setcounter{tocdepth}{4}
-	\phantomsection%
-	\addcontentsline{toc}{chapter}{Contents}
-	\tableofcontents
-	\cleardoublepage%
-
-	\newpage
-	\listofalgorithms%
-	\addcontentsline{toc}{chapter}{\listalgorithmname}
-	\cleardoublepage%
-
-	\newpage
-	\listoftables
-	\addcontentsline{toc}{chapter}{\listtablename}
-	\cleardoublepage%
-
-	\newpage
-	\listoffigures
-	\addcontentsline{toc}{chapter}{\listfigurename}
-	% \cleardoublepage%
-
-	\addtocontents{toc}{\protect\contentsline{chapter}{\protect{}List of Acronyms}{xx}{link}}
-	\printglossaries%
-	\cleardoublepage%
-
-	\newpage
-	\endofprelim%
-	\cleardoublepage%
-
-	\input{sections/introduction}
-	\cleardoublepage%
-	\input{sections/background}
-	\cleardoublepage%
-	\input{sections/related-work}
-	\cleardoublepage%
-	\input{sections/snapshot-range-queries/snapshot-range-queries}
-	\cleardoublepage%
-	\input{sections/persistent-range-queries/persistent-range-queries}
-	\cleardoublepage%
-	\input{sections/snapshot-knn-queries}
-	\cleardoublepage%
-	\input{sections/conclusion}
-	\cleardoublepage%
-
-	\begin{appendices}
-
-		\input{endmatter/appendix-idemix-abstract}
-		\cleardoublepage%
-
-		\input{endmatter/appendix-dispot-abstract}
-		\cleardoublepage%
-
-	\end{appendices}
-
-	\newpage
-	\singlespace%
-
-	\phantomsection%
-	\addcontentsline{toc}{chapter}{Bibliography}
-
-	\printbibliography%
-
-	\cleardoublepage%
-
-	\input{endmatter/cv}
+	\nocite{*}
 
 \end{document}
