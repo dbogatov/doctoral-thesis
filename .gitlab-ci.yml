@@ -116,10 +116,10 @@ put-docs:
   variables:
     GIT_STRATEGY: fetch
   script:
-    - ./put-docs.sh 121 report cv for-thesis # CV
+    - ./put-docs.sh 282 report file master # CV
   artifacts:
     expire_in: 30 min
     paths:
-      - document/graphics/cv.pdf
+      - document/graphics/file.pdf
   tags:
     - docker
