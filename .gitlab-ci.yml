@@ -106,7 +106,7 @@ build:
   variables:
     BUILD_ARGS: " | -e | -n"
   before_script:
-    - /pdfannotextractor.pl document/graphics/cv.pdf
+    - /pdfannotextractor.pl document/file.pdf
   dependencies:
     - put-docs
 
@@ -120,6 +120,6 @@ put-docs:
   artifacts:
     expire_in: 30 min
     paths:
-      - document/graphics/file.pdf
+      - document/file.pdf
   tags:
     - docker

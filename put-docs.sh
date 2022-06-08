@@ -49,6 +49,6 @@ curl \
 > file.pdf
 
 echo "Moving file"
-mv file.pdf $OLDPWD/document/graphics/$DESTINATION.pdf
+mv file.pdf $OLDPWD/document/$DESTINATION.pdf
 
 echo "Done"
