@@ -4,8 +4,8 @@
 
 \usepackage{graphicx}
 \usepackage{pgffor}
-\usepackage[margin=0in]{geometry}
-\usepackage{pax}
+\usepackage[margin=0in]{geometry} % remove all margins
+\usepackage{pax} % process .pax file to bring back internal links
 
 \newcounter{pdfpages}
 \newcommand*{\getpdfpages}[1]{%
@@ -17,8 +17,9 @@
 	\endgroup
 }
 
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks]{hyperref} % remove ugly link borders
 
+% Add metadata to resulting file.
 \hypersetup{
 	pdfauthor   = {Dmytro Bogatov <dmytro@bu.edu>},
 	pdftitle    = {Secure and Efficient Query Processing in Outsourced Databases},
@@ -28,6 +29,7 @@
 	pdfproducer = {dvips + ps2pdf}
 }
 
+% Adapt to your case.
 \usepackage[
 	backend=biber,
 	style=alphabetic,
@@ -41,11 +43,17 @@
 
 \begin{document}
 
+	% This is to remove the first blank page. Feel free to improve.
+	\vspace*{-4ex}
+
 	\getpdfpages{file}
-	\foreach \x in {1,...,\value{pdfpages}} {
-		\includegraphics[width=\paperwidth,keepaspectratio,page=\x]{file}
+	\foreach\x in {1,...,\value{pdfpages}} { % chktex 11
+		\begin{center}
+			\includegraphics[width=\paperwidth,keepaspectratio,page=\x]{file}
+		\end{center}
 	}
 
+	% This is to generate all the citations from your bib-file to *.blg.
 	\nocite{*}
 
 \end{document}
