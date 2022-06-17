@@ -1,7 +1,7 @@
 document/dist/*
 !document/dist/.gitkeep
 
-*.pax
+# *.pax
 *-pdf-converted-to*
 
 chktex*

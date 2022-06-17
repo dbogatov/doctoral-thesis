@@ -8,7 +8,7 @@ CWD=$(pwd)
 
 : ${INTERACTION:=errorstopmode}
 : ${OUTDIR:=dist}
-: ${JOBNAME:=report}
+: ${JOBNAME:=main}
 DRAFT=""
 FAST=false
 SYNCTEX=1
