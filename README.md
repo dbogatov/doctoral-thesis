@@ -37,3 +37,5 @@ open ./document/dist/*.pdf # to open
 Draft mode requires `imagemagick` to be installed (`brew install` or `apt-get install`).
 
 If using with Overleaf, it is suggested to run `git config core.fileMode false` and then `chmod +x ./document/build.sh ./test.sh`.
+
+<!-- `./document/build.sh -f && rm  -rf ./arxiv arxiv.zip && mkdir arxiv && cp -r ./document/* ./arxiv && cp ./document/dist/* ./arxiv && zip -r arxiv.zip arxiv` -->
