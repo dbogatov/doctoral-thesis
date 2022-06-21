@@ -105,21 +105,3 @@ check-links:
 build:
   variables:
     BUILD_ARGS: " | -e | -n"
-  before_script:
-    - /pdfannotextractor.pl document/graphics/cv.pdf
-  dependencies:
-    - put-docs
-
-put-docs:
-  image: dbogatov/docker-images:alpine-extras-latest-multi-arch
-  stage: pre-build
-  variables:
-    GIT_STRATEGY: fetch
-  script:
-    - ./put-docs.sh 121 report cv for-thesis # CV
-  artifacts:
-    expire_in: 30 min
-    paths:
-      - document/graphics/cv.pdf
-  tags:
-    - docker
