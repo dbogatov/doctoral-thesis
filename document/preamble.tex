@@ -388,10 +388,10 @@
 % https://tex.stackexchange.com/a/267089/97712
 \newcommand{\printpublication}[1]{\AtNextCite{\defcounter{maxnames}{99}}\fullcite{#1}}
 
-\newcommand{\approvalSignature}[1]{
+\newcommand{\readerC}[5]{
 	\ifdefined\emptyApproval%
-		\rule{0.75\textwidth}{0.1mm}
+		\reader{#1}{#2}{#3}{#4}{\rule{0.75\textwidth}{0.1mm}}
 	\else
-		#1
+		\readerSigned{#1}{#2}{#3}{#4}{#5}
 	\fi
 }
